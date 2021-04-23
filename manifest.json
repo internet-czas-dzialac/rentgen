@@ -1,0 +1,31 @@
+{
+  "manifest_version": 2,
+  "name": "Problematyczne requesty",
+  "version": "1.0",
+
+  "description": "Adds a red border to all webpages matching mozilla.org.",
+
+  "icons": {
+    "48": "icons/border-48.png"
+  },
+
+  "background": {
+    "scripts": ["problematic.js"]
+  },
+
+  "browser_action": {
+    "default_icon": "border-48.png",
+    "default_title": "Pokaż problematyczne requesty",
+    "default_popup": "popup/choose_beast.html"
+  },
+  "icons": {
+    "48": "icons/border-48.png"
+  },
+  "permissions": [
+    "proxy",
+    "storage",
+    "<all_urls>",
+    "webRequest",
+    "webRequestBlocking"
+  ]
+}
