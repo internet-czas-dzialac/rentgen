@@ -16,7 +16,7 @@
   "browser_action": {
     "default_icon": "border-48.png",
     "default_title": "Pokaż problematyczne requesty",
-    "default_popup": "popup/choose_beast.html"
+    "default_popup": "popup.html"
   },
   "icons": {
     "48": "icons/border-48.png"

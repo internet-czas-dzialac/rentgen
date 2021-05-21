@@ -1,5 +1,7 @@
 console.log("PROBLEMATIC REQUESTS");
 
+let memory = {};
+
 // const isThirdParty = (arg) => arg.urlClassification.thirdParty.length > 0;
 async function isThirdParty(request) {
   const request_url = new URL(request.url);
@@ -18,7 +20,7 @@ const getReferer = (arg) =>
 
 const getOrigin = async (arg) => {
   let url;
-  if (arg.tabId) {
+  if (arg.tabId && arg.tabId >= 0) {
     const tab = await browser.tabs.get(arg.tabId);
     url = tab.url;
   } else {
@@ -40,16 +42,31 @@ browser.webRequest.onBeforeSendHeaders.addListener(
       (await exposesOrigin(request))
     ) {
       const has_cookie = hasCookie(request);
-      fn = has_cookie ? console.warn : console.log;
-      fn(
-        "Leaked referrer! Has cookie:",
-        hasCookie(request),
-        request.url,
-        "referer was",
-        getReferer(request)
-      );
+      if (!memory[request.tabId]) {
+        memory[request.tabId] = {};
+      }
+      const shorthost = new URL(request.url).host
+        .match(/((\.[^.]+){2}$)/)[0]
+        .slice(1);
+      if (!memory[request.tabId][shorthost]) {
+        memory[request.tabId][shorthost] = [];
+      }
+      memory[request.tabId][shorthost].push({ url: request.url, has_cookie });
     }
   },
   { urls: ["<all_urls>"] },
   ["requestHeaders"]
 );
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  if (sender.tab) {
+    return;
+  }
+  console.log("got message!", request);
+  if (request?.msg === "get_memory") {
+    sendResponse(memory);
+  } else if (request?.msg === "clear_memory") {
+    console.log("memory cleared");
+    memory = {};
+  }
+});
