@@ -2,10 +2,31 @@ console.log("PROBLEMATIC REQUESTS");
 
 let memory = {};
 
+function gethost(url) {
+  return new URL(request.url).host;
+}
+
+function getshorthost(host) {
+  console.log("getshort", host);
+  return host.split(".").slice(-2).join(".");
+}
+
 // const isThirdParty = (arg) => arg.urlClassification.thirdParty.length > 0;
 async function isThirdParty(request) {
   const request_url = new URL(request.url);
   const origin_url = new URL(await getOrigin(request));
+  /* console.log(request_url.ho, origin_url, request_url.includes(origin_url)); */
+  console.log(
+    request_url.host,
+    origin_url.host,
+    request_url.host.includes(origin_url.host)
+  );
+  if (request_url.host.includes(origin_url.host)) {
+    return false;
+  }
+  if (getshorthost(request_url.host) == getshorthost(origin_url.host)) {
+    return false;
+  }
   return (
     request_url.origin != origin_url.origin ||
     request.urlClassification.thirdParty.length > 0
@@ -45,13 +66,15 @@ browser.webRequest.onBeforeSendHeaders.addListener(
       if (!memory[request.tabId]) {
         memory[request.tabId] = {};
       }
-      const shorthost = new URL(request.url).host
-        .match(/((\.[^.]+){2}$)/)[0]
-        .slice(1);
+      const shorthost = getshorthost(new URL(request.url).host);
       if (!memory[request.tabId][shorthost]) {
         memory[request.tabId][shorthost] = [];
       }
-      memory[request.tabId][shorthost].push({ url: request.url, has_cookie });
+      memory[request.tabId][shorthost].push({
+        url: request.url,
+        has_cookie,
+        cookie: request.requestHeaders.find((h) => h.name == "Cookie")?.value,
+      });
     }
   },
   { urls: ["<all_urls>"] },
