@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import memory, { RequestCluster } from "./memory";
-import { parseCookie, Tab, useEmitter } from "./util";
+import memory from "./memory";
+import { RequestCluster } from "./request-cluster";
+import { Tab, useEmitter } from "./util";
 
 async function getTabByID(id: number) {
   const tabs = await browser.tabs.query({ currentWindow: true });
@@ -51,20 +52,14 @@ const StolenDataRow = ({
   tabID,
   shorthost,
   refreshToken,
+  minValueLength,
 }: {
   tabID: number;
   shorthost: string;
   refreshToken: number;
+  minValueLength: number;
 }) => {
   const cluster = memory.getClustersForTab(tabID)[shorthost];
-  console.log(
-    "!!",
-    cluster
-      .getCookiesContent()
-      .map(parseCookie)
-      .map((o) => Object.entries(o))
-      .reduce((a, b) => a.concat(b), [])
-  );
   return (
     <div>
       <h2>
@@ -74,10 +69,7 @@ const StolenDataRow = ({
       <table>
         <tbody>
           {cluster
-            .getCookiesContent()
-            .map(parseCookie)
-            .map((o) => Object.entries(o))
-            .reduce((a, b) => a.concat(b), [])
+            .getCookiesContent({ minValueLength })
             .map(([cookie_name, cookie_value]) => (
               <tr>
                 <th style={{ maxWidth: "200px", wordWrap: "break-word" }}>
@@ -95,9 +87,11 @@ const StolenDataRow = ({
 const StolenData = ({
   pickedTab,
   refreshToken,
+  minValueLength,
 }: {
   pickedTab: number | null;
   refreshToken: number;
+  minValueLength: number;
 }) => {
   const [tab, setTab] = useState<Tab | null>(null);
   useEffect(() => {
@@ -120,6 +114,7 @@ const StolenData = ({
             shorthost={cluster.id}
             key={cluster.id}
             refreshToken={refreshToken}
+            minValueLength={minValueLength}
           />
         ))}
       </div>
@@ -130,6 +125,7 @@ const StolenData = ({
 const Sidebar = () => {
   console.log("rendering!");
   const [pickedTab, setPickedTab] = useState<number | null>(null);
+  const [minValueLength, setMinValueLength] = useState<number | null>(3);
   const counter = useEmitter(memory);
   return (
     <>
@@ -142,7 +138,16 @@ const Sidebar = () => {
           Wybierz aktywną kartę{" "}
         </button>
       </div>
-      <StolenData pickedTab={pickedTab} refreshToken={counter} />
+      <input
+        type="number"
+        value={minValueLength}
+        onChange={(e) => setMinValueLength(parseInt(e.target.value))}
+      />
+      <StolenData
+        pickedTab={pickedTab}
+        refreshToken={counter}
+        minValueLength={minValueLength}
+      />
     </>
   );
 };
