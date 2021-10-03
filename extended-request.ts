@@ -1,3 +1,4 @@
+import { StolenDataEntry } from "./request-cluster";
 import { getshorthost, Request } from "./util";
 
 export default class ExtendedRequest {
@@ -50,6 +51,21 @@ export default class ExtendedRequest {
 
   getCookie() {
     return this.requestHeaders.find((h) => h.name == "Cookie")?.value;
+  }
+
+  getPathParams(): StolenDataEntry[] {
+    const url = new URL(this.data.url);
+    const path = url.pathname;
+    if (!path.includes(";")) {
+      return [];
+    }
+    return path
+      .split(";")
+      .map((e) => e.split("="))
+      .map(
+        ([key, value]) =>
+          new StolenDataEntry("pathname", key, decodeURIComponent(value))
+      );
   }
 
   constructor(public data: Request) {

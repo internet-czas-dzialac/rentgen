@@ -68,16 +68,14 @@ const StolenDataRow = ({
       </h2>
       <table>
         <tbody>
-          {cluster
-            .getCookiesContent({ minValueLength })
-            .map(([cookie_name, cookie_value]) => (
-              <tr>
-                <th style={{ maxWidth: "200px", wordWrap: "break-word" }}>
-                  {cookie_name}
-                </th>
-                <td>{cookie_value}</td>
-              </tr>
-            ))}
+          {cluster.getStolenData({ minValueLength }).map((entry) => (
+            <tr>
+              <th style={{ maxWidth: "200px", wordWrap: "break-word" }}>
+                {entry.name}
+              </th>
+              <td>{entry.value}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
@@ -107,7 +105,9 @@ const StolenData = ({
     <div style={{ padding: "5px" }}>
       {" "}
       <div>
-        <img src={tab.favIconUrl} width="20" height="20" /> {tab.title}
+        <h1>
+          <img src={tab.favIconUrl} width="20" height="20" /> {tab.title}
+        </h1>
         {clusters.map((cluster) => (
           <StolenDataRow
             tabID={pickedTab}
@@ -122,10 +122,27 @@ const StolenData = ({
   );
 };
 
+const Options = ({ minValueLength, setMinValueLength }) => {
+  return (
+    <fieldset>
+      <h3>Zaawansowane ustawienia</h3>
+      <label htmlFor="minValueLength">
+        Pokazuj tylko wartości o długości co najmniej{" "}
+      </label>
+      <input
+        type="number"
+        id="minValueLength"
+        value={minValueLength}
+        onChange={(e) => setMinValueLength(parseInt(e.target.value))}
+      />
+    </fieldset>
+  );
+};
+
 const Sidebar = () => {
   console.log("rendering!");
   const [pickedTab, setPickedTab] = useState<number | null>(null);
-  const [minValueLength, setMinValueLength] = useState<number | null>(3);
+  const [minValueLength, setMinValueLength] = useState<number | null>(5);
   const counter = useEmitter(memory);
   return (
     <>
@@ -138,10 +155,9 @@ const Sidebar = () => {
           Wybierz aktywną kartę{" "}
         </button>
       </div>
-      <input
-        type="number"
-        value={minValueLength}
-        onChange={(e) => setMinValueLength(parseInt(e.target.value))}
+      <Options
+        minValueLength={minValueLength}
+        setMinValueLength={setMinValueLength}
       />
       <StolenData
         pickedTab={pickedTab}
