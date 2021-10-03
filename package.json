@@ -1,0 +1,27 @@
+{
+  "name": "problematic-requests",
+  "version": "1.0.0",
+  "description": "",
+  "main": "email-template-harsh.js",
+  "scripts": {
+    "build": "npx esbuild  sidebar.tsx --bundle --outfile=./lib/sidebar.js",
+    "watch": "npm run build -- --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.kuba-orlik.name/kuba/problematic-requests.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "esbuild": "^0.13.3",
+    "events": "^3.3.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "devDependencies": {
+    "@types/events": "^3.0.0",
+    "@types/react-dom": "^17.0.9",
+    "web-ext-types": "^3.2.1"
+  }
+}

@@ -1,1 +1,4 @@
 .log
+node_modules
+sidebar.js
+/web-ext-artifacts/

@@ -8,7 +8,8 @@ function harsh_email_template() {
       Informacje te są automatycznie wysyłane przez Państwa stronę przez
       skrypty, które są na niej umieszczone. Pomimo faktu, że nie otrzymują
       Państwo bezpośrednio i nie przechowują tych danych, w świetle RODO są
-      Państwo administratorem moich danych osobowych (utwierdza taki stan rzeczy
+      Państwo współadministratorem moich danych osobowych (utwierdza taki stan
+      rzeczy
       <a
         href="https://curia.europa.eu/juris/document/document.jsf?text=&docid=216555&pageIndex=0&doclang=PL&mode=lst&dir=&occ=first&part=1&cid=3313819"
       >
@@ -24,6 +25,34 @@ function harsh_email_template() {
       technicznego punktu widzenia). Jeżeli takie przesłanki legalizujące jednak
       występują, proszę o ich wskazanie,
       <strong> dla każdego z celów i podmiotów z osobna</strong>.
+    </p>
+    <p>
+      Jeżeli wskazaną przez Państwa przesłanką legalizującą dany element procesu
+      przetwarzania danych osobowych przez Państwa stronę jest Art 6. pkt 1 lit.
+      a) RODO (zgoda), na mocy Art. 7 pkt 1 RODO proszę o wykazanie, że
+      udzieliłem Państwu zgodę na takie przetwarzanie moich danych osobowych
+      zanim to przetwarzanie nastąpiło, oraz że ta zgoda jest ważna w świetle
+      RODO (odnosząc się w szczególności do art. 7 ust. 3 RODO). Z góry
+      zaznaczam, że „ustawienia przeglądarki” nie stanowią ważnej w świetle RODO
+      zgody.
+    </p>
+    <p>
+      Jeżeli wskazaną przez Państwa przesłanką legalizującą dany element procesu
+      przetwarzania danych osobowych przez Państwa stronę jest Art 6. pkt 1 lit.
+      b) RODO (niezbędność takiego przetwarzania do wykonania umowy), proszę o
+      wskazanie, w jaki sposób ta konieczność zachodzi, oraz co sprawia, że
+      Państwa zdaniem nie można wykonać umowy związanej z wyświetleniem Państwa
+      strony bez przekazywania sztucznie nadanego ID w plikach Cookies lub
+      historii przeglądania w nagłówku Referer do wskazanych podmiotów trzecich.
+    </p>
+    <p>
+      Jeżeli wskazaną przez Państwa przesłanką legalizującą dany element procesu
+      przetwarzania danych osobowych przez Państwa stronę jest Art 6. pkt 1 lit.
+      f) RODO (uzasadniony interes), proszę o wskazanie, jaki to jest konkretny
+      interes, oraz o wynik testu równowagi pomiędzy Państwa interesem a moimi
+      podstawowymi wolnościami i prawami - ze wskazaniem tego, co sprawia, że w
+      Państwa ocenie Państwa uzasadniony interes przeważa moje prawa i interesy
+      w kontekście wspomnianych powyżej procesów przetwarzania danych.
     </p>
     <p>
       Niniejszym zwracam się także z żądaniem wycofania przesłanych przez

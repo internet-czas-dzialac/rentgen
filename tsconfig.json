@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "esModuleInterop": true,
+    "lib": ["es2017", "dom"],
+    "typeRoots": ["node_modules/@types", "node_modules/web-ext-types"],
+    "outDir": "lib"
+  }
+}

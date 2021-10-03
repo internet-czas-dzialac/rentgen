@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      button {
+        display: inline-block;
+        line-height: 3rem;
+        padding: 0 1rem;
+        white-space: nowrap;
+      }
+
+      select {
+        height: 3rem;
+        line-height: 3rem;
+        flex-shrink: 1;
+      }
+
+      #tab_dropdown {
+        flex-basis: 20px;
+        width: 100px !important;
+        flex-grow: 1;
+      }
+
+      #selector {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+      }
+
+	 #app {
+		 user-select: text;
+	 }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script src="./lib/sidebar.js"></script>
+  </body>
+</html>

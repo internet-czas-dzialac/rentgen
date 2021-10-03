@@ -5,18 +5,10 @@
 
   "description": "Adds a red border to all webpages matching mozilla.org.",
 
-  "icons": {
-    "48": "icons/border-48.png"
-  },
-
-  "background": {
-    "scripts": ["problematic.js"]
-  },
-
-  "browser_action": {
-    "default_icon": "border-48.png",
-    "default_title": "Pokaż problematyczne requesty",
-    "default_popup": "popup.html"
+  "sidebar_action": {
+    "default_title": "ICD Skaner",
+    "default_panel": "sidebar.html",
+    "default_icon": "sidebar_icon.png"
   },
   "icons": {
     "48": "icons/border-48.png"
@@ -27,5 +19,10 @@
     "<all_urls>",
     "webRequest",
     "webRequestBlocking"
-  ]
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "problematic-requests@internet-czas-dzialac.pl"
+    }
+  }
 }
