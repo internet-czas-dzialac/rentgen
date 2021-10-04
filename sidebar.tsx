@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import memory from "./memory";
-import { RequestCluster } from "./request-cluster";
+import { RequestCluster, Sources } from "./request-cluster";
 import { Tab, useEmitter } from "./util";
 
 async function getTabByID(id: number) {
@@ -10,7 +10,6 @@ async function getTabByID(id: number) {
 }
 
 async function getCurrentTab() {
-  console.log("getCurrentTab");
   const [tab] = await browser.tabs.query({
     active: true,
     windowId: browser.windows.WINDOW_ID_CURRENT,
@@ -27,7 +26,6 @@ const TabDropdown = ({
 }) => {
   const [tabs, setTabs] = useState([]);
   useEffect(() => {
-    console.log("useEffect!");
     browser.tabs.query({ currentWindow: true }).then(setTabs);
   }, []);
   return (
@@ -35,7 +33,6 @@ const TabDropdown = ({
       id="tab_dropdown"
       value={pickedTab}
       onChange={async (e) => {
-        console.log(e.target.value);
         setPickedTab(parseInt(e.target.value));
       }}
     >
@@ -60,6 +57,11 @@ const StolenDataRow = ({
   minValueLength: number;
 }) => {
   const cluster = memory.getClustersForTab(tabID)[shorthost];
+  const icons: Record<Sources, string> = {
+    cookie: "🍪",
+    pathname: "🛣",
+    queryparams: "🅿",
+  };
   return (
     <div>
       <h2>
@@ -73,7 +75,8 @@ const StolenDataRow = ({
               <th style={{ maxWidth: "200px", wordWrap: "break-word" }}>
                 {entry.name}
               </th>
-              <td>{entry.value}</td>
+              <td>{icons[entry.source]}</td>
+              <td style={{ wordWrap: "anywhere" as any }}>{entry.value}</td>
             </tr>
           ))}
         </tbody>
@@ -140,9 +143,8 @@ const Options = ({ minValueLength, setMinValueLength }) => {
 };
 
 const Sidebar = () => {
-  console.log("rendering!");
   const [pickedTab, setPickedTab] = useState<number | null>(null);
-  const [minValueLength, setMinValueLength] = useState<number | null>(5);
+  const [minValueLength, setMinValueLength] = useState<number | null>(7);
   const counter = useEmitter(memory);
   return (
     <>

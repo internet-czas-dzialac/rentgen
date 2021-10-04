@@ -16,11 +16,8 @@ export function getshorthost(host: string) {
 export function useEmitter(e: EventEmitter) {
   const [counter, setCounter] = useState<number>(0);
   useEffect(() => {
-    console.log("useEmitter!");
     const callback = () => {
-      console.log("Detected memory change!");
       setCounter((counter) => counter + 1);
-      console.log("RT:", counter + 1);
     };
     e.on("change", callback);
     return () => {

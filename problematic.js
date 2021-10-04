@@ -7,7 +7,6 @@ function gethost(url) {
 }
 
 function getshorthost(host) {
-  console.log("getshort", host);
   return host.split(".").slice(-2).join(".");
 }
 
@@ -16,11 +15,6 @@ async function isThirdParty(request) {
   const request_url = new URL(request.url);
   const origin_url = new URL(await getOrigin(request));
   /* console.log(request_url.ho, origin_url, request_url.includes(origin_url)); */
-  console.log(
-    request_url.host,
-    origin_url.host,
-    request_url.host.includes(origin_url.host)
-  );
   if (request_url.host.includes(origin_url.host)) {
     return false;
   }
@@ -85,11 +79,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (sender.tab) {
     return;
   }
-  console.log("got message!", request);
   if (request?.msg === "get_memory") {
     sendResponse(memory);
   } else if (request?.msg === "clear_memory") {
-    console.log("memory cleared");
     memory = {};
   }
 });

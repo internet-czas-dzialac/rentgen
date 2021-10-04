@@ -6,11 +6,8 @@ import { RequestCluster } from "./request-cluster";
 class Memory extends EventEmitter {
   tab_to_history = {} as Record<string, Record<string, RequestCluster>>;
   async register(request: ExtendedRequest) {
-    if (
-      (await request.isThirdParty()) &&
-      request.hasReferer() &&
-      (await request.exposesOrigin())
-    ) {
+    await request.init();
+    if (request.isThirdParty() && request.exposesOrigin()) {
       if (!this.tab_to_history[request.tabId]) {
         this.tab_to_history[request.tabId] = {};
       }

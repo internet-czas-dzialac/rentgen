@@ -1,12 +1,19 @@
 import { StolenDataEntry } from "./request-cluster";
-import { getshorthost, Request } from "./util";
+import { getshorthost, parseCookie, Request } from "./util";
 
 export default class ExtendedRequest {
   public tabId: number;
   public url: string;
   public requestHeaders: Request["requestHeaders"];
+  public origin: string;
+  public initialized = false;
 
-  async getOrigin() {
+  async init() {
+    await this.cacheOrigin();
+    this.initialized = true;
+  }
+
+  async cacheOrigin(): Promise<void> {
     let url: string;
     if (this.data.tabId && this.data.tabId >= 0) {
       const tab = await browser.tabs.get(this.data.tabId);
@@ -14,12 +21,19 @@ export default class ExtendedRequest {
     } else {
       url = (this.data as any).frameAncestors[0].url;
     }
-    return url;
+    this.origin = url;
   }
 
-  async isThirdParty() {
+  getOrigin(): string {
+    if (!this.initialized) {
+      throw new Error("initialize first!!");
+    }
+    return this.origin;
+  }
+
+  isThirdParty() {
     const request_url = new URL(this.data.url);
-    const origin_url = new URL(await this.getOrigin());
+    const origin_url = new URL(this.getOrigin());
     if (request_url.host.includes(origin_url.host)) {
       return false;
     }
@@ -37,8 +51,33 @@ export default class ExtendedRequest {
       .value;
   }
 
-  async exposesOrigin() {
-    return this.getReferer().includes(new URL(await this.getOrigin()).host);
+  exposesOrigin() {
+    const url = new URL(this.getOrigin());
+    const host = url.host;
+    const path = url.pathname;
+    return (
+      this.getReferer().includes(host) ||
+      this.getAllStolenData().filter(
+        (entry) => entry.value.includes(host) || entry.value.includes(path)
+      ).length > 0
+    );
+  }
+
+  getAllStolenData(): StolenDataEntry[] {
+    return [
+      ...this.getPathParams(),
+      ...this.getCookieData(),
+      ...this.getQueryParams(),
+    ];
+  }
+
+  getCookieData(): StolenDataEntry[] {
+    if (!this.hasCookie() || this.getCookie() === undefined) {
+      return [];
+    }
+    return Object.entries(parseCookie(this.getCookie()))
+      .map(([key, value]) => [key, value || ""])
+      .map(([key, value]) => new StolenDataEntry(this, "cookie", key, value));
   }
 
   hasReferer() {
@@ -49,7 +88,7 @@ export default class ExtendedRequest {
     return this.data.requestHeaders.some((h) => h.name === "Cookie");
   }
 
-  getCookie() {
+  getCookie(): string {
     return this.requestHeaders.find((h) => h.name == "Cookie")?.value;
   }
 
@@ -62,10 +101,23 @@ export default class ExtendedRequest {
     return path
       .split(";")
       .map((e) => e.split("="))
+      .map(([key, value]) => [key, value || ""])
       .map(
         ([key, value]) =>
-          new StolenDataEntry("pathname", key, decodeURIComponent(value))
+          new StolenDataEntry(this, "pathname", key, decodeURIComponent(value))
       );
+  }
+
+  getQueryParams(): StolenDataEntry[] {
+    const url = new URL(this.data.url);
+    return Array.from((url.searchParams as any).entries())
+      .map(([key, value]) => [key, value || ""])
+      .map(([key, value]) => {
+        try {
+          value = decodeURIComponent(value);
+        } catch (e) {}
+        return new StolenDataEntry(this, "queryparams", key, value);
+      });
   }
 
   constructor(public data: Request) {

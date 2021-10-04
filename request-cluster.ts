@@ -1,9 +1,25 @@
 import { EventEmitter } from "events";
 import ExtendedRequest from "./extended-request";
-import { parseCookie } from "./util";
+
+export type Sources = "cookie" | "pathname" | "queryparams";
 
 export class StolenDataEntry {
-  constructor(public type: string, public name: string, public value: string) {}
+  constructor(
+    public request: ExtendedRequest,
+    public source: Sources,
+    public name: string,
+    public value: string
+  ) {}
+
+  getPriority() {
+    let priority = 0;
+    priority += this.value.length;
+    const url = new URL(this.request.getOrigin());
+    if (this.value.includes(url.host) || this.value.includes(url.pathname)) {
+      priority += 100;
+    }
+    return priority;
+  }
 }
 
 export class RequestCluster extends EventEmitter {
@@ -25,56 +41,28 @@ export class RequestCluster extends EventEmitter {
     return false;
   }
 
-  getCookiesContent({
-    minValueLength,
-  }: {
-    minValueLength: number;
-  }): StolenDataEntry[] {
-    this.getQueryParamsContent({ minValueLength });
-    const cookieValues = new Set<string>();
-    for (const request of this.requests) {
-      if (request.hasCookie()) {
-        cookieValues.add(request.getCookie());
-      }
-    }
-    return Array.from(cookieValues.values())
-      .map(parseCookie)
-      .map((o) => Object.entries(o))
+  getStolenData(filter: { minValueLength: number }): StolenDataEntry[] {
+    return this.requests
+      .map((request) => request.getAllStolenData())
       .reduce((a, b) => a.concat(b), [])
-      .map(([key, value]) => new StolenDataEntry("cookie", key, value))
-      .filter((e) => e.value.length >= minValueLength);
-  }
-
-  getQueryParamsContent({
-    minValueLength,
-  }: {
-    minValueLength: number;
-  }): StolenDataEntry[] {
-    const result = [];
-    for (const request of this.requests) {
-      console.log(request.data.url);
-    }
-    return result;
-  }
-
-  getPathnameParamsContent({
-    minValueLength,
-  }: {
-    minValueLength: number;
-  }): StolenDataEntry[] {
-    let result = [];
-    for (const request of this.requests) {
-      result = [...result, ...request.getPathParams()];
-    }
-    console.log("PATHNAME PARAMS FOR", this.id, result);
-    return result;
-  }
-
-  getStolenData(filter: { minValueLength: number }) {
-    return [
-      ...this.getCookiesContent(filter),
-      ...this.getPathnameParamsContent(filter),
-    ];
+      .filter((entry) => {
+        return entry.value.length >= filter.minValueLength;
+      })
+      .sort((entry1, entry2) =>
+        entry1.getPriority() > entry2.getPriority() ? -1 : 1
+      )
+      .filter((element, index, array) => {
+        // remove duplicate neighbours
+        if (index == 0) {
+          return true;
+        }
+        if (
+          element.name != array[index - 1].name ||
+          element.value != array[index - 1].value
+        ) {
+          return true;
+        }
+      });
   }
 
   static sortCompare(a: RequestCluster, b: RequestCluster) {
