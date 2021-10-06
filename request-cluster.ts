@@ -1,15 +1,26 @@
 import { EventEmitter } from "events";
 import ExtendedRequest from "./extended-request";
 
-export type Sources = "cookie" | "pathname" | "queryparams";
+export type Sources = "cookie" | "pathname" | "queryparams" | "header";
+
+import { TCString, TCModel } from "@iabtcf/core";
 
 export class StolenDataEntry {
+  public isIAB = false;
+  public iab: TCModel | null = null;
+
   constructor(
     public request: ExtendedRequest,
     public source: Sources,
     public name: string,
     public value: string
-  ) {}
+  ) {
+    try {
+      this.iab = TCString.decode(value);
+      console.log(this.iab);
+      this.isIAB = true;
+    } catch (e) {}
+  }
 
   getPriority() {
     let priority = 0;

@@ -61,6 +61,7 @@ const StolenDataRow = ({
     cookie: "🍪",
     pathname: "🛣",
     queryparams: "🅿",
+    header: "H",
   };
   return (
     <div>
@@ -76,7 +77,9 @@ const StolenDataRow = ({
                 {entry.name}
               </th>
               <td>{icons[entry.source]}</td>
-              <td style={{ wordWrap: "anywhere" as any }}>{entry.value}</td>
+              <td style={{ wordWrap: "anywhere" as any }}>
+                {entry.value} {entry.isIAB ? "!!!!! IAB" : ""}
+              </td>
             </tr>
           ))}
         </tbody>

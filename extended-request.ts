@@ -1,6 +1,16 @@
 import { StolenDataEntry } from "./request-cluster";
 import { getshorthost, parseCookie, Request } from "./util";
 
+const whitelisted_cookies = [
+  /^Accept.*$/,
+  /^Host$/,
+  /^Connection$/,
+  /^Sec-Fetch-.*$/,
+  /^Content-Type$/,
+  /^Cookie$/, // we're extracting it in getCookie separately anyway
+  /^User-Agent$/,
+];
+
 export default class ExtendedRequest {
   public tabId: number;
   public url: string;
@@ -68,6 +78,7 @@ export default class ExtendedRequest {
       ...this.getPathParams(),
       ...this.getCookieData(),
       ...this.getQueryParams(),
+      ...this.getHeadersData(),
     ];
   }
 
@@ -118,6 +129,22 @@ export default class ExtendedRequest {
         } catch (e) {}
         return new StolenDataEntry(this, "queryparams", key, value);
       });
+  }
+
+  getHeadersData(): StolenDataEntry[] {
+    return this.data.requestHeaders
+      .filter((header) => {
+        for (const regex of whitelisted_cookies) {
+          if (regex.test(header.name)) {
+            return false;
+          }
+        }
+        return true;
+      })
+      .map(
+        (header) =>
+          new StolenDataEntry(this, "header", header.name, header.value)
+      );
   }
 
   constructor(public data: Request) {
