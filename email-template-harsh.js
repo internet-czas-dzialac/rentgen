@@ -67,6 +67,12 @@ function harsh_email_template() {
       wyżej wymienionych podmiotów.
     </p>
     <p>
+      W odpowiedzi proszę się nie powoływać na IAB Europe i ich rzekomą renomę w
+      tworzeniu rozwiązań zgodnych z RODO. IAB chroni interes reklamodawców, a
+      nie Użytkowników i ich rozwiązania (np. TCF) są notorycznie niezgodne z
+      RODO i pozbawione szacunku dla Użytkowników.
+    </p>
+    <p>
       Apeluję także o wprowadzenie stosownych zmian na stronie tak, aby nie
       pozostawiać cienia wątpliwości odnośnie tego, na mocy jakiej przesłanki
       legalizującej dane są przetwarzane przez wspomniane podmioty trzecie, lub
