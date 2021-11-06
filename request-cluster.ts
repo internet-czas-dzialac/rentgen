@@ -17,7 +17,7 @@ export class StolenDataEntry {
   ) {
     try {
       this.iab = TCString.decode(value);
-      console.log(this.iab);
+      // console.log(this.iab);
       this.isIAB = true;
     } catch (e) {}
   }
@@ -52,13 +52,17 @@ export class RequestCluster extends EventEmitter {
     return false;
   }
 
-  getStolenData(filter: { minValueLength: number }): StolenDataEntry[] {
+  getStolenData(filter: {
+    minValueLength: number;
+    cookiesOnly: boolean;
+  }): StolenDataEntry[] {
     return this.requests
       .map((request) => request.getAllStolenData())
       .reduce((a, b) => a.concat(b), [])
       .filter((entry) => {
         return entry.value.length >= filter.minValueLength;
       })
+      .filter((entry) => !filter.cookiesOnly || entry.source === "cookie")
       .sort((entry1, entry2) =>
         entry1.getPriority() > entry2.getPriority() ? -1 : 1
       )

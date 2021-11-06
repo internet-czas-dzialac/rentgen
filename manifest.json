@@ -18,7 +18,9 @@
     "storage",
     "<all_urls>",
     "webRequest",
-    "webRequestBlocking"
+    "webRequestBlocking",
+    "cookies",
+    "privacy"
   ],
   "browser_specific_settings": {
     "gecko": {

@@ -48,13 +48,14 @@ const TabDropdown = ({
 const StolenDataRow = ({
   tabID,
   shorthost,
-  refreshToken,
   minValueLength,
+  cookiesOnly,
 }: {
   tabID: number;
   shorthost: string;
   refreshToken: number;
   minValueLength: number;
+  cookiesOnly: boolean;
 }) => {
   const cluster = memory.getClustersForTab(tabID)[shorthost];
   const icons: Record<Sources, string> = {
@@ -71,17 +72,19 @@ const StolenDataRow = ({
       </h2>
       <table>
         <tbody>
-          {cluster.getStolenData({ minValueLength }).map((entry) => (
-            <tr>
-              <th style={{ maxWidth: "200px", wordWrap: "break-word" }}>
-                {entry.name}
-              </th>
-              <td>{icons[entry.source]}</td>
-              <td style={{ wordWrap: "anywhere" as any }}>
-                {entry.value} {entry.isIAB ? "!!!!! IAB" : ""}
-              </td>
-            </tr>
-          ))}
+          {cluster
+            .getStolenData({ minValueLength, cookiesOnly })
+            .map((entry) => (
+              <tr>
+                <th style={{ maxWidth: "200px", wordWrap: "break-word" }}>
+                  {entry.name}
+                </th>
+                <td>{icons[entry.source]}</td>
+                <td style={{ wordWrap: "anywhere" as any }}>
+                  {entry.value} {entry.isIAB ? "!!!!! IAB" : ""}
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>
@@ -92,10 +95,12 @@ const StolenData = ({
   pickedTab,
   refreshToken,
   minValueLength,
+  cookiesOnly,
 }: {
   pickedTab: number | null;
   refreshToken: number;
   minValueLength: number;
+  cookiesOnly: boolean;
 }) => {
   const [tab, setTab] = useState<Tab | null>(null);
   useEffect(() => {
@@ -114,21 +119,29 @@ const StolenData = ({
         <h1>
           <img src={tab.favIconUrl} width="20" height="20" /> {tab.title}
         </h1>
-        {clusters.map((cluster) => (
-          <StolenDataRow
-            tabID={pickedTab}
-            shorthost={cluster.id}
-            key={cluster.id}
-            refreshToken={refreshToken}
-            minValueLength={minValueLength}
-          />
-        ))}
+        {clusters
+          .filter((cluster) => !cookiesOnly || cluster.hasCookies())
+          .map((cluster) => (
+            <StolenDataRow
+              tabID={pickedTab}
+              shorthost={cluster.id}
+              key={cluster.id}
+              refreshToken={refreshToken}
+              minValueLength={minValueLength}
+              cookiesOnly={cookiesOnly}
+            />
+          ))}
       </div>
     </div>
   );
 };
 
-const Options = ({ minValueLength, setMinValueLength }) => {
+const Options = ({
+  minValueLength,
+  setMinValueLength,
+  cookiesOnly,
+  setCookiesOnly,
+}) => {
   return (
     <fieldset>
       <h3>Zaawansowane ustawienia</h3>
@@ -141,6 +154,14 @@ const Options = ({ minValueLength, setMinValueLength }) => {
         value={minValueLength}
         onChange={(e) => setMinValueLength(parseInt(e.target.value))}
       />
+      <br />
+      <input
+        type="checkbox"
+        id="cookiesOnly"
+        value={cookiesOnly}
+        onChange={(e) => setCookiesOnly(e.target.checked)}
+      />
+      <label htmlFor="cookiesOnly">Pokazuj tylko dane z cookiesów</label>
     </fieldset>
   );
 };
@@ -148,6 +169,7 @@ const Options = ({ minValueLength, setMinValueLength }) => {
 const Sidebar = () => {
   const [pickedTab, setPickedTab] = useState<number | null>(null);
   const [minValueLength, setMinValueLength] = useState<number | null>(7);
+  const [cookiesOnly, setCookiesOnly] = useState<boolean>(false);
   const counter = useEmitter(memory);
   return (
     <>
@@ -163,11 +185,14 @@ const Sidebar = () => {
       <Options
         minValueLength={minValueLength}
         setMinValueLength={setMinValueLength}
+        cookiesOnly={cookiesOnly}
+        setCookiesOnly={setCookiesOnly}
       />
       <StolenData
         pickedTab={pickedTab}
         refreshToken={counter}
         minValueLength={minValueLength}
+        cookiesOnly={cookiesOnly}
       />
     </>
   );
