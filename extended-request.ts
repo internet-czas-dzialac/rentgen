@@ -31,7 +31,7 @@ export default class ExtendedRequest {
     } else {
       url = (this.data as any).frameAncestors[0].url;
     }
-    this.origin = url;
+    this.origin = new URL(url).origin;
   }
 
   getOrigin(): string {

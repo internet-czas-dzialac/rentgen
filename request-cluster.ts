@@ -5,9 +5,18 @@ export type Sources = "cookie" | "pathname" | "queryparams" | "header";
 
 import { TCString, TCModel } from "@iabtcf/core";
 
+const id = (function* id() {
+  let i = 0;
+  while (true) {
+    i++;
+    yield i;
+  }
+})();
+
 export class StolenDataEntry {
   public isIAB = false;
   public iab: TCModel | null = null;
+  public id: number;
 
   constructor(
     public request: ExtendedRequest,
@@ -20,6 +29,7 @@ export class StolenDataEntry {
       // console.log(this.iab);
       this.isIAB = true;
     } catch (e) {}
+    this.id = id.next().value as number;
   }
 
   getPriority() {
@@ -93,6 +103,17 @@ export class RequestCluster extends EventEmitter {
       } else {
         return 1;
       }
+    }
+  }
+
+  async removeAllCookies() {
+    const cookies = await browser.cookies.getAll({ domain: this.id });
+    for (const cookie of cookies) {
+      console.log("removing cookie", cookie.name, "from", cookie.domain);
+      await browser.cookies.remove({
+        name: cookie.name,
+        url: `https://${cookie.domain}`,
+      });
     }
   }
 }

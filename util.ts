@@ -39,3 +39,8 @@ export function parseCookie(cookie: string): Record<string, string> {
       {}
     );
 }
+
+export async function getTabByID(id: number) {
+  const tabs = await browser.tabs.query({ currentWindow: true });
+  return tabs.find((tab) => tab.id == id);
+}
