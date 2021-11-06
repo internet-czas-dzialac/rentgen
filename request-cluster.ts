@@ -24,11 +24,11 @@ export class StolenDataEntry {
     public name: string,
     public value: string
   ) {
-    try {
-      this.iab = TCString.decode(value);
-      // console.log(this.iab);
-      this.isIAB = true;
-    } catch (e) {}
+    // try {
+    //   this.iab = TCString.decode(value);
+    //   // console.log(this.iab);
+    //   this.isIAB = true;
+    // } catch (e) {}
     this.id = id.next().value as number;
   }
 
