@@ -41,6 +41,49 @@ export class StolenDataEntry {
     }
     return priority;
   }
+
+  mergeWith(entry: StolenDataEntry): MergedStolenDataEntry {
+    return new MergedStolenDataEntry([this, entry]);
+  }
+
+  hasValue(value: string) {
+    return this.value === value;
+  }
+}
+
+export class MergedStolenDataEntry {
+  constructor(public entries: StolenDataEntry[]) {}
+
+  hasValue(value: string) {
+    return this.entries.some((entry) => entry.value === value);
+  }
+
+  mergeWith(entry: StolenDataEntry) {
+    this.entries.push(entry);
+    return this;
+  }
+
+  getPriority() {
+    return Math.max(...this.entries.map((entry) => entry.getPriority()));
+  }
+
+  getUniqueKey() {
+    return `${this.getNames().join(":")};${this.entries
+      .map((e) => e.id)
+      .join(":")};`;
+  }
+
+  getNames(): string[] {
+    return Array.from(new Set(this.entries.map((e) => e.name)));
+  }
+
+  getSources(): string[] {
+    return Array.from(new Set(this.entries.map((e) => e.source)));
+  }
+
+  getValues() {
+    return Array.from(new Set(this.entries.map((e) => e.value)));
+  }
 }
 
 export class RequestCluster extends EventEmitter {
@@ -65,7 +108,7 @@ export class RequestCluster extends EventEmitter {
   getStolenData(filter: {
     minValueLength: number;
     cookiesOnly: boolean;
-  }): StolenDataEntry[] {
+  }): MergedStolenDataEntry[] {
     return this.requests
       .map((request) => request.getAllStolenData())
       .reduce((a, b) => a.concat(b), [])
@@ -73,11 +116,9 @@ export class RequestCluster extends EventEmitter {
         return entry.value.length >= filter.minValueLength;
       })
       .filter((entry) => !filter.cookiesOnly || entry.source === "cookie")
-      .sort((entry1, entry2) =>
-        entry1.getPriority() > entry2.getPriority() ? -1 : 1
-      )
+      .sort((entryA, entryB) => (entryA.name > entryB.name ? -1 : 1))
       .filter((element, index, array) => {
-        // remove duplicate neighbours
+        // remove duplicates by name/value
         if (index == 0) {
           return true;
         }
@@ -87,7 +128,24 @@ export class RequestCluster extends EventEmitter {
         ) {
           return true;
         }
-      });
+      })
+      .sort((entryA, entryB) => (entryA.value > entryB.value ? -1 : 1))
+      .reduce(
+        (acc: MergedStolenDataEntry[], entry: StolenDataEntry) => {
+          // group by value
+          const last_entry = acc.slice(-1)[0];
+          if (last_entry.hasValue(entry.value)) {
+            last_entry.mergeWith(entry);
+          } else {
+            acc.push(new MergedStolenDataEntry([entry]));
+          }
+          return acc;
+        },
+        [new MergedStolenDataEntry([])] as MergedStolenDataEntry[]
+      )
+      .sort((entry1, entry2) =>
+        entry1.getPriority() > entry2.getPriority() ? -1 : 1
+      );
   }
 
   static sortCompare(a: RequestCluster, b: RequestCluster) {

@@ -78,19 +78,15 @@ const StolenDataRow = ({
             .getStolenData({ minValueLength, cookiesOnly })
             .map((entry) => (
               <tr
-                key={
-                  origin + ";" + cluster.id + ";" + entry.id + ";" + entry.name
-                }
-                data-key={
-                  origin + ";" + cluster.id + ";" + entry.id + ";" + entry.name
-                }
+                key={origin + cluster.id + entry.getUniqueKey()}
+                data-key={origin + cluster.id + entry.getUniqueKey()}
               >
                 <th style={{ maxWidth: "200px", wordWrap: "break-word" }}>
-                  {entry.name}
+                  {entry.getNames().join(",")}
                 </th>
-                <td>{icons[entry.source]}</td>
+                <td>{entry.getSources().map((source) => icons[source])}</td>
                 <td style={{ wordWrap: "anywhere" as any }}>
-                  {entry.value} {entry.isIAB ? "!!!!! IAB" : ""}
+                  {entry.getValues()[0]}
                 </td>
               </tr>
             ))}
