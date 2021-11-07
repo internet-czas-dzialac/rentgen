@@ -1,4 +1,4 @@
-import { StolenDataEntry } from "./request-cluster";
+import { StolenDataEntry } from "./stolen-data-entry";
 import { getshorthost, parseCookie, Request } from "./util";
 
 const whitelisted_cookies = [
