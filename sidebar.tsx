@@ -17,7 +17,7 @@ const Sidebar = () => {
   const [origin, setOrigin] = useState<string | null>(null);
   const [minValueLength, setMinValueLength] = useState<number | null>(7);
   const [cookiesOnly, setCookiesOnly] = useState<boolean>(false);
-  const [counter] = useEmitter(memory);
+  const [counter, setCounter] = useEmitter(memory);
 
   useEffect(() => {
     const listener = async (data) => {
@@ -55,6 +55,7 @@ const Sidebar = () => {
       <StolenData
         origin={origin}
         refreshToken={counter}
+        refresh={() => setCounter((c) => c + 1)}
         minValueLength={minValueLength}
         cookiesOnly={cookiesOnly}
       />

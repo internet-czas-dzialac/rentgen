@@ -18,6 +18,7 @@ export class StolenDataEntry {
   public isIAB = false;
   public iab: TCModel | null = null;
   public id: number;
+  public markedKeys: string[] = [];
 
   constructor(
     public request: ExtendedRequest,
@@ -77,6 +78,10 @@ export class StolenDataEntry {
   getParsedValue(): string | Record<string, unknown> {
     return StolenDataEntry.parseValue(this.value);
   }
+
+  addMarkedValue(key: string) {
+    this.markedKeys.push(key);
+  }
 }
 
 export class MergedStolenDataEntry {
@@ -116,6 +121,10 @@ export class MergedStolenDataEntry {
   getParsedValues() {
     return Array.from(new Set(this.entries.map((e) => e.getParsedValue())));
   }
+
+  addMarkedValue(key: string) {
+    this.entries.forEach((entry) => entry.addMarkedValue(key));
+  }
 }
 
 export class RequestCluster extends EventEmitter {
@@ -142,7 +151,7 @@ export class RequestCluster extends EventEmitter {
     cookiesOnly: boolean;
   }): MergedStolenDataEntry[] {
     return this.requests
-      .map((request) => request.getAllStolenData())
+      .map((request) => request.stolenData)
       .reduce((a, b) => a.concat(b), [])
       .filter((entry) => {
         return entry.value.length >= filter.minValueLength;

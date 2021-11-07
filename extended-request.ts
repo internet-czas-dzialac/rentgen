@@ -17,10 +17,12 @@ export default class ExtendedRequest {
   public requestHeaders: Request["requestHeaders"];
   public origin: string;
   public initialized = false;
+  public stolenData: StolenDataEntry[];
 
   async init() {
     await this.cacheOrigin();
     this.initialized = true;
+    this.stolenData = this.getAllStolenData();
   }
 
   async cacheOrigin(): Promise<void> {
@@ -67,13 +69,13 @@ export default class ExtendedRequest {
     const path = url.pathname;
     return (
       this.getReferer().includes(host) ||
-      this.getAllStolenData().filter(
+      this.stolenData.filter(
         (entry) => entry.value.includes(host) || entry.value.includes(path)
       ).length > 0
     );
   }
 
-  getAllStolenData(): StolenDataEntry[] {
+  private getAllStolenData(): StolenDataEntry[] {
     return [
       ...this.getPathParams(),
       ...this.getCookieData(),

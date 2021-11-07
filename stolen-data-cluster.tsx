@@ -45,7 +45,7 @@ function StolenDataValue({
   return <StolenDataValueTable object={value} prefixKey={prefixKey} />;
 }
 
-export default function StolenDataRow({
+export default function StolenDataCluster({
   origin,
   shorthost,
   minValueLength,

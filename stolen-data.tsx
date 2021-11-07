@@ -1,17 +1,19 @@
 import React from "react";
 import memory from "./memory";
 import { RequestCluster } from "./request-cluster";
-import StolenDataRow from "./stolen-data-row";
+import StolenDataCluster from "./stolen-data-cluster";
 import { getshorthost } from "./util";
 
 export function StolenData({
   origin,
   minValueLength,
   refreshToken,
+  refresh,
   cookiesOnly,
 }: {
   origin: string;
   refreshToken: number;
+  refresh: () => void;
   minValueLength: number;
   cookiesOnly: boolean;
 }) {
@@ -40,7 +42,10 @@ export function StolenData({
           </button>
           <button
             style={{ marginLeft: "1rem" }}
-            onClick={() => memory.removeRequestsFor(origin)}
+            onClick={() => {
+              memory.removeRequestsFor(origin);
+              refresh();
+            }}
           >
             Wyczyść pamięć
           </button>
@@ -49,7 +54,7 @@ export function StolenData({
           .filter((cluster) => !cookiesOnly || cluster.hasCookies())
           .map((cluster) => {
             return (
-              <StolenDataRow
+              <StolenDataCluster
                 origin={origin}
                 shorthost={cluster.id}
                 key={cluster.id + origin}
