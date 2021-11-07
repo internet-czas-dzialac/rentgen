@@ -1,5 +1,5 @@
 import { EventEmitter } from "events";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 export type Unpromisify<T> = T extends Promise<infer R> ? R : T;
 export type Unarray<T> = T extends Array<infer R> ? R : T;
@@ -13,7 +13,9 @@ export function getshorthost(host: string) {
   return host.split(".").slice(-2).join(".");
 }
 
-export function useEmitter(e: EventEmitter) {
+export function useEmitter(
+  e: EventEmitter
+): [number, Dispatch<SetStateAction<number>>] {
   const [counter, setCounter] = useState<number>(0);
   useEffect(() => {
     const callback = () => {
@@ -24,7 +26,7 @@ export function useEmitter(e: EventEmitter) {
       e.removeListener("change", callback);
     };
   }, []);
-  return counter;
+  return [counter, setCounter];
 }
 
 export function parseCookie(cookie: string): Record<string, string> {

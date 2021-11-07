@@ -39,12 +39,24 @@ class Memory extends EventEmitter {
   }
 
   async removeCookiesFor(origin: string, shorthost?: string): Promise<void> {
-    const clusters = this.getClustersForOrigin(origin);
-    await Promise.all(
-      Object.values(clusters)
-        .filter((cluster) => !shorthost || cluster.id === shorthost)
-        .map((cluster) => cluster.removeAllCookies())
-    );
+    if (shorthost) {
+      const cookies = await browser.cookies.getAll({ domain: shorthost });
+      for (const cookie of cookies) {
+        console.log("removing cookie", cookie.name, "from", cookie.domain);
+        await browser.cookies.remove({
+          name: cookie.name,
+          url: `https://${cookie.domain}`,
+        });
+      }
+    } else {
+      const clusters = this.getClustersForOrigin(origin);
+
+      await Promise.all(
+        Object.values(clusters)
+          .filter((cluster) => !shorthost || cluster.id === shorthost)
+          .map((cluster) => this.removeCookiesFor(origin, cluster.id))
+      );
+    }
   }
 
   async removeRequestsFor(origin: string) {

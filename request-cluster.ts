@@ -163,15 +163,4 @@ export class RequestCluster extends EventEmitter {
       }
     }
   }
-
-  async removeAllCookies() {
-    const cookies = await browser.cookies.getAll({ domain: this.id });
-    for (const cookie of cookies) {
-      console.log("removing cookie", cookie.name, "from", cookie.domain);
-      await browser.cookies.remove({
-        name: cookie.name,
-        url: `https://${cookie.domain}`,
-      });
-    }
-  }
 }
