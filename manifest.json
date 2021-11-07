@@ -10,6 +10,9 @@
     "default_panel": "sidebar/sidebar.html",
     "default_icon": "sidebar_icon.png"
   },
+  "background": {
+    "scripts": ["lib/background.js"]
+  },
   "icons": {
     "48": "icons/border-48.png"
   },

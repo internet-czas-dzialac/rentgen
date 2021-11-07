@@ -1,5 +1,6 @@
 import { EventEmitter } from "events";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import Memory from "./memory";
 
 export type Unpromisify<T> = T extends Promise<infer R> ? R : T;
 export type Unarray<T> = T extends Array<infer R> ? R : T;
@@ -75,4 +76,8 @@ export function isURL(str: unknown): str is string {
 
 export function hyphenate(str: string): string {
   return str.replace(/[_\[A-Z]/g, `${String.fromCharCode(173)}$&`);
+}
+
+export function getMemory(): Memory {
+  return (browser.extension.getBackgroundPage().window as any).memory as Memory;
 }

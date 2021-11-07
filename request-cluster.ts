@@ -4,7 +4,7 @@ import ExtendedRequest from "./extended-request";
 export type Sources = "cookie" | "pathname" | "queryparams" | "header";
 
 import { TCString, TCModel } from "@iabtcf/core";
-import { isJSONObject, isURL, parseToObject } from "./util";
+import { getMemory, isJSONObject, isURL, parseToObject } from "./util";
 import memory from "./memory";
 
 const id = (function* id() {
@@ -87,7 +87,7 @@ export class StolenDataEntry {
 
   addMark(key: string) {
     this.markedKeys.push(key);
-    memory.emit("change"); // to trigger rerender
+    getMemory().emit("change"); // to trigger rerender
   }
 
   hasMark(key: string) {
@@ -96,7 +96,7 @@ export class StolenDataEntry {
 
   removeMark(key: string) {
     this.markedKeys = this.markedKeys.filter((e) => e != key);
-    memory.emit("change"); // to trigger rerender
+    getMemory().emit("change"); // to trigger rerender
   }
 
   toggleMark(key: string) {

@@ -1,7 +1,7 @@
 import React from "react";
 import memory from "../memory";
 import { MergedStolenDataEntry, Sources } from "../request-cluster";
-import { hyphenate } from "../util";
+import { getMemory, hyphenate } from "../util";
 
 function StolenDataValueTable({
   entry,
@@ -81,7 +81,7 @@ export default function StolenDataCluster({
   minValueLength: number;
   cookiesOnly: boolean;
 }) {
-  const cluster = memory.getClustersForOrigin(origin)[shorthost];
+  const cluster = getMemory().getClustersForOrigin(origin)[shorthost];
   const icons: Record<Sources, string> = {
     cookie: "🍪",
     pathname: "🛣",
@@ -96,7 +96,7 @@ export default function StolenDataCluster({
         <a
           href="#"
           style={{ fontSize: "10px" }}
-          onClick={() => memory.removeCookiesFor(origin, shorthost)}
+          onClick={() => getMemory().removeCookiesFor(origin, shorthost)}
         >
           Wyczyść cookiesy
         </a>

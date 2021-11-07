@@ -1,8 +1,7 @@
 import React from "react";
-import memory from "../memory";
 import { RequestCluster } from "../request-cluster";
 import StolenDataCluster from "./stolen-data-cluster";
-import { getshorthost } from "../util";
+import { getMemory, getshorthost } from "../util";
 
 export function StolenData({
   origin,
@@ -20,7 +19,7 @@ export function StolenData({
   if (!origin) {
     return <div></div>;
   }
-  const clusters = Object.values(memory.getClustersForOrigin(origin)).sort(
+  const clusters = Object.values(getMemory().getClustersForOrigin(origin)).sort(
     RequestCluster.sortCompare
   );
   return (
@@ -32,7 +31,7 @@ export function StolenData({
           <button
             style={{ marginLeft: "1rem" }}
             onClick={() =>
-              memory.removeCookiesFor(
+              getMemory().removeCookiesFor(
                 origin,
                 getshorthost(new URL(origin).host)
               )
@@ -43,11 +42,22 @@ export function StolenData({
           <button
             style={{ marginLeft: "1rem" }}
             onClick={() => {
-              memory.removeRequestsFor(origin);
+              getMemory().removeRequestsFor(origin);
               refresh();
             }}
           >
             Wyczyść pamięć
+          </button>
+          <button
+            onClick={() =>
+              window.open(
+                "/report-window/report-window.html",
+                "new_window",
+                "width=800,height=600"
+              )
+            }
+          >
+            Generuj maila
           </button>
         </h1>
         {clusters

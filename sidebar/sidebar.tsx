@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import memory from "../memory";
 import Options from "../options";
 import { StolenData } from "./stolen-data";
-import { useEmitter } from "../util";
+import { getMemory, useEmitter } from "../util";
 
 async function getCurrentTab() {
   const [tab] = await browser.tabs.query({
@@ -17,7 +16,7 @@ const Sidebar = () => {
   const [origin, setOrigin] = useState<string | null>(null);
   const [minValueLength, setMinValueLength] = useState<number | null>(7);
   const [cookiesOnly, setCookiesOnly] = useState<boolean>(false);
-  const [counter, setCounter] = useEmitter(memory);
+  const [counter, setCounter] = useEmitter(getMemory());
 
   useEffect(() => {
     const listener = async (data) => {

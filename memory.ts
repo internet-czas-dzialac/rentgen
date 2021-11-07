@@ -3,7 +3,7 @@ import { getshorthost } from "./util";
 import { EventEmitter } from "events";
 import { RequestCluster } from "./request-cluster";
 
-class Memory extends EventEmitter {
+export default class Memory extends EventEmitter {
   origin_to_history = {} as Record<string, Record<string, RequestCluster>>;
   async register(request: ExtendedRequest) {
     await request.init();
@@ -64,6 +64,8 @@ class Memory extends EventEmitter {
   }
 }
 
-const memory = new Memory();
+export function init() {
+  const memory = new Memory();
 
-export default memory;
+  (window as any).memory = memory;
+}

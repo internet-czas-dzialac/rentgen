@@ -4,7 +4,7 @@
   "description": "",
   "main": "email-template-harsh.js",
   "scripts": {
-    "build": "npx esbuild  sidebar.tsx --bundle --outfile=./lib/sidebar.js",
+    "build": "npx esbuild  sidebar/sidebar.tsx report-window/report-window.tsx --bundle  background.ts --bundle --outdir=./lib",
     "watch": "npm run build -- --watch"
   },
   "repository": {
