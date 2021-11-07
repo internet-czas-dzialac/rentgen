@@ -1,7 +1,7 @@
 import React from "react";
 import memory from "./memory";
-import { Sources } from "./request-cluster";
-import { hyphenate, isJSONObject, isURL, parseToObject } from "./util";
+import { Sources, StolenDataEntry } from "./request-cluster";
+import { hyphenate } from "./util";
 
 function StolenDataValueTable({
   object,
@@ -18,7 +18,7 @@ function StolenDataValueTable({
             <th>{hyphenate(key)}</th>
             <td>
               <StolenDataValue
-                value={value}
+                value={StolenDataEntry.parseValue(value)}
                 prefixKey={`${prefixKey}.${key}`}
               />
             </td>
@@ -33,33 +33,16 @@ function StolenDataValue({
   value,
   prefixKey = "",
 }: {
-  value: unknown;
+  value: string | Record<string, unknown>;
   prefixKey?: string;
 }) {
   if (!value) {
     return <></>;
   }
-  console.log("parsing value!", value);
-  if (isJSONObject(value)) {
-    const object = parseToObject(value);
-    return <StolenDataValueTable object={object} prefixKey={prefixKey} />;
-  } else if (isURL(value)) {
-    const url = new URL(value);
-    const object = {
-      host: url.host,
-      path: url.pathname,
-      ...Object.fromEntries(
-        (
-          url.searchParams as unknown as {
-            entries: () => Iterable<[string, string]>;
-          }
-        ).entries()
-      ),
-    };
-    return <StolenDataValueTable object={object} prefixKey={prefixKey} />;
-  } else {
-    return <>{value.toString()}</>;
+  if (typeof value === "string") {
+    return <>{value}</>;
   }
+  return <StolenDataValueTable object={value} prefixKey={prefixKey} />;
 }
 
 export default function StolenDataRow({
@@ -108,7 +91,7 @@ export default function StolenDataRow({
                 </th>
                 <td>{entry.getSources().map((source) => icons[source])}</td>
                 <td style={{ wordWrap: "anywhere" as any }}>
-                  <StolenDataValue value={entry.getValues()[0]} />
+                  <StolenDataValue value={entry.getParsedValues()[0]} />
                 </td>
               </tr>
             ))}

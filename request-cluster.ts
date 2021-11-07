@@ -4,6 +4,7 @@ import ExtendedRequest from "./extended-request";
 export type Sources = "cookie" | "pathname" | "queryparams" | "header";
 
 import { TCString, TCModel } from "@iabtcf/core";
+import { isJSONObject, isURL, parseToObject } from "./util";
 
 const id = (function* id() {
   let i = 0;
@@ -49,6 +50,33 @@ export class StolenDataEntry {
   hasValue(value: string) {
     return this.value === value;
   }
+
+  static parseValue(value: unknown): string | Record<string, unknown> {
+    if (isJSONObject(value)) {
+      const object = parseToObject(value);
+      return object;
+    } else if (isURL(value)) {
+      const url = new URL(value);
+      const object = {
+        host: url.host,
+        path: url.pathname,
+        ...Object.fromEntries(
+          (
+            url.searchParams as unknown as {
+              entries: () => Iterable<[string, string]>;
+            }
+          ).entries()
+        ),
+      };
+      return object;
+    } else {
+      return value.toString();
+    }
+  }
+
+  getParsedValue(): string | Record<string, unknown> {
+    return StolenDataEntry.parseValue(this.value);
+  }
 }
 
 export class MergedStolenDataEntry {
@@ -83,6 +111,10 @@ export class MergedStolenDataEntry {
 
   getValues() {
     return Array.from(new Set(this.entries.map((e) => e.value)));
+  }
+
+  getParsedValues() {
+    return Array.from(new Set(this.entries.map((e) => e.getParsedValue())));
   }
 }
 
