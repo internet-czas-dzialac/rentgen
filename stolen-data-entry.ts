@@ -2,6 +2,7 @@ import { TCModel } from "@iabtcf/core";
 import ExtendedRequest from "./extended-request";
 import { getMemory } from "./memory";
 import {
+  getshorthost,
   isJSONObject,
   isURL,
   parseToObject,
@@ -127,11 +128,22 @@ export class StolenDataEntry {
   }
 
   private classify(): keyof typeof Classifications {
-    if (this.value.includes(this.request.originalURL)) {
-      return "history";
+    let result: keyof typeof Classifications;
+    if (
+      [this.value, decodeURIComponent(this.value)].some((haystack) =>
+        [
+          this.request.origin,
+          this.request.originalURL,
+          getshorthost(this.request.origin),
+        ].some((needle) => haystack.includes(needle))
+      )
+    ) {
+      result = "history";
     } else {
-      return "id";
+      result = "id";
     }
+    console.log("classifying", this.value, result, this.request.origin);
+    return result;
   }
 
   isRelatedToID() {
