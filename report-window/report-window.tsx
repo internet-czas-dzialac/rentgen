@@ -26,13 +26,24 @@ function Report() {
         </thead>
         <tbody>
           {marked_entries.map((entry) => (
-            <tr>
+            <tr
+              style={{
+                backgroundColor:
+                  entry.classification == "id" ? "yellow" : "white",
+              }}
+            >
               <td>{entry.request.shorthost}</td>
               <td style={{ overflowWrap: "anywhere" }}>
                 {entry.source}:{entry.name}
                 {entry.markedKeys.join(",")}
               </td>
-              <td style={{ width: "400px", overflowWrap: "anywhere" }}>
+              <td
+                style={{
+                  width: "400px",
+                  overflowWrap: "anywhere",
+                  backgroundColor: entry.isRelatedToID() ? "yellow" : "white",
+                }}
+              >
                 {entry.value}
               </td>
               <td>

@@ -133,6 +133,12 @@ export class StolenDataEntry {
       return "id";
     }
   }
+
+  isRelatedToID() {
+    return this.request.stolenData.some(
+      (entry) => (entry.classification = "id")
+    );
+  }
 }
 
 export class MergedStolenDataEntry {
