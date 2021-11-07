@@ -1,7 +1,8 @@
 import React from "react";
+import { getMemory } from "../memory";
+import { MergedStolenDataEntry, Sources } from "../stolen-data-entry";
 
-import { MergedStolenDataEntry, Sources } from "../request-cluster";
-import { getMemory, hyphenate } from "../util";
+import { hyphenate } from "../util";
 
 function StolenDataValueTable({
   entry,

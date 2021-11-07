@@ -83,10 +83,6 @@ export function hyphenate(str: string): string {
   return str.replace(/[_\[A-Z]/g, `${String.fromCharCode(173)}$&`);
 }
 
-export function getMemory(): Memory {
-  return (browser.extension.getBackgroundPage().window as any).memory as Memory;
-}
-
 export function unique(array: string[]) {
   return Array.from(new Set(array));
 }

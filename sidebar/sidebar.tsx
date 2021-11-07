@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import Options from "../options";
 import { StolenData } from "./stolen-data";
-import { getMemory, useEmitter } from "../util";
+import { useEmitter } from "../util";
+import { getMemory } from "../memory";
 
 async function getCurrentTab() {
   const [tab] = await browser.tabs.query({

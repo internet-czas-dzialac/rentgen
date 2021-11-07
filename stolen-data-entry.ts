@@ -1,6 +1,7 @@
 import { TCModel } from "@iabtcf/core";
 import ExtendedRequest from "./extended-request";
-import { getMemory, isJSONObject, isURL, parseToObject } from "./util";
+import { getMemory } from "./memory";
+import { isJSONObject, isURL, parseToObject } from "./util";
 
 export type Sources = "cookie" | "pathname" | "queryparams" | "header";
 

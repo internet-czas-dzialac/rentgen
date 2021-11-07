@@ -69,3 +69,7 @@ export function init() {
 
   (window as any).memory = memory;
 }
+
+export function getMemory(): Memory {
+  return (browser.extension.getBackgroundPage().window as any).memory as Memory;
+}

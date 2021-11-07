@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { getMemory } from "../util";
+import { getMemory } from "../memory";
 
 function Report() {
   const origin = new URL(document.location.toString()).searchParams.get(
