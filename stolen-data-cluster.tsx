@@ -1,24 +1,24 @@
 import React from "react";
 import memory from "./memory";
-import { Sources, StolenDataEntry } from "./request-cluster";
+import { MergedStolenDataEntry, Sources } from "./request-cluster";
 import { hyphenate } from "./util";
 
 function StolenDataValueTable({
-  object,
+  entry,
   prefixKey = "",
 }: {
-  object: Record<string, unknown>;
+  entry: MergedStolenDataEntry;
   prefixKey: string;
 }) {
   return (
     <table>
       <tbody>
-        {Object.entries(object).map(([key, value]) => (
+        {Object.keys(entry.getParsedValues(prefixKey)[0]).map((key) => (
           <tr key={`${prefixKey}.${key}`}>
             <th>{hyphenate(key)}</th>
             <td>
               <StolenDataValue
-                value={StolenDataEntry.parseValue(value)}
+                entry={entry}
                 prefixKey={`${prefixKey}.${key}`}
               />
             </td>
@@ -30,19 +30,20 @@ function StolenDataValueTable({
 }
 
 function StolenDataValue({
-  value,
+  entry,
   prefixKey = "",
 }: {
-  value: string | Record<string, unknown>;
+  entry: MergedStolenDataEntry;
   prefixKey?: string;
 }) {
+  const value = entry.getParsedValues(prefixKey)[0];
   if (!value) {
     return <></>;
   }
   if (typeof value === "string") {
-    return <>{value}</>;
+    return <>{entry.getParsedValues(prefixKey)[0] as string}</>;
   }
-  return <StolenDataValueTable object={value} prefixKey={prefixKey} />;
+  return <StolenDataValueTable entry={entry} prefixKey={prefixKey} />;
 }
 
 export default function StolenDataCluster({
@@ -91,7 +92,7 @@ export default function StolenDataCluster({
                 </th>
                 <td>{entry.getSources().map((source) => icons[source])}</td>
                 <td style={{ wordWrap: "anywhere" as any }}>
-                  <StolenDataValue value={entry.getParsedValues()[0]} />
+                  <StolenDataValue entry={entry} />
                 </td>
               </tr>
             ))}
