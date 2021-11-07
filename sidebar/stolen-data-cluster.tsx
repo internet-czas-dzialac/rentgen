@@ -75,12 +75,14 @@ export default function StolenDataCluster({
   shorthost,
   minValueLength,
   cookiesOnly,
+  cookiesOrOriginOnly,
 }: {
   origin: string;
   shorthost: string;
   refreshToken: number;
   minValueLength: number;
   cookiesOnly: boolean;
+  cookiesOrOriginOnly: boolean;
 }) {
   const cluster = getMemory().getClustersForOrigin(origin)[shorthost];
   const icons: Record<Sources, string> = {
@@ -110,7 +112,7 @@ export default function StolenDataCluster({
       <table>
         <tbody>
           {cluster
-            .getStolenData({ minValueLength, cookiesOnly })
+            .getStolenData({ minValueLength, cookiesOnly, cookiesOrOriginOnly })
             .map((entry) => (
               <tr
                 key={origin + cluster.id + entry.getUniqueKey()}

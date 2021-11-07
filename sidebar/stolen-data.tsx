@@ -11,12 +11,14 @@ export function StolenData({
   refreshToken,
   refresh,
   cookiesOnly,
+  cookiesOrOriginOnly,
 }: {
   origin: string;
   refreshToken: number;
   refresh: () => void;
   minValueLength: number;
   cookiesOnly: boolean;
+  cookiesOrOriginOnly: boolean;
 }) {
   if (!origin) {
     return <div></div>;
@@ -64,6 +66,12 @@ export function StolenData({
         </h1>
         {clusters
           .filter((cluster) => !cookiesOnly || cluster.hasCookies())
+          .filter(
+            (cluster) =>
+              !cookiesOrOriginOnly ||
+              cluster.hasCookies() ||
+              cluster.exposesOrigin()
+          )
           .map((cluster) => {
             return (
               <StolenDataCluster
@@ -73,6 +81,7 @@ export function StolenData({
                 refreshToken={refreshToken}
                 minValueLength={minValueLength}
                 cookiesOnly={cookiesOnly}
+                cookiesOrOriginOnly={cookiesOrOriginOnly}
               />
             );
           })}

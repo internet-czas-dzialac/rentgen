@@ -17,6 +17,7 @@ const Sidebar = () => {
   const [origin, setOrigin] = useState<string | null>(null);
   const [minValueLength, setMinValueLength] = useState<number | null>(7);
   const [cookiesOnly, setCookiesOnly] = useState<boolean>(false);
+  const [cookiesOrOriginOnly, setCookiesOrOriginOnly] = useState<boolean>(true);
   const [counter, setCounter] = useEmitter(getMemory());
 
   useEffect(() => {
@@ -51,6 +52,8 @@ const Sidebar = () => {
         setMinValueLength={setMinValueLength}
         cookiesOnly={cookiesOnly}
         setCookiesOnly={setCookiesOnly}
+        cookiesOrOriginOnly={cookiesOrOriginOnly}
+        setCookiesOrOriginOnly={setCookiesOrOriginOnly}
       />
       <StolenData
         origin={origin}
@@ -58,6 +61,7 @@ const Sidebar = () => {
         refresh={() => setCounter((c) => c + 1)}
         minValueLength={minValueLength}
         cookiesOnly={cookiesOnly}
+        cookiesOrOriginOnly={cookiesOrOriginOnly}
       />
     </>
   );
