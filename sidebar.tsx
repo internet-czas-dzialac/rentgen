@@ -24,11 +24,6 @@ const Sidebar = () => {
       console.log("tab change!");
       const tab = await getCurrentTab();
       const url = new URL(tab.url);
-      console.log(
-        "NEW ORIGIN",
-        url.origin,
-        url.origin.startsWith("moz-extension")
-      );
       if (url.origin.startsWith("moz-extension")) {
         return;
       }

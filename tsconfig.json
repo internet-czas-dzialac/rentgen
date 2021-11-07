@@ -2,7 +2,7 @@
   "compilerOptions": {
     "jsx": "react",
     "esModuleInterop": true,
-    "lib": ["es2017", "dom"],
+    "lib": ["es2017", "dom", "es2019"],
     "typeRoots": ["node_modules/@types", "node_modules/web-ext-types"],
     "outDir": "lib"
   }

@@ -46,3 +46,33 @@ export async function getTabByID(id: number) {
   const tabs = await browser.tabs.query({ currentWindow: true });
   return tabs.find((tab) => tab.id == id);
 }
+
+export function parseToObject(str: unknown): Record<string, unknown> {
+  if (typeof str === "string") {
+    return JSON.parse(str);
+  } else if (typeof str == "object") {
+    return str as Record<string, unknown>;
+  }
+}
+
+export function isJSONObject(
+  str: unknown
+): str is Record<string, unknown> | string | number {
+  try {
+    return JSON.stringify(parseToObject(str))[0] == "{";
+  } catch (e) {
+    return false;
+  }
+}
+
+export function isURL(str: unknown): str is string {
+  try {
+    return !!(typeof str === "string" && new URL(str));
+  } catch (e) {
+    return false;
+  }
+}
+
+export function hyphenate(str: string): string {
+  return str.replace(/[_\[A-Z]/g, `${String.fromCharCode(173)}$&`);
+}
