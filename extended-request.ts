@@ -164,4 +164,8 @@ export default class ExtendedRequest {
   getMarkedEntries() {
     return this.stolenData.filter((data) => data.hasMark());
   }
+
+  getHost() {
+    return new URL(this.url).host;
+  }
 }

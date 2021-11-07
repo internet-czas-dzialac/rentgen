@@ -1,5 +1,5 @@
 import React from "react";
-import memory from "../memory";
+
 import { MergedStolenDataEntry, Sources } from "../request-cluster";
 import { getMemory, hyphenate } from "../util";
 
@@ -101,6 +101,11 @@ export default function StolenDataCluster({
           Wyczyść cookiesy
         </a>
       </h2>
+      <div>
+        {cluster.getFullHosts().map((host) => (
+          <a href={`https://${host}`}>{host}, </a>
+        ))}
+      </div>
       <table>
         <tbody>
           {cluster

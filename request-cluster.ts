@@ -4,7 +4,14 @@ import ExtendedRequest from "./extended-request";
 export type Sources = "cookie" | "pathname" | "queryparams" | "header";
 
 import { TCString, TCModel } from "@iabtcf/core";
-import { getMemory, isJSONObject, isURL, parseToObject } from "./util";
+import {
+  allSubhosts,
+  getMemory,
+  isJSONObject,
+  isURL,
+  parseToObject,
+  unique,
+} from "./util";
 
 const id = (function* id() {
   let i = 0;
@@ -45,7 +52,7 @@ export class StolenDataEntry {
       priority += 100;
     }
     if (this.source === "cookie") {
-      priority += 100;
+      priority += 200;
     }
     return priority;
   }
@@ -68,11 +75,9 @@ export class StolenDataEntry {
         host: url.host,
         path: url.pathname,
         ...Object.fromEntries(
-          (
-            url.searchParams as unknown as {
-              entries: () => Iterable<[string, string]>;
-            }
-          ).entries()
+          ((url.searchParams as unknown) as {
+            entries: () => Iterable<[string, string]>;
+          }).entries()
         ),
       };
       return object;
@@ -256,5 +261,13 @@ export class RequestCluster extends EventEmitter {
 
   getMarkedRequests() {
     return this.requests.filter((request) => request.hasMark());
+  }
+
+  getFullHosts() {
+    return unique(
+      this.requests
+        .map((request) => allSubhosts(request.getHost()))
+        .reduce((a, b) => a.concat(b), [])
+    );
   }
 }

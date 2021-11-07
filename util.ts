@@ -86,3 +86,16 @@ export function hyphenate(str: string): string {
 export function getMemory(): Memory {
   return (browser.extension.getBackgroundPage().window as any).memory as Memory;
 }
+
+export function unique(array: string[]) {
+  return Array.from(new Set(array));
+}
+
+export function allSubhosts(host: string) {
+  const parts = host.split(".");
+  const result = [];
+  for (let i = 0; i < parts.length - 2; i++) {
+    result.push(parts.slice(i).join("."));
+  }
+  return result;
+}
