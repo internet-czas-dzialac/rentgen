@@ -7,19 +7,19 @@ export default class Memory extends EventEmitter {
   origin_to_history = {} as Record<string, Record<string, RequestCluster>>;
   async register(request: ExtendedRequest) {
     await request.init();
-    console.log("registering request for", request.origin);
+    console.log("registering request for", request.originalURL);
     if (!request.isThirdParty()) {
       return;
     }
-    if (!this.origin_to_history[request.origin]) {
-      this.origin_to_history[request.origin] = {};
+    if (!this.origin_to_history[request.originalURL]) {
+      this.origin_to_history[request.originalURL] = {};
     }
     const shorthost = getshorthost(new URL(request.url).host);
-    if (!this.origin_to_history[request.origin][shorthost]) {
+    if (!this.origin_to_history[request.originalURL][shorthost]) {
       const cluster = new RequestCluster(shorthost);
-      this.origin_to_history[request.origin][shorthost] = cluster;
+      this.origin_to_history[request.originalURL][shorthost] = cluster;
     }
-    this.origin_to_history[request.origin][shorthost].add(request);
+    this.origin_to_history[request.originalURL][shorthost].add(request);
     this.emit("change");
   }
 

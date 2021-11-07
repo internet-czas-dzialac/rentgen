@@ -49,7 +49,7 @@ export class StolenDataEntry {
   getPriority() {
     let priority = 0;
     priority += Math.min(this.value.length, 50);
-    const url = new URL(this.request.getOrigin());
+    const url = new URL(this.request.originalURL);
     if (this.value.includes(url.host)) {
       priority += 100;
     }
@@ -127,7 +127,7 @@ export class StolenDataEntry {
   }
 
   private classify(): keyof typeof Classifications {
-    if (this.value.includes(this.request.origin)) {
+    if (this.value.includes(this.request.originalURL)) {
       return "history";
     } else {
       return "id";
