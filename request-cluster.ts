@@ -26,6 +26,7 @@ export class RequestCluster extends EventEmitter {
   getStolenData(filter: {
     minValueLength: number;
     cookiesOnly: boolean;
+    cookiesOrOriginOnly: boolean;
   }): MergedStolenDataEntry[] {
     return this.requests
       .map((request) => request.stolenData)
@@ -34,6 +35,12 @@ export class RequestCluster extends EventEmitter {
         return entry.value.length >= filter.minValueLength;
       })
       .filter((entry) => !filter.cookiesOnly || entry.source === "cookie")
+      .filter(
+        (entry) =>
+          !filter.cookiesOrOriginOnly ||
+          entry.source === "cookie" ||
+          entry.classification === "history"
+      )
       .sort((entryA, entryB) => (entryA.name > entryB.name ? -1 : 1))
       .filter((element, index, array) => {
         // remove duplicates by name/value
@@ -102,5 +109,9 @@ export class RequestCluster extends EventEmitter {
     return this.requests
       .map((request) => request.getMarkedEntries())
       .reduce(reduceConcat, []);
+  }
+
+  exposesOrigin() {
+    return this.requests.some((request) => request.exposesOrigin());
   }
 }

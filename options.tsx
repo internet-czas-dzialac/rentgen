@@ -5,6 +5,8 @@ export default function Options({
   setMinValueLength,
   cookiesOnly,
   setCookiesOnly,
+  cookiesOrOriginOnly,
+  setCookiesOrOriginOnly,
 }) {
   return (
     <fieldset>
@@ -26,6 +28,16 @@ export default function Options({
         onChange={(e) => setCookiesOnly(e.target.checked)}
       />
       <label htmlFor="cookiesOnly">Pokazuj tylko dane z cookiesów</label>
+      <br />
+      <input
+        type="checkbox"
+        id="cookiesOrOriginOnly"
+        value={cookiesOrOriginOnly}
+        onChange={(e) => setCookiesOrOriginOnly(e.target.checked)}
+      />
+      <label htmlFor="cookiesOrOriginOnly">
+        Pokazuj tylko dane z cookiesów lub z częścią historii przeglądania
+      </label>
     </fieldset>
   );
 }
