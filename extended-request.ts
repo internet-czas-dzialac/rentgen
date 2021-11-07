@@ -17,6 +17,7 @@ export default class ExtendedRequest {
   public shorthost: string;
   public requestHeaders: Request["requestHeaders"];
   public originalURL: string;
+  public origin: string;
   public initialized = false;
   public stolenData: StolenDataEntry[];
 
@@ -34,19 +35,13 @@ export default class ExtendedRequest {
     } else {
       url = (this.data as any).frameAncestors[0].url;
     }
-    this.originalURL = new URL(url).origin;
-  }
-
-  getOriginalURL(): string {
-    if (!this.initialized) {
-      throw new Error("initialize first!!");
-    }
-    return this.originalURL;
+    this.originalURL = url;
+    this.origin = new URL(url).origin;
   }
 
   isThirdParty() {
     const request_url = new URL(this.data.url);
-    const origin_url = new URL(this.getOriginalURL());
+    const origin_url = new URL(this.originalURL);
     if (request_url.host.includes(origin_url.host)) {
       return false;
     }
@@ -65,7 +60,7 @@ export default class ExtendedRequest {
   }
 
   exposesOrigin() {
-    const url = new URL(this.getOriginalURL());
+    const url = new URL(this.origin);
     const host = url.host;
     const path = url.pathname;
     return (

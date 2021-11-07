@@ -2,7 +2,7 @@ import { EventEmitter } from "events";
 import ExtendedRequest from "./extended-request";
 import { MergedStolenDataEntry, StolenDataEntry } from "./stolen-data-entry";
 
-import { allSubhosts, unique } from "./util";
+import { allSubhosts, reduceConcat, unique } from "./util";
 
 export class RequestCluster extends EventEmitter {
   public requests: ExtendedRequest[] = [];
@@ -92,5 +92,15 @@ export class RequestCluster extends EventEmitter {
         .map((request) => allSubhosts(request.getHost()))
         .reduce((a, b) => a.concat(b), [])
     );
+  }
+
+  hasMarks() {
+    return this.requests.some((request) => request.hasMark());
+  }
+
+  getMarkedEntries() {
+    return this.requests
+      .map((request) => request.getMarkedEntries())
+      .reduce(reduceConcat, []);
   }
 }

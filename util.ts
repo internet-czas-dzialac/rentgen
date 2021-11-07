@@ -99,3 +99,10 @@ export function allSubhosts(host: string) {
 export function reduceConcat<T>(a: T[], b: T[]): T[] {
   return a.concat(b);
 }
+
+export function getDate() {
+  const d = new Date();
+  return `${d.getFullYear()}-${(d.getMonth() + 1)
+    .toString()
+    .padStart(2, "0")}-${d.getDate().toString().padStart(2, "0")}`;
+}
