@@ -2,12 +2,19 @@ import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import { getMemory } from "../memory";
 import { RequestCluster } from "../request-cluster";
-import { Classifications } from "../stolen-data-entry";
+import { Classifications, Sources } from "../stolen-data-entry";
 import { getDate } from "../util";
 
 const emailClassifications: Record<keyof typeof Classifications, string> = {
   id: "sztucznie nadane mi ID",
   history: "część mojej historii przeglądania",
+};
+
+const emailSources: Record<Sources, string> = {
+  header: "w nagłówku HTTP",
+  cookie: "z pliku Cookie",
+  pathname: "jako części adresu URL",
+  queryparams: "jako część adresu URL (query-params)",
 };
 
 type PopupState = "not_clicked" | "clicked_but_invalid";
@@ -31,7 +38,8 @@ function DomainSummary({ cluster }: { cluster: RequestCluster }) {
           }, [])
           .map((entry) => (
             <li>
-              {emailClassifications[entry.classification]} w {entry.source}
+              {emailClassifications[entry.classification]}{" "}
+              {emailSources[entry.source]}
               &nbsp;(<code>{entry.name.trim()}</code>)
             </li>
           ))}
