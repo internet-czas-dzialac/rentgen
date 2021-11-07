@@ -37,7 +37,7 @@ export class StolenDataEntry {
 
   getPriority() {
     let priority = 0;
-    priority += this.value.length;
+    priority += Math.min(this.value.length, 100);
     const url = new URL(this.request.getOrigin());
     if (this.value.includes(url.host) || this.value.includes(url.pathname)) {
       priority += 100;
