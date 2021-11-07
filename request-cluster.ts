@@ -75,8 +75,15 @@ export class StolenDataEntry {
     }
   }
 
-  getParsedValue(): string | Record<string, unknown> {
-    return StolenDataEntry.parseValue(this.value);
+  getParsedValue(key_path: string): string | Record<string, unknown> {
+    let object = StolenDataEntry.parseValue(this.value);
+    console.log("key_path", key_path);
+    for (const key of key_path.split(".")) {
+      if (key === "") continue;
+      console.log(key, object[key]);
+      object = StolenDataEntry.parseValue(object[key]);
+    }
+    return object;
   }
 
   addMarkedValue(key: string) {
@@ -118,8 +125,10 @@ export class MergedStolenDataEntry {
     return Array.from(new Set(this.entries.map((e) => e.value)));
   }
 
-  getParsedValues() {
-    return Array.from(new Set(this.entries.map((e) => e.getParsedValue())));
+  getParsedValues(key_path: string) {
+    return Array.from(
+      new Set(this.entries.map((e) => e.getParsedValue(key_path)))
+    );
   }
 
   addMarkedValue(key: string) {
