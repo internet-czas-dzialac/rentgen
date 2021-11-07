@@ -21,20 +21,22 @@ function Report() {
             <th>Adres docelowy</th>
             <th>Źródło danych</th>
             <th>Treść danych</th>
-            <th> Klasyfikacja</th>
+            <th>Klasyfikacja</th>
           </tr>
         </thead>
         <tbody>
           {marked_entries.map((entry) => (
             <tr>
               <td>{entry.request.shorthost}</td>
-              <td>
+              <td style={{ overflowWrap: "anywhere" }}>
                 {entry.source}:{entry.name}
                 {entry.markedKeys.join(",")}
               </td>
-              <td>{entry.value}</td>
+              <td style={{ width: "400px", overflowWrap: "anywhere" }}>
+                {entry.value}
+              </td>
               <td>
-                <select>
+                <select value={entry.classification}>
                   {[
                     ["history", "Historia przeglądania"],
                     ["id", "Sztucznie nadane id"],

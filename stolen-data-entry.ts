@@ -1,9 +1,20 @@
 import { TCModel } from "@iabtcf/core";
 import ExtendedRequest from "./extended-request";
 import { getMemory } from "./memory";
-import { isJSONObject, isURL, parseToObject } from "./util";
+import {
+  isJSONObject,
+  isURL,
+  parseToObject,
+  reduceConcat,
+  unique,
+} from "./util";
 
 export type Sources = "cookie" | "pathname" | "queryparams" | "header";
+
+export const Classifications = <const>{
+  id: "Sztucznie nadane ID",
+  history: "Część historii przeglądania",
+};
 
 const id = (function* id() {
   let i = 0;
@@ -18,6 +29,7 @@ export class StolenDataEntry {
   public iab: TCModel | null = null;
   public id: number;
   public markedKeys: string[] = [];
+  public classification: keyof typeof Classifications;
 
   constructor(
     public request: ExtendedRequest,
@@ -31,6 +43,7 @@ export class StolenDataEntry {
     //   this.isIAB = true;
     // } catch (e) {}
     this.id = id.next().value as number;
+    this.classification = this.classify();
   }
 
   getPriority() {
@@ -112,10 +125,26 @@ export class StolenDataEntry {
       this.addMark(key);
     }
   }
+
+  private classify(): keyof typeof Classifications {
+    if (this.value.includes(this.request.origin)) {
+      return "history";
+    } else {
+      return "id";
+    }
+  }
 }
 
 export class MergedStolenDataEntry {
-  constructor(public entries: StolenDataEntry[]) {}
+  constructor(public entries: StolenDataEntry[]) {
+    const all_marks = unique(
+      entries.map((entry) => entry.markedKeys).reduce(reduceConcat, [])
+    );
+    for (const entry of entries) {
+      entry.markedKeys = all_marks;
+    }
+    // getMemory().emit("change"); // to trigger render
+  }
 
   hasValue(value: string) {
     return this.entries.some((entry) => entry.value === value);
