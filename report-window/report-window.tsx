@@ -41,7 +41,9 @@ function Report() {
                 style={{
                   width: "400px",
                   overflowWrap: "anywhere",
-                  backgroundColor: entry.isRelatedToID() ? "yellow" : "white",
+                  backgroundColor: entry.isRelatedToID()
+                    ? "#ffff0054"
+                    : "white",
                 }}
               >
                 {entry.value}
