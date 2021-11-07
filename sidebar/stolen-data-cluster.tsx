@@ -1,7 +1,7 @@
 import React from "react";
-import memory from "./memory";
-import { MergedStolenDataEntry, Sources } from "./request-cluster";
-import { hyphenate } from "./util";
+import memory from "../memory";
+import { MergedStolenDataEntry, Sources } from "../request-cluster";
+import { hyphenate } from "../util";
 
 function StolenDataValueTable({
   entry,
@@ -15,7 +15,14 @@ function StolenDataValueTable({
       <tbody>
         {Object.keys(entry.getParsedValues(prefixKey)[0]).map((key) => (
           <tr key={`${prefixKey}.${key}`}>
-            <th>{hyphenate(key)}</th>
+            <th
+              onClick={(e) => {
+                entry.toggleMark(prefixKey);
+                e.stopPropagation();
+              }}
+            >
+              {hyphenate(key)}
+            </th>
             <td>
               <StolenDataValue
                 entry={entry}
@@ -37,13 +44,29 @@ function StolenDataValue({
   prefixKey?: string;
 }) {
   const value = entry.getParsedValues(prefixKey)[0];
+  let body = null;
   if (!value) {
-    return <></>;
+    body = <></>;
+  } else if (typeof value === "string") {
+    body = (
+      <div style={{ border: entry.hasMark(prefixKey) ? "2px solid red" : "" }}>
+        {entry.getParsedValues(prefixKey)[0] as string}
+      </div>
+    );
+  } else {
+    body = <StolenDataValueTable entry={entry} prefixKey={prefixKey} />;
   }
-  if (typeof value === "string") {
-    return <>{entry.getParsedValues(prefixKey)[0] as string}</>;
-  }
-  return <StolenDataValueTable entry={entry} prefixKey={prefixKey} />;
+  return (
+    <div
+      onClick={(e) => {
+        entry.toggleMark(prefixKey);
+        e.stopPropagation();
+      }}
+      data-marks={entry.getMarkedValues().join(", ")}
+    >
+      {body}
+    </div>
+  );
 }
 
 export default function StolenDataCluster({
@@ -68,8 +91,8 @@ export default function StolenDataCluster({
   return (
     <div>
       <h2>
-        {cluster.id} {cluster.hasCookies() ? "🍪" : ""} x
-        {cluster.requests.length}{" "}
+        <a href={"https://" + cluster.id}>{cluster.id}</a>{" "}
+        {cluster.hasCookies() ? "🍪" : ""} x{cluster.requests.length}{" "}
         <a
           href="#"
           style={{ fontSize: "10px" }}

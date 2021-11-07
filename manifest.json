@@ -7,7 +7,7 @@
 
   "sidebar_action": {
     "default_title": "ICD Skaner",
-    "default_panel": "sidebar.html",
+    "default_panel": "sidebar/sidebar.html",
     "default_icon": "sidebar_icon.png"
   },
   "icons": {

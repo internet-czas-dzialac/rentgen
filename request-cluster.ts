@@ -5,6 +5,7 @@ export type Sources = "cookie" | "pathname" | "queryparams" | "header";
 
 import { TCString, TCModel } from "@iabtcf/core";
 import { isJSONObject, isURL, parseToObject } from "./util";
+import memory from "./memory";
 
 const id = (function* id() {
   let i = 0;
@@ -77,17 +78,33 @@ export class StolenDataEntry {
 
   getParsedValue(key_path: string): string | Record<string, unknown> {
     let object = StolenDataEntry.parseValue(this.value);
-    console.log("key_path", key_path);
     for (const key of key_path.split(".")) {
       if (key === "") continue;
-      console.log(key, object[key]);
       object = StolenDataEntry.parseValue(object[key]);
     }
     return object;
   }
 
-  addMarkedValue(key: string) {
+  addMark(key: string) {
     this.markedKeys.push(key);
+    memory.emit("change"); // to trigger rerender
+  }
+
+  hasMark(key: string) {
+    return this.markedKeys.some((k) => k == key);
+  }
+
+  removeMark(key: string) {
+    this.markedKeys = this.markedKeys.filter((e) => e != key);
+    memory.emit("change"); // to trigger rerender
+  }
+
+  toggleMark(key: string) {
+    if (this.hasMark(key)) {
+      this.removeMark(key);
+    } else {
+      this.addMark(key);
+    }
   }
 }
 
@@ -131,8 +148,22 @@ export class MergedStolenDataEntry {
     );
   }
 
-  addMarkedValue(key: string) {
-    this.entries.forEach((entry) => entry.addMarkedValue(key));
+  addMark(key: string) {
+    this.entries.forEach((entry) => entry.addMark(key));
+  }
+
+  getMarkedValues() {
+    return this.entries
+      .map((entry) => entry.markedKeys)
+      .reduce((a, b) => a.concat(b), []);
+  }
+
+  hasMark(key: string): boolean {
+    return this.entries.some((entry) => entry.hasMark(key));
+  }
+
+  toggleMark(key: string): void {
+    this.entries.forEach((entry) => entry.toggleMark(key));
   }
 }
 

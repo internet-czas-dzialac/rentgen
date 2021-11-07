@@ -1,8 +1,8 @@
 import React from "react";
-import memory from "./memory";
-import { RequestCluster } from "./request-cluster";
+import memory from "../memory";
+import { RequestCluster } from "../request-cluster";
 import StolenDataCluster from "./stolen-data-cluster";
-import { getshorthost } from "./util";
+import { getshorthost } from "../util";
 
 export function StolenData({
   origin,
