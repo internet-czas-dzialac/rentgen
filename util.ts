@@ -11,7 +11,12 @@ export type Request = Parameters<
 >[0];
 
 export function getshorthost(host: string) {
-  return host.split(".").slice(-2).join(".");
+  return host
+    .replace(/^.*:\/\//, "")
+    .replace(/\/.*$/, "")
+    .split(".")
+    .slice(-2)
+    .join(".");
 }
 
 export function useEmitter(

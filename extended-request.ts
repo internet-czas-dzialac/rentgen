@@ -14,6 +14,7 @@ const whitelisted_cookies = [
 export default class ExtendedRequest {
   public tabId: number;
   public url: string;
+  public shorthost: string;
   public requestHeaders: Request["requestHeaders"];
   public origin: string;
   public initialized = false;
@@ -153,5 +154,14 @@ export default class ExtendedRequest {
     this.tabId = data.tabId;
     this.url = data.url;
     this.requestHeaders = data.requestHeaders;
+    this.shorthost = getshorthost(data.url);
+  }
+
+  hasMark() {
+    return this.stolenData.some((data) => data.hasMark());
+  }
+
+  getMarkedEntries() {
+    return this.stolenData.filter((data) => data.hasMark());
   }
 }

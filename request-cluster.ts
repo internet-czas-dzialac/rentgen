@@ -5,7 +5,6 @@ export type Sources = "cookie" | "pathname" | "queryparams" | "header";
 
 import { TCString, TCModel } from "@iabtcf/core";
 import { getMemory, isJSONObject, isURL, parseToObject } from "./util";
-import memory from "./memory";
 
 const id = (function* id() {
   let i = 0;
@@ -37,9 +36,15 @@ export class StolenDataEntry {
 
   getPriority() {
     let priority = 0;
-    priority += Math.min(this.value.length, 100);
+    priority += Math.min(this.value.length, 50);
     const url = new URL(this.request.getOrigin());
-    if (this.value.includes(url.host) || this.value.includes(url.pathname)) {
+    if (this.value.includes(url.host)) {
+      priority += 100;
+    }
+    if (this.value.includes(url.pathname)) {
+      priority += 100;
+    }
+    if (this.source === "cookie") {
       priority += 100;
     }
     return priority;
@@ -90,8 +95,12 @@ export class StolenDataEntry {
     getMemory().emit("change"); // to trigger rerender
   }
 
-  hasMark(key: string) {
-    return this.markedKeys.some((k) => k == key);
+  hasMark(key?: string) {
+    if (key) {
+      return this.markedKeys.some((k) => k == key);
+    } else {
+      return this.markedKeys.length > 0;
+    }
   }
 
   removeMark(key: string) {
@@ -243,5 +252,9 @@ export class RequestCluster extends EventEmitter {
         return 1;
       }
     }
+  }
+
+  getMarkedRequests() {
+    return this.requests.filter((request) => request.hasMark());
   }
 }

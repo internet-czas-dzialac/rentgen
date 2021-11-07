@@ -51,7 +51,7 @@ export function StolenData({
           <button
             onClick={() =>
               window.open(
-                "/report-window/report-window.html",
+                `/report-window/report-window.html?origin=${origin}`,
                 "new_window",
                 "width=800,height=600"
               )
