@@ -172,15 +172,15 @@ export class MergedStolenDataEntry {
   }
 
   getNames(): string[] {
-    return Array.from(new Set(this.entries.map((e) => e.name)));
+    return unique(this.entries.map((e) => e.name));
   }
 
   getSources(): string[] {
-    return Array.from(new Set(this.entries.map((e) => e.source)));
+    return unique(this.entries.map((e) => e.source));
   }
 
   getValues() {
-    return Array.from(new Set(this.entries.map((e) => e.value)));
+    return unique(this.entries.map((e) => e.value));
   }
 
   getParsedValues(key_path: string) {
