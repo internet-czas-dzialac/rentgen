@@ -1,5 +1,5 @@
 import { TCModel } from "@iabtcf/core";
-import ExtendedRequest from "./extended-request";
+import ExtendedRequest, { HAREntry } from "./extended-request";
 import { getMemory } from "./memory";
 import {
   getshorthost,
@@ -142,7 +142,6 @@ export class StolenDataEntry {
     } else {
       result = "id";
     }
-    console.log("classifying", this.value, result, this.request.origin);
     return result;
   }
 
@@ -150,6 +149,10 @@ export class StolenDataEntry {
     return this.request.stolenData.some(
       (entry) => (entry.classification = "id")
     );
+  }
+
+  matchesHAREntry(har: HAREntry): boolean {
+    return this.request.matchesHAREntry(har);
   }
 }
 

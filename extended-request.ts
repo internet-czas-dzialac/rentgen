@@ -1,6 +1,33 @@
 import { StolenDataEntry } from "./stolen-data-entry";
 import { getshorthost, parseCookie, Request } from "./util";
 
+export type HAREntry = {
+  pageref: string;
+  startedDateTime: string;
+  request: {
+    bodySize: number;
+    cookies: {}[];
+    headers: {}[];
+    headersSize: number;
+    httpVersion: string;
+    method: string;
+    postData: {
+      mimeType: string;
+      params: { name: string; value: string }[];
+      text: string;
+    };
+    queryString: { name: string; value: string }[];
+    url: string;
+  };
+  response: {}; // not relevant
+  cache: {};
+  timings: {};
+  time: number;
+  _securityState: string;
+  serverIPAddress: string;
+  connection: string;
+};
+
 const whitelisted_cookies = [
   /^Accept.*$/,
   /^Host$/,
@@ -162,5 +189,11 @@ export default class ExtendedRequest {
 
   getHost() {
     return new URL(this.url).host;
+  }
+
+  matchesHAREntry(har: HAREntry): boolean {
+    const rq = this.data;
+    const hrq = har.request;
+    return rq.url == hrq.url;
   }
 }
