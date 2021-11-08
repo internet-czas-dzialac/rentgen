@@ -60,7 +60,7 @@ export default class ExtendedRequest {
       const tab = await browser.tabs.get(this.data.tabId);
       url = tab.url;
     } else {
-      url = (this.data as any).frameAncestors[0].url;
+      url = (this.data as any).frameAncestors?.[0].url || "";
     }
     this.originalURL = url;
     this.origin = new URL(url).origin;
