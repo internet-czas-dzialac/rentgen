@@ -59,9 +59,17 @@ export default class ExtendedRequest {
     if (this.data.tabId && this.data.tabId >= 0) {
       const tab = await browser.tabs.get(this.data.tabId);
       url = tab.url;
+    } else if ((this.data as any)?.frameAncestors) {
+      url = (this.data as any).frameAncestors[0].url || "";
     } else {
-      url = (this.data as any).frameAncestors?.[0].url || "";
+      const headers = Object.fromEntries(
+        this.data.requestHeaders.map(({ name, value }) => [name, value])
+      );
+      if (headers.Referer) {
+        url = headers.Referer;
+      }
     }
+
     this.originalURL = url;
     this.origin = new URL(url).origin;
   }
