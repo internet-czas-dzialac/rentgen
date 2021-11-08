@@ -40,7 +40,7 @@ export default function EmailTemplate({
       </ul>
       {popupState === "not_clicked" ? (
         <p>
-          Dane te zostały wysłane przez Państwa stronę zanim zdążyłem w ogóle
+          Dane te zostały wysłane przez Państwa stronę, zanim zdążyłem w ogóle
           przeczytać treść wyskakującego okienka ze zgodami.
         </p>
       ) : null}
