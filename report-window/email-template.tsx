@@ -45,6 +45,10 @@ export default function EmailTemplate({
         </p>
       ) : null}
       <p>
+        Udokumentowałem to na zrzutach ekranu z mojej przeglądarki internetowej,
+        które to zrzuty przesyłam w załączeniu.
+      </p>
+      <p>
         Nie widzę zatem przesłanki legalizującej takie przetwarzanie moich
         danych osobowych (na pewno nie jest to przetwarzanie konieczne do
         wyświetlenia strony z technicznego punktu widzenia). Jeżeli takie
