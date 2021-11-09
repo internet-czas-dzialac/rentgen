@@ -117,7 +117,7 @@ export default class ExtendedRequest {
 
   getReferer() {
     return (
-      this.data.requestHeaders.filter((h) => h.name === "Referer")?.[0].value ||
+      this.data.requestHeaders.filter((h) => h.name === "Referer")[0]?.value ||
       "missing-referrer"
     );
   }
@@ -126,10 +126,14 @@ export default class ExtendedRequest {
     const url = new URL(this.origin);
     const host = url.host;
     const path = url.pathname;
+    const shorthost = getshorthost(host);
     return (
       this.getReferer().includes(host) ||
       this.stolenData.filter(
-        (entry) => entry.value.includes(host) || entry.value.includes(path)
+        (entry) =>
+          entry.value.includes(host) ||
+          entry.value.includes(path) ||
+          entry.value.includes(shorthost)
       ).length > 0
     );
   }
