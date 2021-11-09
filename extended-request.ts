@@ -1,25 +1,42 @@
 import { StolenDataEntry } from "./stolen-data-entry";
 import { getshorthost, parseCookie, Request } from "./util";
 
+type NameValue = { name: string; value: string };
+
 export type HAREntry = {
   pageref: string;
   startedDateTime: string;
   request: {
     bodySize: number;
-    cookies: {}[];
-    headers: {}[];
+    cookies: NameValue[];
+    headers: NameValue[];
     headersSize: number;
     httpVersion: string;
     method: string;
-    postData: {
+    postData?: {
       mimeType: string;
-      params: { name: string; value: string }[];
+      params: NameValue[];
       text: string;
     };
-    queryString: { name: string; value: string }[];
+    queryString: NameValue[];
     url: string;
   };
-  response: {}; // not relevant
+  response: {
+    status: number;
+    statusText: string;
+    httpVersion: string;
+    headers: NameValue[];
+    cookies: NameValue[];
+    content: {
+      mimeType: string;
+      size: number;
+      encoding: "base64";
+      text: string;
+    };
+    redirectURL: "";
+    headersSize: number;
+    bodySize: number;
+  }; // not relevant
   cache: {};
   timings: {};
   time: number;
@@ -48,6 +65,13 @@ export default class ExtendedRequest {
   public initialized = false;
   public stolenData: StolenDataEntry[];
 
+  constructor(public data: Request) {
+    this.tabId = data.tabId;
+    this.url = data.url;
+    this.requestHeaders = data.requestHeaders;
+    this.shorthost = getshorthost(data.url);
+  }
+
   async init() {
     await this.cacheOrigin();
     this.initialized = true;
@@ -67,6 +91,8 @@ export default class ExtendedRequest {
       );
       if (headers.Referer) {
         url = headers.Referer;
+      } else {
+        url = this.data.url;
       }
     }
 
@@ -90,8 +116,10 @@ export default class ExtendedRequest {
   }
 
   getReferer() {
-    return this.data.requestHeaders.filter((h) => h.name === "Referer")[0]
-      .value;
+    return (
+      this.data.requestHeaders.filter((h) => h.name === "Referer")?.[0].value ||
+      "missing-referrer"
+    );
   }
 
   exposesOrigin() {
@@ -180,13 +208,6 @@ export default class ExtendedRequest {
       );
   }
 
-  constructor(public data: Request) {
-    this.tabId = data.tabId;
-    this.url = data.url;
-    this.requestHeaders = data.requestHeaders;
-    this.shorthost = getshorthost(data.url);
-  }
-
   hasMark() {
     return this.stolenData.some((data) => data.hasMark());
   }
@@ -203,5 +224,58 @@ export default class ExtendedRequest {
     const rq = this.data;
     const hrq = har.request;
     return rq.url == hrq.url;
+  }
+
+  toHAR(): HAREntry {
+    return {
+      pageref: "page_1",
+      startedDateTime: `${new Date().toJSON().replace("Z", "+01:00")}`,
+      request: {
+        bodySize: 0,
+        method: this.data.method,
+        url: this.data.url,
+        headersSize: 100,
+        httpVersion: "HTTP/2",
+        headers: this.data.requestHeaders as NameValue[],
+        cookies: this.getCookieData().map((cookie) => ({
+          name: cookie.name,
+          value: cookie.value,
+        })),
+        queryString: this.getQueryParams().map((param) => ({
+          name: param.name,
+          value: param.value,
+        })),
+      },
+      response: {
+        status: 200,
+        statusText: "OK",
+        httpVersion: "HTTP/2",
+        headers: [],
+        cookies: [],
+        content: {
+          mimeType: "text/plain",
+          size: 15,
+          encoding: "base64",
+          text: "ZG9lc24ndCBtYXR0ZXIK",
+        },
+        redirectURL: "",
+        headersSize: 15,
+        bodySize: 15,
+      },
+      cache: {},
+      timings: {
+        blocked: -1,
+        dns: 0,
+        connect: 0,
+        ssl: 0,
+        send: 0,
+        wait: 79,
+        receive: 0,
+      },
+      time: 79,
+      _securityState: "secure",
+      serverIPAddress: "31.13.92.36",
+      connection: "443",
+    };
   }
 }

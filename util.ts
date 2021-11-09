@@ -6,9 +6,31 @@ export type Unpromisify<T> = T extends Promise<infer R> ? R : T;
 export type Unarray<T> = T extends Array<infer R> ? R : T;
 
 export type Tab = Unarray<Unpromisify<ReturnType<typeof browser.tabs.query>>>;
-export type Request = Parameters<
-  Parameters<typeof browser.webRequest.onBeforeSendHeaders.addListener>[0]
->[0];
+export type Request = {
+  cookieStoreId?: string;
+  documentUrl?: string; // RL of the document in which the resource will be loaded. For example, if the web page at "https://example.com" contains an image or an iframe, then the documentUrl for the image or iframe will be "https://example.com". For a top-level document, documentUrl is undefined.
+  frameId: number;
+  incognito?: boolean;
+  method: string;
+  originUrl: string;
+  parentFrameId: number;
+  proxyInfo?: {
+    host: string;
+    port: number;
+    type: string;
+    username: string;
+    proxyDNS: boolean;
+    failoverTimeout: number;
+  };
+  requestHeaders?: { name: string; value?: string; binaryValue?: number[] }[];
+  requestId: string;
+  tabId: number;
+  thirdParty?: boolean;
+  timeStamp: number;
+  type: string;
+  url: string; // the target of the request;
+  urlClassification?: { firstParty: string[]; thirdParty: string[] };
+};
 
 export function getshorthost(host: string) {
   return host
@@ -83,8 +105,8 @@ export function hyphenate(str: string): string {
   return str.replace(/[_\[A-Z]/g, `${String.fromCharCode(173)}$&`);
 }
 
-export function unique(array: string[]) {
-  return Array.from(new Set(array));
+export function unique<T>(array: T[]): Array<T> {
+  return Array.from(new Set<T>(array));
 }
 
 export function allSubhosts(host: string) {

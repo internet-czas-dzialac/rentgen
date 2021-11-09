@@ -23,6 +23,7 @@ export default function DomainSummary({
     <li>
       Właściciel domeny <strong>{cluster.id}</strong> otrzymał:{" "}
       <ul>
+        <li>Mój adres IP</li>
         {cluster
           .getMarkedEntries()
           .sort((entryA, entryB) => (entryA.value > entryB.value ? -1 : 1))
