@@ -85,7 +85,7 @@ export default function HARConverter({
         )}
         download={`${getshorthost(
           marked_entries[0].request.originalURL
-        )}-${new Date().toJSON()}-faked.har`}
+        )}-${new Date().toJSON()}-trimmed.har`}
       >
         Pobierz "zfałszowany" HAR
       </a>
