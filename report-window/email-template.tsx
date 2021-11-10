@@ -14,6 +14,9 @@ export default function EmailTemplate({
   clusters: Record<string, RequestCluster>;
 }): JSX.Element {
   const [popupState, setPopupState] = useState<PopupState>("not_clicked");
+  const [acceptAllName, setAcceptAllName] = useState<string>(
+    "Zaakceptuj wszystkie"
+  );
 
   return (
     <div>
@@ -26,6 +29,20 @@ export default function EmailTemplate({
         <option value="not_clicked">Nic nie kliknięte</option>
         <option value="clicked_but_invalid">Kliknięte, ale nieważne</option>
       </select>
+      {popupState === "clicked_but_invalid" ? (
+        <div>
+          <label htmlFor="acceptAllName">
+            Tekst na przycisku do zatwierdzania wszystkich zgód:
+          </label>
+          <input
+            {...{
+              type: "text",
+              value: acceptAllName,
+              onChange: (e) => setAcceptAllName(e.target.value),
+            }}
+          />
+        </div>
+      ) : null}
       <p>
         Dzień dobry, w dniu {getDate()} odwiedziłem stronę{" "}
         {marked_entries[0].request.originalURL}. Strona ta wysłała moje dane
@@ -44,6 +61,23 @@ export default function EmailTemplate({
           przeczytać treść wyskakującego okienka ze zgodami.
         </p>
       ) : null}
+      {popupState === "clicked_but_invalid" ? (
+        <p>
+          O ile po wejściu na stronę wcisnąłem w wyskakującym okienku przycisk „
+          {acceptAllName}”, o tyle nie stanowi to według mnie ważnej w świetle
+          RODO zgody, gdyż brakowało w tym okienku równie łatwo osiągalnego
+          przycisku, którego kliknięcie skutkowałoby zasygnalizowaniem braku
+          mojej zgody na takie przetwarzanie moich danych. Mówiąc wprost -
+          wyrażenie „zgody” było łatwiejsze niż jej niewyrażenie. Zatem tak
+          otrzymana przez Państwo moja „zgoda” nie jest poprawną podstawą prawną
+          do przetwarzania moich danych osobowych (
+          <em>
+            art. 7 ust. 3 Rozporządzenia Parlamentu Europejskiego i Rady (UE)
+            2016/679 z dnia 27 kwietnia 2016
+          </em>
+          ).
+        </p>
+      ) : null}
       <p>
         Udokumentowałem to na zrzutach ekranu z mojej przeglądarki internetowej,
         które to zrzuty przesyłam w załączeniu.
@@ -53,7 +87,11 @@ export default function EmailTemplate({
         danych osobowych (na pewno nie jest to przetwarzanie konieczne do
         wyświetlenia strony z technicznego punktu widzenia). Jeżeli takie
         przesłanki legalizujące jednak występują, proszę o ich wskazanie,
-        <strong> dla każdego z celów i podmiotów z osobna</strong>.
+        <strong>
+          {" "}
+          dla każdego z celów i podmiotów z <em>osobna</em>
+        </strong>
+        .
       </p>
       <p>
         Jeżeli wskazaną przez Państwa przesłanką legalizującą dany element
