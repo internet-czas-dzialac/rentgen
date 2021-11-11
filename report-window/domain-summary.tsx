@@ -5,6 +5,7 @@ import { Classifications, Sources } from "../stolen-data-entry";
 const emailClassifications: Record<keyof typeof Classifications, string> = {
   id: "sztucznie nadane mi ID",
   history: "część mojej historii przeglądania",
+  location: "informacje na temat mojej lokalizacji geograficznej",
 };
 
 const emailSources: Record<Sources, string> = {

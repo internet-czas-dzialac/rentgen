@@ -1,6 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { getMemory } from "../memory";
+import { Classifications } from "../stolen-data-entry";
+import { useEmitter } from "../util";
 import EmailTemplate from "./email-template";
 import HARConverter from "./har-converter";
 
@@ -8,6 +10,10 @@ function Report() {
   const origin = new URL(document.location.toString()).searchParams.get(
     "origin"
   );
+  const [counter, setCounter] = useEmitter(getMemory());
+  function refresh() {
+    setCounter((c) => c + 1);
+  }
   const clusters = getMemory().getClustersForOrigin(origin);
   const marked_entries = Object.values(clusters)
     .map((cluster) => cluster.getMarkedRequests())
@@ -51,10 +57,18 @@ function Report() {
                 {entry.value}
               </td>
               <td>
-                <select value={entry.classification}>
+                <select
+                  value={entry.classification}
+                  onChange={(e) => {
+                    entry.classification = e.target
+                      .value as keyof typeof Classifications;
+                    refresh();
+                  }}
+                >
                   {[
                     ["history", "Historia przeglądania"],
                     ["id", "Sztucznie nadane id"],
+                    ["location", "Informacje na temat mojej lokalizacji"],
                   ].map(([key, name]) => (
                     <option key={key} value={key}>
                       {name}

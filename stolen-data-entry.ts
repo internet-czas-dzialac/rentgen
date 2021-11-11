@@ -15,6 +15,7 @@ export type Sources = "cookie" | "pathname" | "queryparams" | "header";
 export const Classifications = <const>{
   id: "Sztucznie nadane ID",
   history: "Część historii przeglądania",
+  location: "Informacje na temat mojego położenia",
 };
 
 const id = (function* id() {
