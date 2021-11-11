@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { RequestCluster } from "../request-cluster";
 import { StolenDataEntry } from "../stolen-data-entry";
-import { getDate } from "../util";
+import { getDate, toBase64 } from "../util";
 import DomainSummary from "./domain-summary";
 
 type PopupState = "not_clicked" | "clicked_but_invalid";
@@ -17,6 +17,8 @@ export default function EmailTemplate({
   const [acceptAllName, setAcceptAllName] = useState<string>(
     "Zaakceptuj wszystkie"
   );
+  const [popupScreenshotBase64, setPopupScreenshotBase64] =
+    useState<string>(null);
 
   return (
     <div>
@@ -30,18 +32,35 @@ export default function EmailTemplate({
         <option value="clicked_but_invalid">Kliknięte, ale nieważne</option>
       </select>
       {popupState === "clicked_but_invalid" ? (
-        <div>
-          <label htmlFor="acceptAllName">
-            Tekst na przycisku do zatwierdzania wszystkich zgód:
-          </label>
-          <input
-            {...{
-              type: "text",
-              value: acceptAllName,
-              onChange: (e) => setAcceptAllName(e.target.value),
-            }}
-          />
-        </div>
+        <>
+          <div>
+            <label htmlFor="acceptAllName">
+              Tekst na przycisku do zatwierdzania wszystkich zgód:
+            </label>
+            <input
+              {...{
+                type: "text",
+                value: acceptAllName,
+                onChange: (e) => setAcceptAllName(e.target.value),
+              }}
+            />
+          </div>
+          <div>
+            <label htmlFor="popup-screenshot">
+              Zrzut ekranu z tego, jak wyglądał popup przed kliknięciem „
+              {acceptAllName}”:
+            </label>
+            <input
+              {...{
+                type: "file",
+                id: "popup-screenshot",
+                onChange: async (e) => {
+                  setPopupScreenshotBase64(await toBase64(e.target.files[0]));
+                },
+              }}
+            />
+          </div>
+        </>
       ) : null}
       <p>
         Dzień dobry, w dniu {getDate()} odwiedziłem stronę{" "}
@@ -76,6 +95,7 @@ export default function EmailTemplate({
             2016/679 z dnia 27 kwietnia 2016
           </em>
           ).
+          {<img {...{ src: popupScreenshotBase64 }} />}
         </p>
       ) : null}
       <p>

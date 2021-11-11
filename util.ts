@@ -128,3 +128,13 @@ export function getDate() {
     .toString()
     .padStart(2, "0")}-${d.getDate().toString().padStart(2, "0")}`;
 }
+
+export function toBase64(file: File): Promise<string> {
+  return new Promise((resolve) => {
+    const FR = new FileReader();
+    FR.addEventListener("load", (e) => {
+      resolve(e.target.result as string);
+    });
+    FR.readAsDataURL(file);
+  });
+}
