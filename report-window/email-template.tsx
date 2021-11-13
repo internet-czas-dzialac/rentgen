@@ -74,10 +74,15 @@ export default function EmailTemplate({
             <DomainSummary cluster={cluster} />
           ))}
       </ul>
+      <p>
+        {" "}
+        Dane te zostały wysłane przez Państwa stronę - a mówiąc dokładniej,
+        przez zamieszczone przez Państwa na tej stronie skrypty.
+      </p>
       {popupState === "not_clicked" ? (
         <p>
-          Dane te zostały wysłane przez Państwa stronę, zanim zdążyłem w ogóle
-          przeczytać treść wyskakującego okienka ze zgodami.
+          Nastąpiło to, zanim zdążyłem w ogóle przeczytać treść wyskakującego
+          okienka ze zgodami.
         </p>
       ) : null}
       {popupState === "clicked_but_invalid" ? (
