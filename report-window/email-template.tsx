@@ -150,12 +150,10 @@ export default function EmailTemplate({
         procesów przetwarzania danych.
       </p>
       <p>
-        Niniejszym zwracam się także z żądaniem wycofania przesłanych przez
-        Państwa stronę moich danych osobowych z baz wyżej wymienionych podmiotów
-        oraz przesłania potwierdzenia uwiarygadniającego pomyślne wycofanie tych
-        danych. Proszę też o przesłanie tożsamości podmiotów, które są
-        właścicielami wyżej wymienionych domen, abym mógł zapoznać się z ich
-        politykami prywatności.
+        Niniejszym zwracam się także z żądaniem ujawnienia tożsamości podmiotów,
+        które są właścicielami wyżej wymienionych domen, abym mógł zapoznać się
+        z ich politykami prywatności i zwrócić się do tych podmiotów o usunięcie
+        z ich baz wysłanych przez Państwa stronę moich danych.
       </p>
       <p>
         Proszę też o wysłanie kopii danych zebranych na mój temat i wysłanych do
