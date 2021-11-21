@@ -37,7 +37,7 @@ export default function DomainSummary({
           .sort((markA, markB) => {
             if (markA.entry.value > markB.entry.value) {
               return -1;
-            } else if (markA.entry.value > markB.entry.value) {
+            } else if (markA.entry.value < markB.entry.value) {
               return 1;
             } else {
               const indexA = source_priority.indexOf(markA.source);
