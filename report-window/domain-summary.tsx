@@ -26,22 +26,22 @@ export default function DomainSummary({
       <ul>
         <li>Mój adres IP</li>
         {cluster
-          .getMarkedEntries()
-          .sort((entryA, entryB) => (entryA.value > entryB.value ? -1 : 1))
-          .reduce((acc, entry, index, arr) => {
-            if (index === 0) {
-              return [entry];
-            }
-            if (entry.value != arr[index - 1].value) {
-              acc.push(entry);
-            }
-            return acc;
-          }, [])
-          .map((entry) => (
+          .getMarks()
+          .sort((markA, markB) =>
+            markA.entry.value > markB.entry.value ? -1 : 1
+          )
+          .map((mark) => (
             <li>
-              {emailClassifications[entry.classification]}{" "}
-              {emailSources[entry.source]}
-              &nbsp;(<code>{entry.name.trim()}</code>)
+              {emailClassifications[mark.classification]}{" "}
+              {emailSources[mark.source]} (nazwa: {mark.name},{" "}
+              {mark.key ? (
+                <>
+                  pozycja <code>{mark.key}</code>,
+                </>
+              ) : (
+                ""
+              )}
+              wartość: <code>{mark.valuePreview}</code>)
             </li>
           ))}
       </ul>

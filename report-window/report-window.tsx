@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { getMemory } from "../memory";
 import { Classifications } from "../stolen-data-entry";
-import { useEmitter } from "../util";
+import { reduceConcat, useEmitter } from "../util";
 import EmailTemplate from "./email-template";
 import HARConverter from "./har-converter";
 
@@ -15,13 +15,15 @@ function Report() {
     setCounter((c) => c + 1);
   }
   const clusters = getMemory().getClustersForOrigin(origin);
-  const marked_entries = Object.values(clusters)
+  const marks = Object.values(clusters)
     .map((cluster) => cluster.getMarkedRequests())
-    .reduce((a, b) => a.concat(b), [])
+    .reduce(reduceConcat, [])
     .map((request) => request.getMarkedEntries())
-    .reduce((a, b) => a.concat(b), []);
+    .reduce(reduceConcat, [])
+    .map((entry) => entry.marks)
+    .reduce(reduceConcat, []);
   return (
-    <div>
+    <div {...{ "data-version": counter }}>
       <h1>Generuj treść maila dla {origin}</h1>
       <table>
         <thead>
@@ -33,42 +35,46 @@ function Report() {
           </tr>
         </thead>
         <tbody>
-          {marked_entries.map((entry) => (
+          {marks.map((mark) => (
             <tr
+              key={mark.entry.request.originalURL + ";" + mark.key}
               style={{
                 backgroundColor:
-                  entry.classification == "id" ? "yellow" : "white",
+                  mark.classification == "id" ? "yellow" : "white",
               }}
             >
-              <td>{entry.request.shorthost}</td>
+              <td>{mark.shorthost}</td>
               <td style={{ overflowWrap: "anywhere" }}>
-                {entry.source}:{entry.name}
-                {entry.markedKeys.join(",")}
+                {mark.source}:{mark.name}
+                {mark.key}
               </td>
               <td
                 style={{
                   width: "400px",
                   overflowWrap: "anywhere",
-                  backgroundColor: entry.isRelatedToID()
+                  backgroundColor: mark.entry.isRelatedToID()
                     ? "#ffff0054"
                     : "white",
                 }}
               >
-                {entry.value}
+                {mark.valuePreview}
+                {/* always gonna have
+                one key, because unwrapEntry is calle above */}
               </td>
               <td>
                 <select
-                  value={entry.classification}
+                  value={mark.classification}
                   onChange={(e) => {
-                    entry.classification = e.target
+                    mark.classification = e.target
                       .value as keyof typeof Classifications;
+                    console.log("changed classification!");
                     refresh();
                   }}
                 >
                   {[
                     ["history", "Historia przeglądania"],
                     ["id", "Sztucznie nadane id"],
-                    ["location", "Informacje na temat mojej lokalizacji"],
+                    ["location", "Lokalizacja"],
                   ].map(([key, name]) => (
                     <option key={key} value={key}>
                       {name}
@@ -80,8 +86,8 @@ function Report() {
           ))}
         </tbody>
       </table>
-      <EmailTemplate {...{ marked_entries, clusters }} />
-      <HARConverter {...{ marked_entries }} />
+      <EmailTemplate {...{ marks, clusters, version: counter }} />
+      <HARConverter {...{ marks }} />
     </div>
   );
 }

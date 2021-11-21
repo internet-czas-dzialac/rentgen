@@ -1,5 +1,6 @@
 import { TCModel } from "@iabtcf/core";
 import ExtendedRequest, { HAREntry } from "./extended-request";
+import Mark from "./mark";
 import { getMemory } from "./memory";
 import {
   getshorthost,
@@ -18,6 +19,8 @@ export const Classifications = <const>{
   location: "Informacje na temat mojego położenia",
 };
 
+const ID_PREVIEW_MAX_LENGTH = 20;
+
 const id = (function* id() {
   let i = 0;
   while (true) {
@@ -30,7 +33,7 @@ export class StolenDataEntry {
   public isIAB = false;
   public iab: TCModel | null = null;
   public id: number;
-  public markedKeys: string[] = [];
+  public marks: Mark[] = [];
   public classification: keyof typeof Classifications;
 
   constructor(
@@ -79,6 +82,7 @@ export class StolenDataEntry {
     } else if (isURL(value)) {
       const url = new URL(value);
       const object = {
+        [Symbol.for("originalURL")]: value,
         host: url.host,
         path: url.pathname,
         ...Object.fromEntries(
@@ -93,7 +97,7 @@ export class StolenDataEntry {
     }
   }
 
-  getParsedValue(key_path: string): string | Record<string, unknown> {
+  getParsedValue(key_path: string): string | Record<string | symbol, unknown> {
     let object = StolenDataEntry.parseValue(this.value);
     for (const key of key_path.split(".")) {
       if (key === "") continue;
@@ -103,20 +107,20 @@ export class StolenDataEntry {
   }
 
   addMark(key: string) {
-    this.markedKeys.push(key);
-    getMemory().emit("change"); // to trigger rerender
+    this.marks.push(new Mark(this, key));
+    getMemory().emit("change", true); // to trigger rerender
   }
 
   hasMark(key?: string) {
     if (key) {
-      return this.markedKeys.some((k) => k == key);
+      return this.marks.some((k) => k.key == key);
     } else {
-      return this.markedKeys.length > 0;
+      return this.marks.length > 0;
     }
   }
 
   removeMark(key: string) {
-    this.markedKeys = this.markedKeys.filter((e) => e != key);
+    this.marks = this.marks.filter((mark) => mark.key != key);
     getMemory().emit("change"); // to trigger rerender
   }
 
@@ -155,15 +159,29 @@ export class StolenDataEntry {
   matchesHAREntry(har: HAREntry): boolean {
     return this.request.matchesHAREntry(har);
   }
+
+  getValuePreview(key = ""): string {
+    const value = this.getParsedValue(key);
+    const str = value.toString();
+    if (this.classification == "id") {
+      return (
+        str.slice(0, Math.min(str.length / 3, ID_PREVIEW_MAX_LENGTH)) + "(...)"
+      );
+    } else if (typeof value === "object" && value[Symbol.for("originalURL")]) {
+      return value[Symbol.for("originalURL")] as string;
+    } else {
+      return str;
+    }
+  }
 }
 
 export class MergedStolenDataEntry {
   constructor(public entries: StolenDataEntry[]) {
     const all_marks = unique(
-      entries.map((entry) => entry.markedKeys).reduce(reduceConcat, [])
+      entries.map((entry) => entry.marks).reduce(reduceConcat, [])
     );
     for (const entry of entries) {
-      entry.markedKeys = all_marks;
+      entry.marks = all_marks;
     }
     // getMemory().emit("change"); // to trigger render
   }
@@ -211,7 +229,7 @@ export class MergedStolenDataEntry {
 
   getMarkedValues() {
     return this.entries
-      .map((entry) => entry.markedKeys)
+      .map((entry) => entry.marks)
       .reduce((a, b) => a.concat(b), []);
   }
 

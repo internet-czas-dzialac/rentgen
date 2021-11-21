@@ -4,6 +4,7 @@
     "esModuleInterop": true,
     "lib": ["es2017", "dom", "es2019"],
     "typeRoots": ["node_modules/@types", "node_modules/web-ext-types"],
+    "target": "es2019",
     "outDir": "lib"
   }
 }

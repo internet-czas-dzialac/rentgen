@@ -105,7 +105,7 @@ export class RequestCluster extends EventEmitter {
     return this.requests.some((request) => request.hasMark());
   }
 
-  getMarkedEntries() {
+  getMarkedEntries(): StolenDataEntry[] {
     return this.requests
       .map((request) => request.getMarkedEntries())
       .reduce(reduceConcat, []);
@@ -113,5 +113,13 @@ export class RequestCluster extends EventEmitter {
 
   exposesOrigin() {
     return this.requests.some((request) => request.exposesOrigin());
+  }
+
+  getMarks() {
+    return this.requests
+      .map((request) => request.getMarkedEntries())
+      .reduce(reduceConcat, [])
+      .map((entry) => entry.marks)
+      .reduce(reduceConcat, []);
   }
 }

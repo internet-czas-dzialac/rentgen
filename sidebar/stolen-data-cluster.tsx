@@ -118,7 +118,14 @@ export default function StolenDataCluster({
                 key={origin + cluster.id + entry.getUniqueKey()}
                 data-key={origin + cluster.id + entry.getUniqueKey()}
               >
-                <th style={{ width: "100px", overflowWrap: "anywhere" }}>
+                <th
+                  style={{
+                    width: "100px",
+                    overflowWrap: "anywhere",
+                    border: entry.hasMark("") ? "2px solid red" : "",
+                  }}
+                  onClick={() => entry.addMark("")}
+                >
                   {entry.getNames().map(hyphenate).join(", ")}
                 </th>
                 <td>{entry.getSources().map((source) => icons[source])}</td>

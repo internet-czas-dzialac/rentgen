@@ -1,20 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { HAREntry } from "../extended-request";
-import { StolenDataEntry } from "../stolen-data-entry";
+import Mark from "../mark";
 import { getshorthost, unique } from "../util";
 
 function handleNewFile(
   element: HTMLInputElement,
-  marked_entries: StolenDataEntry[],
+  marks: Mark[],
   setFiltered: (Blob) => void
 ): void {
   const reader = new FileReader();
   reader.addEventListener("load", () => {
     const content = JSON.parse(reader.result as string);
     content.log.entries = content.log.entries.filter((har_entry: HAREntry) =>
-      marked_entries.some((stolen_entry) =>
-        stolen_entry.matchesHAREntry(har_entry)
-      )
+      marks.some((mark) => mark.entry.matchesHAREntry(har_entry))
     );
     setFiltered(
       new Blob([JSON.stringify(content)], { type: "application/json" })
@@ -23,8 +21,8 @@ function handleNewFile(
   reader.readAsText(element.files[0]);
 }
 
-function generateFakeHAR(marked_entries: StolenDataEntry[]) {
-  const requests = marked_entries.map((entry) => entry.request);
+function generateFakeHAR(marks: Mark[]) {
+  const requests = marks.map((mark) => mark.entry.request);
   return {
     log: {
       version: "1.2",
@@ -52,14 +50,14 @@ function generateFakeHAR(marked_entries: StolenDataEntry[]) {
   };
 }
 
-export default function HARConverter({
-  marked_entries,
-}: {
-  marked_entries: StolenDataEntry[];
-}) {
+export default function HARConverter({ marks }: { marks: Mark[] }) {
   const [filtered, setFiltered] = useState<Blob | null>(null);
   const [filename, setFilename] = useState("");
-  const fakeHAR = generateFakeHAR(marked_entries);
+  const [fakeHAR, setFakeHAR] = useState<ReturnType<typeof generateFakeHAR>>();
+  useEffect(() => {
+    setFakeHAR(generateFakeHAR(marks));
+  }, []);
+
   return (
     <div>
       <input
@@ -67,7 +65,7 @@ export default function HARConverter({
         accept=".har"
         onChange={(e) => {
           setFilename(e.target.files[0].name);
-          handleNewFile(e.target, marked_entries, setFiltered);
+          handleNewFile(e.target, marks, setFiltered);
         }}
       />
       {(filtered && (
@@ -84,7 +82,7 @@ export default function HARConverter({
           new Blob([JSON.stringify(fakeHAR)], { type: "application/json" })
         )}
         download={`${getshorthost(
-          marked_entries[0].request.originalURL
+          marks[0].originalURL
         )}-${new Date().toJSON()}-trimmed.har`}
       >
         Pobierz "zfałszowany" HAR
