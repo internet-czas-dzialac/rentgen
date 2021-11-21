@@ -1,10 +1,11 @@
 import ExtendedRequest from "./extended-request";
-import { getshorthost } from "./util";
+import { getshorthost, makeThrottle } from "./util";
 import { EventEmitter } from "events";
 import { RequestCluster } from "./request-cluster";
 
 export default class Memory extends EventEmitter {
   origin_to_history = {} as Record<string, Record<string, RequestCluster>>;
+  private throttle = makeThrottle(200);
   async register(request: ExtendedRequest) {
     await request.init();
     console.log("registering request for", request.origin);
@@ -32,6 +33,20 @@ export default class Memory extends EventEmitter {
       { urls: ["<all_urls>"] },
       ["requestHeaders"]
     );
+  }
+
+  emit(eventName: string, immediate = false) {
+    try {
+      if (immediate) {
+        super.emit(eventName);
+        return;
+      } else {
+        this.throttle(() => super.emit(eventName));
+      }
+      return true;
+    } catch (e) {
+      debugger;
+    }
   }
 
   getClustersForOrigin(origin: string): Record<string, RequestCluster> {

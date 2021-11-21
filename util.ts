@@ -138,3 +138,21 @@ export function toBase64(file: File): Promise<string> {
     FR.readAsDataURL(file);
   });
 }
+
+export function makeThrottle(interval: number) {
+  let last_emit = 0;
+  function emit(callback: () => void) {
+    if (Date.now() - last_emit > interval) {
+      callback();
+      last_emit = Date.now();
+      return true;
+    } else {
+      return false;
+    }
+  }
+  return function (callback: () => void) {
+    if (!emit(callback)) {
+      setTimeout(() => emit(callback), interval);
+    }
+  };
+}
