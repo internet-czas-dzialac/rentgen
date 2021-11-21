@@ -81,8 +81,26 @@ export class StolenDataEntry {
       return object;
     } else if (isURL(value)) {
       const url = new URL(value);
+      let hash = url.hash;
+      if (hash.includes("=")) {
+        //facebook sometimes includes querystring-encoded data into the hash... attempt to parse it
+        try {
+          hash = Object.fromEntries(
+            hash
+              .slice(1)
+              .split("&")
+              .map((kv) => kv.split("="))
+          );
+        } catch (e) {
+          // failed to parse as query string
+          console.log(
+            "Failed attempt to parse hash location as query string, probably safe to ignore:",
+            e
+          );
+        }
+      }
       const object = {
-        [Symbol.for("originalURL")]: value,
+        [Symbol.for("originalURL")]: value, // so it doesn't appear raw in the table but can be easily retrieved later
         host: url.host,
         path: url.pathname,
         ...Object.fromEntries(
@@ -90,6 +108,7 @@ export class StolenDataEntry {
             entries: () => Iterable<[string, string]>;
           }).entries()
         ),
+        ...(hash === "" ? {} : typeof hash === "string" ? { hash } : hash),
       };
       return object;
     } else {
@@ -121,7 +140,7 @@ export class StolenDataEntry {
 
   removeMark(key: string) {
     this.marks = this.marks.filter((mark) => mark.key != key);
-    getMemory().emit("change"); // to trigger rerender
+    getMemory().emit("change", true); // to trigger rerender
   }
 
   toggleMark(key: string) {
@@ -163,7 +182,7 @@ export class StolenDataEntry {
   getValuePreview(key = ""): string {
     const value = this.getParsedValue(key);
     const str = value.toString();
-    if (this.classification == "id") {
+    if (typeof value !== "object" && this.classification == "id") {
       return (
         str.slice(0, Math.min(str.length / 3, ID_PREVIEW_MAX_LENGTH)) + "(...)"
       );

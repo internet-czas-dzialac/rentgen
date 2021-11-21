@@ -59,7 +59,7 @@ function Report() {
               >
                 {mark.valuePreview}
                 {/* always gonna have
-                one key, because unwrapEntry is calle above */}
+                one key, because unwrapEntry is called above */}
               </td>
               <td>
                 <select
@@ -67,7 +67,6 @@ function Report() {
                   onChange={(e) => {
                     mark.classification = e.target
                       .value as keyof typeof Classifications;
-                    console.log("changed classification!");
                     refresh();
                   }}
                 >

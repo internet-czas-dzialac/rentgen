@@ -4,6 +4,8 @@ import { MergedStolenDataEntry, Sources } from "../stolen-data-entry";
 
 import { hyphenate } from "../util";
 
+const MAX_STRING_VALUE_LENGTH = 100;
+
 function StolenDataValueTable({
   entry,
   prefixKey = "",
@@ -14,24 +16,29 @@ function StolenDataValueTable({
   return (
     <table>
       <tbody>
-        {Object.keys(entry.getParsedValues(prefixKey)[0]).map((key) => (
-          <tr key={`${prefixKey}.${key}`}>
-            <th
-              onClick={(e) => {
-                entry.toggleMark(prefixKey);
-                e.stopPropagation();
-              }}
-            >
-              {hyphenate(key)}
-            </th>
-            <td>
-              <StolenDataValue
-                entry={entry}
-                prefixKey={`${prefixKey}.${key}`}
-              />
-            </td>
-          </tr>
-        ))}
+        {Object.keys(entry.getParsedValues(prefixKey)[0]).map((key) => {
+          const subkey = `${prefixKey}.${key}`;
+          return (
+            <tr key={`${prefixKey}.${key}`}>
+              <th
+                onClick={(e) => {
+                  entry.toggleMark(subkey);
+                  e.stopPropagation();
+                }}
+                style={{
+                  border: entry.hasMark(subkey)
+                    ? "2px solid red"
+                    : "2px solid transparent",
+                }}
+              >
+                {hyphenate(key)}
+              </th>
+              <td>
+                <StolenDataValue entry={entry} prefixKey={subkey} />
+              </td>
+            </tr>
+          );
+        })}
       </tbody>
     </table>
   );
@@ -49,9 +56,17 @@ function StolenDataValue({
   if (!value) {
     body = <></>;
   } else if (typeof value === "string") {
+    const content = entry.getParsedValues(prefixKey)[0] as string;
     body = (
-      <div style={{ border: entry.hasMark(prefixKey) ? "2px solid red" : "" }}>
-        {entry.getParsedValues(prefixKey)[0] as string}
+      <div
+        style={{
+          border: entry.hasMark(prefixKey)
+            ? "2px solid red"
+            : "2px solid transparent",
+        }}
+      >
+        {content.slice(0, MAX_STRING_VALUE_LENGTH)}{" "}
+        {content.length > MAX_STRING_VALUE_LENGTH ? "(...)" : ""}
       </div>
     );
   } else {
@@ -70,6 +85,13 @@ function StolenDataValue({
   );
 }
 
+const icons: Record<Sources, string> = {
+  cookie: "🍪",
+  pathname: "🛣",
+  queryparams: "🅿",
+  header: "H",
+};
+
 export default function StolenDataCluster({
   origin,
   shorthost,
@@ -85,12 +107,6 @@ export default function StolenDataCluster({
   cookiesOrOriginOnly: boolean;
 }) {
   const cluster = getMemory().getClustersForOrigin(origin)[shorthost];
-  const icons: Record<Sources, string> = {
-    cookie: "🍪",
-    pathname: "🛣",
-    queryparams: "🅿",
-    header: "H",
-  };
   return (
     <div>
       <h2>
@@ -122,9 +138,11 @@ export default function StolenDataCluster({
                   style={{
                     width: "100px",
                     overflowWrap: "anywhere",
-                    border: entry.hasMark("") ? "2px solid red" : "",
+                    border: entry.hasMark("")
+                      ? "2px solid red"
+                      : "2px solid transparent",
                   }}
-                  onClick={() => entry.addMark("")}
+                  onClick={() => entry.toggleMark("")}
                 >
                   {entry.getNames().map(hyphenate).join(", ")}
                 </th>

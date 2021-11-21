@@ -8,7 +8,7 @@ export default class Memory extends EventEmitter {
   private throttle = makeThrottle(200);
   async register(request: ExtendedRequest) {
     await request.init();
-    console.log("registering request for", request.origin);
+    // console.log("registering request for", request.origin);
     if (!request.isThirdParty()) {
       return;
     }

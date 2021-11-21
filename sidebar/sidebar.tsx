@@ -17,7 +17,9 @@ const Sidebar = () => {
   const [origin, setOrigin] = useState<string | null>(null);
   const [minValueLength, setMinValueLength] = useState<number | null>(7);
   const [cookiesOnly, setCookiesOnly] = useState<boolean>(false);
-  const [cookiesOrOriginOnly, setCookiesOrOriginOnly] = useState<boolean>(true);
+  const [cookiesOrOriginOnly, setCookiesOrOriginOnly] = useState<boolean>(
+    false
+  );
   const [counter, setCounter] = useEmitter(getMemory());
 
   useEffect(() => {
