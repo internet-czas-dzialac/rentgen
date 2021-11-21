@@ -1,7 +1,7 @@
 import { TCModel } from "@iabtcf/core";
+import { EventEmitter } from "events";
 import ExtendedRequest, { HAREntry } from "./extended-request";
 import Mark from "./mark";
-import { getMemory } from "./memory";
 import {
   getshorthost,
   isJSONObject,
@@ -29,7 +29,7 @@ const id = (function* id() {
   }
 })();
 
-export class StolenDataEntry {
+export class StolenDataEntry extends EventEmitter {
   public isIAB = false;
   public iab: TCModel | null = null;
   public id: number;
@@ -47,6 +47,7 @@ export class StolenDataEntry {
     //   // console.log(this.iab);
     //   this.isIAB = true;
     // } catch (e) {}
+    super();
     this.id = id.next().value as number;
     this.classification = this.classify();
   }
@@ -127,7 +128,7 @@ export class StolenDataEntry {
 
   addMark(key: string) {
     this.marks.push(new Mark(this, key));
-    getMemory().emit("change", true); // to trigger rerender
+    this.emit("change");
   }
 
   hasMark(key?: string) {
@@ -140,7 +141,7 @@ export class StolenDataEntry {
 
   removeMark(key: string) {
     this.marks = this.marks.filter((mark) => mark.key != key);
-    getMemory().emit("change", true); // to trigger rerender
+    this.emit("change");
   }
 
   toggleMark(key: string) {
@@ -194,8 +195,9 @@ export class StolenDataEntry {
   }
 }
 
-export class MergedStolenDataEntry {
+export class MergedStolenDataEntry extends EventEmitter {
   constructor(public entries: StolenDataEntry[]) {
+    super();
     const all_marks = unique(
       entries.map((entry) => entry.marks).reduce(reduceConcat, [])
     );
@@ -203,6 +205,20 @@ export class MergedStolenDataEntry {
       entry.marks = all_marks;
     }
     // getMemory().emit("change"); // to trigger render
+  }
+
+  on(event: string, listener: () => void) {
+    for (const entry of this.entries) {
+      entry.on(event, listener);
+    }
+    return this;
+  }
+
+  removeListener(event: string, listener: () => void) {
+    for (const entry of this.entries) {
+      entry.removeListener(event, listener);
+    }
+    return this;
   }
 
   hasValue(value: string) {

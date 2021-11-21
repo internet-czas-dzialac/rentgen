@@ -1,6 +1,5 @@
 import { EventEmitter } from "events";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import Memory from "./memory";
 
 export type Unpromisify<T> = T extends Promise<infer R> ? R : T;
 export type Unarray<T> = T extends Array<infer R> ? R : T;

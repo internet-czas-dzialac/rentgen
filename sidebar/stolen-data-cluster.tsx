@@ -1,8 +1,13 @@
 import React from "react";
 import { getMemory } from "../memory";
-import { MergedStolenDataEntry, Sources } from "../stolen-data-entry";
+import { RequestCluster } from "../request-cluster";
+import {
+  MergedStolenDataEntry,
+  Sources,
+  StolenDataEntry,
+} from "../stolen-data-entry";
 
-import { hyphenate } from "../util";
+import { hyphenate, useEmitter } from "../util";
 
 const MAX_STRING_VALUE_LENGTH = 100;
 
@@ -51,6 +56,7 @@ function StolenDataValue({
   entry: MergedStolenDataEntry;
   prefixKey?: string;
 }) {
+  const [version] = useEmitter(entry);
   const value = entry.getParsedValues(prefixKey)[0];
   let body = null;
   if (!value) {
@@ -64,6 +70,7 @@ function StolenDataValue({
             ? "2px solid red"
             : "2px solid transparent",
         }}
+        data-version={version}
       >
         {content.slice(0, MAX_STRING_VALUE_LENGTH)}{" "}
         {content.length > MAX_STRING_VALUE_LENGTH ? "(...)" : ""}
@@ -91,6 +98,38 @@ const icons: Record<Sources, string> = {
   queryparams: "🅿",
   header: "H",
 };
+
+function StolenDataRow({
+  entry,
+  cluster,
+}: {
+  entry: MergedStolenDataEntry;
+  cluster: RequestCluster;
+}) {
+  const [version] = useEmitter(entry);
+  return (
+    <tr
+      key={origin + cluster.id + entry.getUniqueKey()}
+      data-key={origin + cluster.id + entry.getUniqueKey()}
+      data-version={version}
+    >
+      <th
+        style={{
+          width: "100px",
+          overflowWrap: "anywhere",
+          border: entry.hasMark("") ? "2px solid red" : "2px solid transparent",
+        }}
+        onClick={() => entry.toggleMark("")}
+      >
+        {entry.getNames().map(hyphenate).join(", ")}
+      </th>
+      <td>{entry.getSources().map((source) => icons[source])}</td>
+      <td style={{ wordWrap: "anywhere" as any }}>
+        <StolenDataValue entry={entry} />
+      </td>
+    </tr>
+  );
+}
 
 export default function StolenDataCluster({
   origin,
@@ -130,27 +169,13 @@ export default function StolenDataCluster({
           {cluster
             .getStolenData({ minValueLength, cookiesOnly, cookiesOrOriginOnly })
             .map((entry) => (
-              <tr
-                key={origin + cluster.id + entry.getUniqueKey()}
-                data-key={origin + cluster.id + entry.getUniqueKey()}
-              >
-                <th
-                  style={{
-                    width: "100px",
-                    overflowWrap: "anywhere",
-                    border: entry.hasMark("")
-                      ? "2px solid red"
-                      : "2px solid transparent",
-                  }}
-                  onClick={() => entry.toggleMark("")}
-                >
-                  {entry.getNames().map(hyphenate).join(", ")}
-                </th>
-                <td>{entry.getSources().map((source) => icons[source])}</td>
-                <td style={{ wordWrap: "anywhere" as any }}>
-                  <StolenDataValue entry={entry} />
-                </td>
-              </tr>
+              <StolenDataRow
+                {...{
+                  entry,
+                  cluster,
+                  key: origin + cluster.id + entry.getUniqueKey(),
+                }}
+              />
             ))}
         </tbody>
       </table>
