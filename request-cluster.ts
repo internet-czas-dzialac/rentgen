@@ -1,8 +1,19 @@
 import { EventEmitter } from "events";
 import ExtendedRequest from "./extended-request";
-import { MergedStolenDataEntry, StolenDataEntry } from "./stolen-data-entry";
+import {
+  MergedStolenDataEntry,
+  Sources,
+  StolenDataEntry,
+} from "./stolen-data-entry";
 
-import { allSubhosts, reduceConcat, unique } from "./util";
+import { allSubhosts, isSameURL, reduceConcat, unique } from "./util";
+
+const source_priority: Array<Sources> = [
+  "cookie",
+  "pathname",
+  "queryparams",
+  "header",
+];
 
 export class RequestCluster extends EventEmitter {
   public requests: ExtendedRequest[] = [];
@@ -121,5 +132,42 @@ export class RequestCluster extends EventEmitter {
       .reduce(reduceConcat, [])
       .map((entry) => entry.marks)
       .reduce(reduceConcat, []);
+  }
+
+  getRepresentativeMarks() {
+    // removes duplicates so the email/HAR file is shorter
+    return this.getMarks()
+      .sort((markA, markB) => {
+        if (markA.entry.value > markB.entry.value) {
+          return -1;
+        } else if (markA.entry.value < markB.entry.value) {
+          return 1;
+        } else {
+          const indexA = source_priority.indexOf(markA.source);
+          const indexB = source_priority.indexOf(markB.source);
+          if (indexA < indexB) {
+            return -1;
+          } else if (indexA > indexB) {
+            return 1;
+          } else {
+            return markA.entry.value.length > markB.entry.value.length ? -1 : 1;
+          }
+        }
+      })
+      .filter((_, index, array) => {
+        if (index == 0) {
+          return true;
+        }
+        if (
+          array[index].valuePreview === array[index - 1].valuePreview ||
+          (array[index].classification === "history" &&
+            array[index - 1].classification === "history") || // if they're both history, then the first one is the longest
+          isSameURL(array[index].entry.value, array[index - 1].entry.value)
+        ) {
+          return false;
+        } else {
+          return true;
+        }
+      });
   }
 }

@@ -16,11 +16,7 @@ function Report() {
   }
   const clusters = getMemory().getClustersForOrigin(origin);
   const marks = Object.values(clusters)
-    .map((cluster) => cluster.getMarkedRequests())
-    .reduce(reduceConcat, [])
-    .map((request) => request.getMarkedEntries())
-    .reduce(reduceConcat, [])
-    .map((entry) => entry.marks)
+    .map((cluster) => cluster.getRepresentativeMarks())
     .reduce(reduceConcat, []);
   return (
     <div {...{ "data-version": counter }}>

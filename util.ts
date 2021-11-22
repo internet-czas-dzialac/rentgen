@@ -155,3 +155,12 @@ export function makeThrottle(interval: number) {
     }
   };
 }
+
+export function isSameURL(url1: string, url2: string): boolean {
+  if (url1 === url2) {
+    return true;
+  }
+  url1 = url1.replace(/^https?:\/\//, "").replace(/\/$/, "");
+  url2 = url2.replace(/^https?:\/\//, "").replace(/\/$/, "");
+  return url1 === url2;
+}

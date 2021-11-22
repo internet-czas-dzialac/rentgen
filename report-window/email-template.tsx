@@ -4,12 +4,11 @@ import { RequestCluster } from "../request-cluster";
 import { getDate, toBase64 } from "../util";
 import DomainSummary from "./domain-summary";
 
-type PopupState = "not_clicked" | "clicked_but_invalid";
+type PopupState = "not_clicked" | "clicked_but_no_reject_all";
 
 export default function EmailTemplate({
   marks,
   clusters,
-  version,
 }: {
   marks: Mark[];
   clusters: Record<string, RequestCluster>;
@@ -32,9 +31,11 @@ export default function EmailTemplate({
         onChange={(e) => setPopupState(e.target.value as PopupState)}
       >
         <option value="not_clicked">Nic nie kliknięte</option>
-        <option value="clicked_but_invalid">Kliknięte, ale nieważne</option>
+        <option value="clicked_but_no_reject_all">
+          Kliknięte "akceptuj wszystkie", ale nie było opcji "Odrzuć wszystkie"
+        </option>
       </select>
-      {popupState === "clicked_but_invalid" ? (
+      {popupState === "clicked_but_no_reject_all" ? (
         <>
           <div>
             <label htmlFor="acceptAllName">
@@ -88,22 +89,26 @@ export default function EmailTemplate({
           okienka ze zgodami.
         </p>
       ) : null}
-      {popupState === "clicked_but_invalid" ? (
+      {popupState === "clicked_but_no_reject_all" ? (
         <p>
           O ile po wejściu na stronę wcisnąłem w wyskakującym okienku przycisk „
           {acceptAllName}”, o tyle nie stanowi to według mnie ważnej w świetle
           RODO zgody, gdyż brakowało w tym okienku równie łatwo osiągalnego
           przycisku, którego kliknięcie skutkowałoby zasygnalizowaniem braku
           mojej zgody na takie przetwarzanie moich danych. Mówiąc wprost -
-          wyrażenie „zgody” było łatwiejsze niż jej niewyrażenie. Zatem tak
-          otrzymana przez Państwo moja „zgoda” nie jest poprawną podstawą prawną
-          do przetwarzania moich danych osobowych (
+          wyrażenie „zgody” było łatwiejsze niż jej niewyrażenie. Niewyrażenie
+          zgody wiąże się z negatywną konsekwencją konieczności przechodzenia
+          przez dodatkowe kroki w wyskakującym okienku. Zatem tak otrzymana
+          przez Państwo moja „zgoda” nie jest poprawną podstawą prawną do
+          przetwarzania moich danych osobowych, gdyż nie spełnia warunku
+          dobrowolności wspomnianego w Art. 4. pkt 11{" "}
           <em>
-            art. 7 ust. 3 Rozporządzenia Parlamentu Europejskiego i Rady (UE)
-            2016/679 z dnia 27 kwietnia 2016
+            rozporządzenia Parlamentu Europejskiego i Rady (UE) 2016/679 z dnia
+            27 kwietnia 2016 r. w sprawie ochrony osób fizycznych w związku z
+            przetwarzaniem danych osobowych i w sprawie swobodnego przepływu
+            takich danych oraz uchylenia dyrektywy 95/46/WE
           </em>
-          ).
-          {<img {...{ src: popupScreenshotBase64 }} />}
+          .{<img {...{ src: popupScreenshotBase64 }} />}
         </p>
       ) : null}
       <p>
