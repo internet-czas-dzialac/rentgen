@@ -86,7 +86,8 @@ export default function EmailTemplate({
       {popupState === "not_clicked" ? (
         <p>
           Nastąpiło to, zanim zdążyłem w ogóle przeczytać treść wyskakującego
-          okienka ze zgodami.
+          okienka ze zgodami i zanim miałem szansę wyrazić sprzeciw takiemu
+          przetwarzaniu danych osobowych.
         </p>
       ) : null}
       {popupState === "clicked_but_no_reject_all" ? (
@@ -116,10 +117,20 @@ export default function EmailTemplate({
         które to zrzuty przesyłam w załączeniu.
       </p>
       <p>
-        Nie widzę zatem przesłanki legalizującej takie przetwarzanie moich
-        danych osobowych (na pewno nie jest to przetwarzanie konieczne do
-        wyświetlenia strony z technicznego punktu widzenia). Jeżeli takie
-        przesłanki legalizujące jednak występują, proszę o ich wskazanie,
+        Wiem, że nie wszystkie rodzaje przetwarzania danych wymagają zgody
+        użytkownika. W kontekście stron internetowych z wymienionych w Art. 6.
+        pkt 1. RODO mogą mieć zastosowanie albo „zgoda” (Art. 6. pkt 1. lit.
+        a)), albo niezbędność tego przetwarzania do wykonania umowy (Art. 6. pkt
+        1. lit. b)), albo uzasadniony interes (Art. 6. pkt 1. lit. f)). Wiem
+        też, że każda z tych podstaw prawnych ma moc dopiero po spełnieniu
+        określonych warunków.
+      </p>
+      <p>
+        Nie widzę ważnej podstawy prawnej legalizującej procesy przetwarzania
+        moich danych osobowych, jakie wymieniłem powyżej (na pewno nie jest to
+        przetwarzanie konieczne do wyświetlenia strony z technicznego punktu
+        widzenia). Jeżeli takie przesłanki legalizujące jednak występują, proszę
+        o ich wskazanie,
         <strong>
           {" "}
           dla każdego z celów i podmiotów z <em>osobna</em>
@@ -155,7 +166,14 @@ export default function EmailTemplate({
         Państwa interesem a moimi podstawowymi wolnościami i prawami - ze
         wskazaniem tego, co sprawia, że w Państwa ocenie Państwa uzasadniony
         interes przeważa moje prawa i interesy w kontekście wspomnianych powyżej
-        procesów przetwarzania danych.
+        procesów przetwarzania danych. Proszę też pamiętać, że aby w ramach
+        danego celu przetwarzania powołać się na prawnie uzasadniony interes,
+        powinni mi Państo umożliwić wyrażenie sprzeciwu wobec przetwarzania
+        moich danych w tym celu <em>przed</em> rozpoczęciem przetwarzania - zob.{" "}
+        <a href="https://edpb.europa.eu/system/files/2021-11/edpb_guidelines_082020_on_the_targeting_of_social_media_users_pl_0.pdf">
+          Wytyczne 8/2020 Europejskiej Rady Ochrony Danych dotyczące
+          targetowania użytkowników mediów społecznościowych
+        </a>
       </p>
       <p>
         Niniejszym zwracam się także z żądaniem ujawnienia tożsamości podmiotów,
@@ -170,8 +188,11 @@ export default function EmailTemplate({
       <p>
         W odpowiedzi proszę się nie powoływać na IAB Europe i ich rzekomą renomę
         w tworzeniu rozwiązań zgodnych z RODO. IAB chroni interes reklamodawców,
-        a nie Użytkowników i ich rozwiązania (np. TCF) są notorycznie niezgodne
-        z RODO i pozbawione szacunku dla Użytkowników.
+        a nie Użytkowników, i ich rozwiązania (np. TCF) są{" "}
+        <a href="https://panoptykon.org/search/site/IAB">
+          notorycznie niezgodne z RODO i pozbawione szacunku dla Użytkowników
+        </a>
+        .
       </p>
       <p>
         Apeluję także o wprowadzenie stosownych zmian na stronie tak, aby nie
