@@ -141,16 +141,6 @@ export default class ExtendedRequest {
         entry.value.includes(path) ||
         entry.value.includes(shorthost)
       ) {
-        console.log(
-          "request",
-          this.data.url,
-          "exposes origin in ",
-          entry,
-          ". Checked",
-          host,
-          path,
-          shorthost
-        );
         return true;
       }
     }
