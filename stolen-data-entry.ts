@@ -77,6 +77,9 @@ export class StolenDataEntry extends EventEmitter {
   }
 
   static parseValue(value: unknown): string | Record<string, unknown> {
+    if (value === undefined) {
+      return "";
+    }
     if (isJSONObject(value)) {
       const object = parseToObject(value);
       return object;
@@ -101,7 +104,7 @@ export class StolenDataEntry extends EventEmitter {
         }
       }
       const object = {
-        [Symbol.for("originalURL")]: value, // so it doesn't appear raw in the table but can be easily retrieved later
+        [Symbol.for("originalString")]: value, // so it doesn't appear raw in the table but can be easily retrieved later
         host: url.host,
         path: url.pathname,
         ...Object.fromEntries(
@@ -181,14 +184,21 @@ export class StolenDataEntry extends EventEmitter {
   }
 
   getValuePreview(key = ""): string {
+    console.log("getValuePreview", key, this.getParsedValue(key));
     const value = this.getParsedValue(key);
-    const str = value.toString();
+    const str =
+      typeof value === "object" && value[Symbol.for("originalString")]
+        ? (value[Symbol.for("originalString")] as string)
+        : value.toString();
     if (typeof value !== "object" && this.classification == "id") {
       return (
         str.slice(0, Math.min(str.length / 3, ID_PREVIEW_MAX_LENGTH)) + "(...)"
       );
-    } else if (typeof value === "object" && value[Symbol.for("originalURL")]) {
-      return value[Symbol.for("originalURL")] as string;
+    } else if (
+      typeof value === "object" &&
+      value[Symbol.for("originalString")]
+    ) {
+      return value[Symbol.for("originalString")] as string;
     } else {
       return str;
     }

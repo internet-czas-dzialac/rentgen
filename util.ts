@@ -74,12 +74,19 @@ export async function getTabByID(id: number) {
   return tabs.find((tab) => tab.id == id);
 }
 
-export function parseToObject(str: unknown): Record<string, unknown> {
+export function parseToObject(str: unknown): Record<string | symbol, unknown> {
+  let result: Record<string | symbol, unknown>;
+  let original_string: string;
   if (typeof str === "string") {
-    return JSON.parse(str);
+    original_string = str;
+    result = JSON.parse(str);
   } else if (typeof str == "object") {
-    return str as Record<string, unknown>;
+    result = str as Record<string | symbol, unknown>;
+    original_string =
+      (result[Symbol.for("originalString")] as string) || JSON.stringify(str);
   }
+  result[Symbol.for("originalString")] = original_string;
+  return result;
 }
 
 export function isJSONObject(
