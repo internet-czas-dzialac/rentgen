@@ -1,16 +1,16 @@
 import React, { useState } from "react";
-import Mark from "../mark";
 import { RequestCluster } from "../request-cluster";
+import { StolenDataEntry } from "../stolen-data-entry";
 import { getDate, toBase64 } from "../util";
 import DomainSummary from "./domain-summary";
 
 type PopupState = "not_clicked" | "clicked_but_no_reject_all";
 
 export default function EmailTemplate({
-  marks,
+  entries,
   clusters,
 }: {
-  marks: Mark[];
+  entries: StolenDataEntry[];
   clusters: Record<string, RequestCluster>;
   version: number;
 }): JSX.Element {
@@ -68,8 +68,8 @@ export default function EmailTemplate({
       ) : null}
       <p>
         Dzień dobry, w dniu {getDate()} odwiedziłem stronę{" "}
-        {marks[0].originalURL}. Strona ta wysłała moje dane osobowe do podmiotów
-        trzecich - bez mojej zgody.{" "}
+        {entries[0].request.originalURL}. Strona ta wysłała moje dane osobowe do
+        podmiotów trzecich - bez mojej zgody.{" "}
       </p>
       <ul>
         {Object.values(clusters)

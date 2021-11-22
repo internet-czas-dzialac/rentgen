@@ -15,9 +15,10 @@ function Report() {
     setCounter((c) => c + 1);
   }
   const clusters = getMemory().getClustersForOrigin(origin);
-  const marks = Object.values(clusters)
-    .map((cluster) => cluster.getRepresentativeMarks())
-    .reduce(reduceConcat, []);
+  const entries = Object.values(clusters)
+    .map((cluster) => cluster.getRepresentativeStolenData())
+    .reduce(reduceConcat, [])
+    .filter((entry) => entry.isMarked);
   return (
     <div {...{ "data-version": counter }}>
       <h1>Generuj treść maila dla {origin}</h1>
@@ -31,37 +32,36 @@ function Report() {
           </tr>
         </thead>
         <tbody>
-          {marks.map((mark) => (
+          {entries.map((entry) => (
             <tr
-              key={mark.entry.request.originalURL + ";" + mark.key}
+              key={entry.id}
               style={{
                 backgroundColor:
-                  mark.classification == "id" ? "yellow" : "white",
+                  entry.classification == "id" ? "yellow" : "white",
               }}
             >
-              <td>{mark.shorthost}</td>
+              <td>{entry.request.shorthost}</td>
               <td style={{ overflowWrap: "anywhere" }}>
-                {mark.source}:{mark.name}
-                {mark.key}
+                {entry.source}:{entry.name}
               </td>
               <td
                 style={{
                   width: "400px",
                   overflowWrap: "anywhere",
-                  backgroundColor: mark.entry.isRelatedToID()
+                  backgroundColor: entry.isRelatedToID()
                     ? "#ffff0054"
                     : "white",
                 }}
               >
-                {mark.valuePreview}
+                {entry.getValuePreview()}
                 {/* always gonna have
                 one key, because unwrapEntry is called above */}
               </td>
               <td>
                 <select
-                  value={mark.classification}
+                  value={entry.classification}
                   onChange={(e) => {
-                    mark.classification = e.target
+                    entry.classification = e.target
                       .value as keyof typeof Classifications;
                     refresh();
                   }}
@@ -81,8 +81,8 @@ function Report() {
           ))}
         </tbody>
       </table>
-      <EmailTemplate {...{ marks, clusters, version: counter }} />
-      <HARConverter {...{ marks }} />
+      <EmailTemplate {...{ entries, clusters, version: counter }} />
+      <HARConverter {...{ entries }} />
     </div>
   );
 }

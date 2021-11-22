@@ -1,7 +1,6 @@
-import { TCModel } from "@iabtcf/core";
+// import { TCModel } from "@iabtcf/core";
 import { EventEmitter } from "events";
 import ExtendedRequest, { HAREntry } from "./extended-request";
-import Mark from "./mark";
 
 import {
   getshorthost,
@@ -9,8 +8,6 @@ import {
   isJSONObject,
   isURL,
   parseToObject,
-  reduceConcat,
-  unique,
 } from "./util";
 
 export type Sources = "cookie" | "pathname" | "queryparams" | "header";
@@ -35,9 +32,9 @@ export type DecodingSchema = "base64";
 
 export class StolenDataEntry extends EventEmitter {
   public isIAB = false;
-  public iab: TCModel | null = null;
+  // public iab: TCModel | null = null;
   public id: number;
-  public marks: Mark[] = [];
+  private marked = false;
   public classification: keyof typeof Classifications;
   public decoding_applied: DecodingSchema = null;
 
@@ -77,8 +74,8 @@ export class StolenDataEntry extends EventEmitter {
     return priority;
   }
 
-  mergeWith(entry: StolenDataEntry): MergedStolenDataEntry {
-    return new MergedStolenDataEntry([this, entry]);
+  get isMarked() {
+    return this.marked;
   }
 
   hasValue(value: string) {
@@ -86,6 +83,9 @@ export class StolenDataEntry extends EventEmitter {
   }
 
   static parseValue(value: unknown): string | Record<string, unknown> {
+    if (isBase64JSON(value)) {
+      return StolenDataEntry.parseValue({ base64: JSON.parse(atob(value)) });
+    }
     if (value === undefined) {
       return "";
     }
@@ -144,29 +144,21 @@ export class StolenDataEntry extends EventEmitter {
     return object;
   }
 
-  addMark(key: string) {
-    this.marks.push(new Mark(this, key));
+  mark() {
+    this.marked = true;
     this.emit("change");
   }
 
-  hasMark(key?: string) {
-    if (key) {
-      return this.marks.some((k) => k.key == key);
-    } else {
-      return this.marks.length > 0;
-    }
-  }
-
-  removeMark(key: string) {
-    this.marks = this.marks.filter((mark) => mark.key != key);
+  unmark() {
+    this.marked = false;
     this.emit("change");
   }
 
-  toggleMark(key: string) {
-    if (this.hasMark(key)) {
-      this.removeMark(key);
+  toggleMark() {
+    if (this.marked) {
+      this.unmark();
     } else {
-      this.addMark(key);
+      this.mark();
     }
   }
 
@@ -199,7 +191,6 @@ export class StolenDataEntry extends EventEmitter {
   }
 
   getValuePreview(key = ""): string {
-    console.log("getValuePreview", key, this.getParsedValue(key));
     const value = this.getParsedValue(key);
     const str =
       typeof value === "object" && value[Symbol.for("originalString")]
@@ -218,90 +209,8 @@ export class StolenDataEntry extends EventEmitter {
       return str;
     }
   }
-}
-
-export class MergedStolenDataEntry extends EventEmitter {
-  constructor(public entries: StolenDataEntry[]) {
-    super();
-    const all_marks = unique(
-      entries.map((entry) => entry.marks).reduce(reduceConcat, [])
-    );
-    for (const entry of entries) {
-      entry.marks = all_marks;
-    }
-    // getMemory().emit("change"); // to trigger render
-  }
-
-  on(event: string, listener: () => void) {
-    for (const entry of this.entries) {
-      entry.on(event, listener);
-    }
-    return this;
-  }
-
-  removeListener(event: string, listener: () => void) {
-    for (const entry of this.entries) {
-      entry.removeListener(event, listener);
-    }
-    return this;
-  }
-
-  hasValue(value: string) {
-    return this.entries.some((entry) => entry.value === value);
-  }
-
-  mergeWith(entry: StolenDataEntry) {
-    this.entries.push(entry);
-    return this;
-  }
-
-  getPriority() {
-    return Math.max(...this.entries.map((entry) => entry.getPriority()));
-  }
 
   getUniqueKey() {
-    return `${this.getNames().join(":")};${this.entries
-      .map((e) => e.id)
-      .join(":")};`;
-  }
-
-  getNames(): string[] {
-    return unique(this.entries.map((e) => e.name));
-  }
-
-  getSources(): string[] {
-    return unique(this.entries.map((e) => e.source));
-  }
-
-  getValues() {
-    return unique(this.entries.map((e) => e.value));
-  }
-
-  getParsedValues(key_path: string) {
-    return Array.from(
-      new Set(this.entries.map((e) => e.getParsedValue(key_path)))
-    );
-  }
-
-  addMark(key: string) {
-    this.entries.forEach((entry) => entry.addMark(key));
-  }
-
-  getMarkedValues() {
-    return this.entries
-      .map((entry) => entry.marks)
-      .reduce((a, b) => a.concat(b), []);
-  }
-
-  hasMark(key: string): boolean {
-    return this.entries.some((entry) => entry.hasMark(key));
-  }
-
-  toggleMark(key: string): void {
-    this.entries.forEach((entry) => entry.toggleMark(key));
-  }
-
-  getDecodingsApplied(): DecodingSchema[] {
-    return unique(this.entries.map((entry) => entry.decoding_applied));
+    return this.request.shorthost + ";" + this.name + ";" + this.value;
   }
 }

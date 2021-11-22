@@ -183,3 +183,31 @@ export function isBase64(s: string): boolean {
 export function isBase64JSON(s: unknown): s is string {
   return typeof s === "string" && isBase64(s) && isJSONObject(atob(s));
 }
+
+export function flattenObject(
+  obj: Record<string, unknown>
+): [string, string][] {
+  const ret: [string, string][] = [];
+  for (const [key, value] of Object.entries(obj)) {
+    const value = obj[key];
+    if (value === null) {
+      ret.push([key, "null"]);
+      continue;
+    }
+    if (typeof value === "object") {
+      const flattened = flattenObject(value as Record<string, unknown>);
+      for (const [subkey, subvalue] of flattened) {
+        ret.push([`${key}.${subkey}`, subvalue]);
+      }
+    } else {
+      ret.push([key, value.toString()]);
+    }
+  }
+  return ret;
+}
+
+export function flattenObjectEntries(
+  entries: [string, unknown][]
+): [string, string][] {
+  return flattenObject(Object.fromEntries(entries));
+}

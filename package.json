@@ -4,8 +4,9 @@
   "description": "",
   "main": "email-template-harsh.js",
   "scripts": {
-    "build": "npx esbuild  sidebar/sidebar.tsx report-window/report-window.tsx --bundle  background.ts --bundle --outdir=./lib",
-    "watch": "npm run build -- --watch"
+    "build": "npx esbuild  sidebar/sidebar.tsx test.ts report-window/report-window.tsx --bundle  background.ts --bundle --outdir=./lib",
+    "watch": "npm run build -- --watch",
+    "typecheck": "tsc"
   },
   "repository": {
     "type": "git",

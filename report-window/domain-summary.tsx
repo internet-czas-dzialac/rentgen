@@ -25,18 +25,11 @@ export default function DomainSummary({
       Właściciel domeny <strong>{cluster.id}</strong> otrzymał:{" "}
       <ul>
         <li>Mój adres IP</li>
-        {cluster.getRepresentativeMarks().map((mark) => (
+        {cluster.getRepresentativeStolenData().map((entry) => (
           <li>
-            {emailClassifications[mark.classification]}{" "}
-            {emailSources[mark.source]} (nazwa: <code>{mark.name}</code>,{" "}
-            {mark.key ? (
-              <>
-                pozycja <code>{mark.key}</code>,
-              </>
-            ) : (
-              ""
-            )}
-            wartość: <code>{mark.valuePreview}</code>)
+            {emailClassifications[entry.classification]}{" "}
+            {emailSources[entry.source]} (nazwa: <code>{entry.name}</code>,{" "}
+            wartość: <code>{entry.getValuePreview()}</code>)
           </li>
         ))}
       </ul>

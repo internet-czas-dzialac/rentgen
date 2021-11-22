@@ -1,5 +1,10 @@
 import { StolenDataEntry } from "./stolen-data-entry";
-import { getshorthost, parseCookie, Request } from "./util";
+import {
+  flattenObjectEntries,
+  getshorthost,
+  parseCookie,
+  Request,
+} from "./util";
 
 type NameValue = { name: string; value: string };
 
@@ -151,9 +156,13 @@ export default class ExtendedRequest {
     if (!this.hasCookie() || this.getCookie() === undefined) {
       return [];
     }
-    return Object.entries(parseCookie(this.getCookie()))
-      .map(([key, value]) => [key, value || ""])
-      .map(([key, value]) => new StolenDataEntry(this, "cookie", key, value));
+    return flattenObjectEntries(
+      Object.entries(parseCookie(this.getCookie()))
+        .map(([key, value]) => [key, value || ""])
+        .map(([key, value]) => {
+          return [key, StolenDataEntry.parseValue(value)];
+        })
+    ).map(([key, value]) => new StolenDataEntry(this, "cookie", key, value));
   }
 
   hasReferer() {
@@ -174,50 +183,56 @@ export default class ExtendedRequest {
     if (!path.includes(";")) {
       return [];
     }
-    return path
-      .split(";")
-      .map((e) => e.split("="))
-      .map(([key, value]) => [key, value || ""])
-      .map(
-        ([key, value]) =>
-          new StolenDataEntry(this, "pathname", key, decodeURIComponent(value))
-      );
+    return flattenObjectEntries(
+      path
+        .split(";")
+        .map((e) => e.split("="))
+        .map(([key, value]) => [key, value || ""])
+        .map(([key, value]) => {
+          return [key, StolenDataEntry.parseValue(decodeURIComponent(value))];
+        })
+    ).map(([key, value]) => new StolenDataEntry(this, "pathname", key, value));
   }
 
   getQueryParams(): StolenDataEntry[] {
     const url = new URL(this.data.url);
-    return Array.from((url.searchParams as any).entries())
-      .map(([key, value]) => [key, value || ""])
-      .map(([key, value]) => {
-        try {
-          value = decodeURIComponent(value);
-        } catch (e) {}
-        return new StolenDataEntry(this, "queryparams", key, value);
-      });
+    return flattenObjectEntries(
+      Array.from((url.searchParams as any).entries())
+        .map(([key, value]) => [key, value || ""])
+        .map(([key, value]) => {
+          return [key, StolenDataEntry.parseValue(decodeURIComponent(value))];
+        })
+    ).map(([key, value]) => {
+      return new StolenDataEntry(this, "queryparams", key, value);
+    });
   }
 
   getHeadersData(): StolenDataEntry[] {
-    return this.data.requestHeaders
-      .filter((header) => {
-        for (const regex of whitelisted_cookies) {
-          if (regex.test(header.name)) {
-            return false;
+    return flattenObjectEntries(
+      this.data.requestHeaders
+        .filter((header) => {
+          for (const regex of whitelisted_cookies) {
+            if (regex.test(header.name)) {
+              return false;
+            }
           }
-        }
-        return true;
-      })
-      .map(
-        (header) =>
-          new StolenDataEntry(this, "header", header.name, header.value)
-      );
+          return true;
+        })
+        .map((header) => {
+          return [
+            header.name,
+            StolenDataEntry.parseValue(decodeURIComponent(header.value)),
+          ];
+        })
+    ).map(([key, value]) => new StolenDataEntry(this, "header", key, value));
   }
 
   hasMark() {
-    return this.stolenData.some((data) => data.hasMark());
+    return this.stolenData.some((data) => data.isMarked);
   }
 
   getMarkedEntries() {
-    return this.stolenData.filter((data) => data.hasMark());
+    return this.stolenData.filter((data) => data.isMarked);
   }
 
   getHost() {

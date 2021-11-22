@@ -1,96 +1,36 @@
 import React from "react";
 import { getMemory } from "../memory";
 import { RequestCluster } from "../request-cluster";
-import { MergedStolenDataEntry, Sources } from "../stolen-data-entry";
+import { Sources, StolenDataEntry } from "../stolen-data-entry";
 
-import { hyphenate, useEmitter } from "../util";
+import { useEmitter } from "../util";
 
 const MAX_STRING_VALUE_LENGTH = 100;
 
-function StolenDataValueTable({
-  entry,
-  prefixKey = "",
-}: {
-  entry: MergedStolenDataEntry;
-  prefixKey: string;
-}) {
-  return (
-    <div>
-      {entry.getDecodingsApplied().includes("base64") ? (
-        <span style={{ color: "white", backgroundColor: "green" }}>
-          "base64"
-        </span>
-      ) : (
-        ""
-      )}
-      <table>
-        <tbody>
-          {Object.keys(entry.getParsedValues(prefixKey)[0]).map((key) => {
-            const subkey = `${prefixKey}.${key}`;
-            return (
-              <tr key={`${prefixKey}.${key}`}>
-                <th
-                  onClick={(e) => {
-                    entry.toggleMark(subkey);
-                    e.stopPropagation();
-                  }}
-                  style={{
-                    border: entry.hasMark(subkey)
-                      ? "2px solid red"
-                      : "2px solid transparent",
-                  }}
-                >
-                  {hyphenate(key)}
-                </th>
-                <td>
-                  <StolenDataValue entry={entry} prefixKey={subkey} />
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
 function StolenDataValue({
   entry,
-  prefixKey = "",
 }: {
-  entry: MergedStolenDataEntry;
+  entry: StolenDataEntry;
   prefixKey?: string;
 }) {
   const [version] = useEmitter(entry);
-  const value = entry.getParsedValues(prefixKey)[0];
   let body = null;
-  if (!value) {
+  if (!entry.value) {
     body = <></>;
-  } else if (typeof value === "string") {
-    const content = entry.getParsedValues(prefixKey)[0] as string;
+  } else {
     body = (
-      <div
-        style={{
-          border: entry.hasMark(prefixKey)
-            ? "2px solid red"
-            : "2px solid transparent",
-        }}
-        data-version={version}
-      >
-        {content.slice(0, MAX_STRING_VALUE_LENGTH)}{" "}
-        {content.length > MAX_STRING_VALUE_LENGTH ? "(...)" : ""}
+      <div data-version={version}>
+        {entry.value.slice(0, MAX_STRING_VALUE_LENGTH)}{" "}
+        {entry.value.length > MAX_STRING_VALUE_LENGTH ? "(...)" : ""}
       </div>
     );
-  } else {
-    body = <StolenDataValueTable entry={entry} prefixKey={prefixKey} />;
   }
   return (
     <div
       onClick={(e) => {
-        entry.toggleMark(prefixKey);
+        entry.toggleMark();
         e.stopPropagation();
       }}
-      data-marks={entry.getMarkedValues().join(", ")}
     >
       {body}
     </div>
@@ -108,27 +48,32 @@ function StolenDataRow({
   entry,
   cluster,
 }: {
-  entry: MergedStolenDataEntry;
+  entry: StolenDataEntry;
   cluster: RequestCluster;
 }) {
   const [version] = useEmitter(entry);
   return (
     <tr
-      key={origin + cluster.id + entry.getUniqueKey()}
       data-key={origin + cluster.id + entry.getUniqueKey()}
       data-version={version}
     >
+      <td>
+        <input
+          type="checkbox"
+          checked={entry.isMarked}
+          onChange={() => entry.toggleMark()}
+        />
+      </td>
       <th
         style={{
           width: "100px",
           overflowWrap: "anywhere",
-          border: entry.hasMark("") ? "2px solid red" : "2px solid transparent",
         }}
-        onClick={() => entry.toggleMark("")}
+        onClick={() => entry.toggleMark()}
       >
-        {entry.getNames().map(hyphenate).join(", ")}
+        {entry.name}
       </th>
-      <td>{entry.getSources().map((source) => icons[source])}</td>
+      <td>{[entry.source].map((source) => icons[source])}</td>
       <td style={{ wordWrap: "anywhere" as any }}>
         <StolenDataValue entry={entry} />
       </td>
@@ -172,13 +117,17 @@ export default function StolenDataCluster({
       <table>
         <tbody>
           {cluster
-            .getStolenData({ minValueLength, cookiesOnly, cookiesOrOriginOnly })
+            .getRepresentativeStolenData({
+              minValueLength,
+              cookiesOnly,
+              cookiesOrOriginOnly,
+            })
             .map((entry) => (
               <StolenDataRow
                 {...{
                   entry,
                   cluster,
-                  key: origin + cluster.id + entry.getUniqueKey(),
+                  key: entry.id,
                 }}
               />
             ))}
