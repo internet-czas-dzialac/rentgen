@@ -103,18 +103,24 @@ export class StolenDataEntry extends EventEmitter {
           );
         }
       }
+      const searchParams = Object.fromEntries(
+        ((url.searchParams as unknown) as {
+          entries: () => Iterable<[string, string]>;
+        }).entries()
+      );
+      if (typeof hash !== "object" && Object.keys(searchParams).length === 0) {
+        return value; // just a string;
+      }
       const object = {
         [Symbol.for("originalString")]: value, // so it doesn't appear raw in the table but can be easily retrieved later
         host: url.host,
         path: url.pathname,
-        ...Object.fromEntries(
-          ((url.searchParams as unknown) as {
-            entries: () => Iterable<[string, string]>;
-          }).entries()
-        ),
+        searchParams,
         ...(hash === "" ? {} : typeof hash === "string" ? { hash } : hash),
       };
       return object;
+    } else if (value === null) {
+      return "null";
     } else {
       return value.toString();
     }
