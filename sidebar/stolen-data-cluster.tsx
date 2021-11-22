@@ -44,19 +44,10 @@ const icons: Record<Sources, string> = {
   header: "H",
 };
 
-function StolenDataRow({
-  entry,
-  cluster,
-}: {
-  entry: StolenDataEntry;
-  cluster: RequestCluster;
-}) {
+function StolenDataRow({ entry }: { entry: StolenDataEntry }) {
   const [version] = useEmitter(entry);
   return (
-    <tr
-      data-key={origin + cluster.id + entry.getUniqueKey()}
-      data-version={version}
-    >
+    <tr data-key={entry.id} data-version={version}>
       <td>
         <input
           type="checkbox"
@@ -73,7 +64,16 @@ function StolenDataRow({
       >
         {entry.name}
       </th>
-      <td>{[entry.source].map((source) => icons[source])}</td>
+      <td style={{ whiteSpace: "nowrap" }}>
+        {[entry.source].map((source) => icons[source])}
+        {entry.exposesOrigin() ? (
+          <span title="Pokazuje część historii przeglądania">🔴</span>
+        ) : entry.request.exposesOrigin() ? (
+          <span title="Jest częścią zapytania, które ujawnia historię przeglądania">
+            🟡
+          </span>
+        ) : null}
+      </td>
       <td style={{ wordWrap: "anywhere" as any }}>
         <StolenDataValue entry={entry} />
       </td>
@@ -126,7 +126,6 @@ export default function StolenDataCluster({
               <StolenDataRow
                 {...{
                   entry,
-                  cluster,
                   key: entry.id,
                 }}
               />

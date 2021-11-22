@@ -128,19 +128,33 @@ export default class ExtendedRequest {
   }
 
   exposesOrigin() {
-    const url = new URL(this.origin);
+    const url = new URL(this.originalURL);
     const host = url.host;
     const path = url.pathname;
     const shorthost = getshorthost(host);
-    return (
-      this.getReferer().includes(host) ||
-      this.stolenData.filter(
-        (entry) =>
-          entry.value.includes(host) ||
-          entry.value.includes(path) ||
-          entry.value.includes(shorthost)
-      ).length > 0
-    );
+    if (this.getReferer().includes(shorthost)) {
+      return true;
+    }
+    for (const entry of this.stolenData) {
+      if (
+        entry.value.includes(host) ||
+        entry.value.includes(path) ||
+        entry.value.includes(shorthost)
+      ) {
+        console.log(
+          "request",
+          this.data.url,
+          "exposes origin in ",
+          entry,
+          ". Checked",
+          host,
+          path,
+          shorthost
+        );
+        return true;
+      }
+    }
+    return false;
   }
 
   private getAllStolenData(): StolenDataEntry[] {

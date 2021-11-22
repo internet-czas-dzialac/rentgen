@@ -4,6 +4,7 @@ import ExtendedRequest, { HAREntry } from "./extended-request";
 
 import {
   getshorthost,
+  isBase64,
   isBase64JSON,
   isJSONObject,
   isURL,
@@ -28,7 +29,7 @@ const id = (function* id() {
   }
 })();
 
-export type DecodingSchema = "base64";
+export type DecodingSchema = "base64" | "raw";
 
 export class StolenDataEntry extends EventEmitter {
   public isIAB = false;
@@ -36,7 +37,8 @@ export class StolenDataEntry extends EventEmitter {
   public id: number;
   private marked = false;
   public classification: keyof typeof Classifications;
-  public decoding_applied: DecodingSchema = null;
+  public decoding_applied: DecodingSchema = "raw";
+  public decodings_available: DecodingSchema[] = ["raw"];
 
   constructor(
     public request: ExtendedRequest,
@@ -52,9 +54,8 @@ export class StolenDataEntry extends EventEmitter {
     super();
     this.id = id.next().value as number;
     this.classification = this.classify();
-    if (isBase64JSON(value)) {
-      this.value = atob(value);
-      this.decoding_applied = "base64";
+    if (isBase64(value)) {
+      this.decodings_available.push("base64");
     }
   }
 
@@ -212,5 +213,9 @@ export class StolenDataEntry extends EventEmitter {
 
   getUniqueKey() {
     return this.request.shorthost + ";" + this.name + ";" + this.value;
+  }
+
+  exposesOrigin(): boolean {
+    return this.value.includes(getshorthost(this.request.origin));
   }
 }
