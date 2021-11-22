@@ -25,13 +25,16 @@ export default function DomainSummary({
       Właściciel domeny <strong>{cluster.id}</strong> otrzymał:{" "}
       <ul>
         <li>Mój adres IP</li>
-        {cluster.getRepresentativeStolenData().map((entry) => (
-          <li>
-            {emailClassifications[entry.classification]}{" "}
-            {emailSources[entry.source]} (nazwa: <code>{entry.name}</code>,{" "}
-            wartość: <code>{entry.getValuePreview()}</code>)
-          </li>
-        ))}
+        {cluster
+          .getRepresentativeStolenData()
+          .filter((entry) => entry.isMarked)
+          .map((entry) => (
+            <li>
+              {emailClassifications[entry.classification]}{" "}
+              {emailSources[entry.source]} (nazwa: <code>{entry.name}</code>,{" "}
+              wartość: <code>{entry.getValuePreview()}</code>)
+            </li>
+          ))}
       </ul>
     </li>
   );

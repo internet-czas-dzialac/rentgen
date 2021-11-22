@@ -8,6 +8,7 @@ import {
   isBase64JSON,
   isJSONObject,
   isURL,
+  maskString,
   parseToObject,
 } from "./util";
 
@@ -198,9 +199,7 @@ export class StolenDataEntry extends EventEmitter {
         ? (value[Symbol.for("originalString")] as string)
         : value.toString();
     if (typeof value !== "object" && this.classification == "id") {
-      return (
-        str.slice(0, Math.min(str.length / 3, ID_PREVIEW_MAX_LENGTH)) + "(...)"
-      );
+      return maskString(value, 1 / 3, ID_PREVIEW_MAX_LENGTH);
     } else if (
       typeof value === "object" &&
       value[Symbol.for("originalString")]

@@ -1,9 +1,8 @@
 import React from "react";
 import { getMemory } from "../memory";
-import { RequestCluster } from "../request-cluster";
-import { Sources, StolenDataEntry } from "../stolen-data-entry";
+import { StolenDataEntry } from "../stolen-data-entry";
 
-import { useEmitter } from "../util";
+import { maskString, useEmitter } from "../util";
 
 const MAX_STRING_VALUE_LENGTH = 100;
 
@@ -20,8 +19,7 @@ function StolenDataValue({
   } else {
     body = (
       <div data-version={version}>
-        {entry.value.slice(0, MAX_STRING_VALUE_LENGTH)}{" "}
-        {entry.value.length > MAX_STRING_VALUE_LENGTH ? "(...)" : ""}
+        {maskString(entry.value, 1, MAX_STRING_VALUE_LENGTH)}
       </div>
     );
   }
@@ -36,13 +34,6 @@ function StolenDataValue({
     </div>
   );
 }
-
-const icons: Record<Sources, string> = {
-  cookie: "🍪",
-  pathname: "🛣",
-  queryparams: "🅿",
-  header: "H",
-};
 
 function StolenDataRow({ entry }: { entry: StolenDataEntry }) {
   const [version] = useEmitter(entry);
@@ -65,12 +56,24 @@ function StolenDataRow({ entry }: { entry: StolenDataEntry }) {
         {entry.name}
       </th>
       <td style={{ whiteSpace: "nowrap" }}>
-        {[entry.source].map((source) => icons[source])}
+        {entry.source === "cookie" ? (
+          <span title="Dane przechowywane w Cookies">🍪</span>
+        ) : entry.request.hasCookie() ? (
+          <span
+            title="Wysłane w zapytaniu opatrzonym cookies"
+            style={{ opacity: 0.5, fontSize: "0.5em" }}
+          >
+            🍪
+          </span>
+        ) : null}
         {entry.exposesOrigin() ? (
-          <span title="Pokazuje część historii przeglądania">🔴</span>
+          <span title="Pokazuje część historii przeglądania">⚠️</span>
         ) : entry.request.exposesOrigin() ? (
-          <span title="Jest częścią zapytania, które ujawnia historię przeglądania">
-            🟡
+          <span
+            title="Jest częścią zapytania, które ujawnia historię przeglądania"
+            style={{ opacity: 0.5, fontSize: "0.5em" }}
+          >
+            ⚠️
           </span>
         ) : null}
       </td>

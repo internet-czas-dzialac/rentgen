@@ -211,3 +211,20 @@ export function flattenObjectEntries(
 ): [string, string][] {
   return flattenObject(Object.fromEntries(entries));
 }
+
+export function maskString(
+  str: string,
+  max_fraction_remaining: number,
+  max_chars_total: number
+): string {
+  const amount_of_chars_to_cut =
+    str.length - Math.min(str.length * max_fraction_remaining, max_chars_total);
+  if (amount_of_chars_to_cut == 0) {
+    return str;
+  }
+  return (
+    str.slice(0, str.length / 2 - amount_of_chars_to_cut / 2) +
+    "(...)" +
+    str.slice(str.length / 2 + amount_of_chars_to_cut / 2)
+  );
+}
