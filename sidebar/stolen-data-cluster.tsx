@@ -1,11 +1,7 @@
 import React from "react";
 import { getMemory } from "../memory";
 import { RequestCluster } from "../request-cluster";
-import {
-  MergedStolenDataEntry,
-  Sources,
-  StolenDataEntry,
-} from "../stolen-data-entry";
+import { MergedStolenDataEntry, Sources } from "../stolen-data-entry";
 
 import { hyphenate, useEmitter } from "../util";
 
@@ -19,33 +15,42 @@ function StolenDataValueTable({
   prefixKey: string;
 }) {
   return (
-    <table>
-      <tbody>
-        {Object.keys(entry.getParsedValues(prefixKey)[0]).map((key) => {
-          const subkey = `${prefixKey}.${key}`;
-          return (
-            <tr key={`${prefixKey}.${key}`}>
-              <th
-                onClick={(e) => {
-                  entry.toggleMark(subkey);
-                  e.stopPropagation();
-                }}
-                style={{
-                  border: entry.hasMark(subkey)
-                    ? "2px solid red"
-                    : "2px solid transparent",
-                }}
-              >
-                {hyphenate(key)}
-              </th>
-              <td>
-                <StolenDataValue entry={entry} prefixKey={subkey} />
-              </td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+    <div>
+      {entry.getDecodingsApplied().includes("base64") ? (
+        <span style={{ color: "white", backgroundColor: "green" }}>
+          "base64"
+        </span>
+      ) : (
+        ""
+      )}
+      <table>
+        <tbody>
+          {Object.keys(entry.getParsedValues(prefixKey)[0]).map((key) => {
+            const subkey = `${prefixKey}.${key}`;
+            return (
+              <tr key={`${prefixKey}.${key}`}>
+                <th
+                  onClick={(e) => {
+                    entry.toggleMark(subkey);
+                    e.stopPropagation();
+                  }}
+                  style={{
+                    border: entry.hasMark(subkey)
+                      ? "2px solid red"
+                      : "2px solid transparent",
+                  }}
+                >
+                  {hyphenate(key)}
+                </th>
+                <td>
+                  <StolenDataValue entry={entry} prefixKey={subkey} />
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
   );
 }
 

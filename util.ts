@@ -171,3 +171,15 @@ export function isSameURL(url1: string, url2: string): boolean {
   url2 = url2.replace(/^https?:\/\//, "").replace(/\/$/, "");
   return url1 === url2;
 }
+
+export function isBase64(s: string): boolean {
+  try {
+    atob(s);
+    return true;
+  } catch (e) {}
+  return false;
+}
+
+export function isBase64JSON(s: unknown): s is string {
+  return typeof s === "string" && isBase64(s) && isJSONObject(atob(s));
+}

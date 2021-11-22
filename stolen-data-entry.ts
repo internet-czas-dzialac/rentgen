@@ -2,8 +2,10 @@ import { TCModel } from "@iabtcf/core";
 import { EventEmitter } from "events";
 import ExtendedRequest, { HAREntry } from "./extended-request";
 import Mark from "./mark";
+
 import {
   getshorthost,
+  isBase64JSON,
   isJSONObject,
   isURL,
   parseToObject,
@@ -29,12 +31,15 @@ const id = (function* id() {
   }
 })();
 
+export type DecodingSchema = "base64";
+
 export class StolenDataEntry extends EventEmitter {
   public isIAB = false;
   public iab: TCModel | null = null;
   public id: number;
   public marks: Mark[] = [];
   public classification: keyof typeof Classifications;
+  public decoding_applied: DecodingSchema = null;
 
   constructor(
     public request: ExtendedRequest,
@@ -50,6 +55,10 @@ export class StolenDataEntry extends EventEmitter {
     super();
     this.id = id.next().value as number;
     this.classification = this.classify();
+    if (isBase64JSON(value)) {
+      this.value = atob(value);
+      this.decoding_applied = "base64";
+    }
   }
 
   getPriority() {
@@ -290,5 +299,9 @@ export class MergedStolenDataEntry extends EventEmitter {
 
   toggleMark(key: string): void {
     this.entries.forEach((entry) => entry.toggleMark(key));
+  }
+
+  getDecodingsApplied(): DecodingSchema[] {
+    return unique(this.entries.map((entry) => entry.decoding_applied));
   }
 }
