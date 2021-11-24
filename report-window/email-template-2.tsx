@@ -231,7 +231,7 @@ export default function EmailTemplate2({
         <li>
           Osoby, których dane dotyczą, powinny mieć możliwość wyrażenia
           sprzeciwu wobec przetwarzania ich danych do celów związanych z
-          targetowaniem <em>przed</em> rozpoczęciem przetwarzania (zob.{" "}
+          targetowaniem <strong>przed rozpoczęciem przetwarzania</strong> (zob.{" "}
           <a href="https://edpb.europa.eu/system/files/2021-11/edpb_guidelines_082020_on_the_targeting_of_social_media_users_pl_0.pdf">
             Wytyczne 8/2020 EROD dotyczące targetowania użytkowników mediów
             społecznościowych
