@@ -29,6 +29,7 @@ function StolenDataValue({
         entry.toggleMark();
         e.stopPropagation();
       }}
+      style={{ color: entry.isMarked ? "black" : "gray" }}
     >
       {body}
     </div>
