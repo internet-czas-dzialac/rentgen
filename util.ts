@@ -36,8 +36,11 @@ export function getshorthost(host: string) {
     .replace(/^.*:\/\//, "")
     .replace(/\/.*$/, "")
     .split(".");
-
-  return parts.slice(parts.at(-2).length > 3 ? -2 : -3).join(".");
+  let lookback = parts.at(-2).length > 3 ? -2 : -3;
+  if (parts.at(-2) == "doubleclick") {
+    lookback = -4; // to distinguish between google ads and stats
+  }
+  return parts.slice(lookback).join(".");
 }
 
 export function useEmitter(
