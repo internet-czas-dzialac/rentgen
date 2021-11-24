@@ -184,7 +184,7 @@ export class StolenDataEntry extends EventEmitter {
 
   isRelatedToID() {
     return this.request.stolenData.some(
-      (entry) => (entry.classification = "id")
+      (entry) => entry.classification == "id"
     );
   }
 
