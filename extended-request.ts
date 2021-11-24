@@ -69,6 +69,7 @@ export default class ExtendedRequest {
   public origin: string;
   public initialized = false;
   public stolenData: StolenDataEntry[];
+  public originalPathname: string;
 
   constructor(public data: Request) {
     this.tabId = data.tabId;
@@ -103,6 +104,7 @@ export default class ExtendedRequest {
 
     this.originalURL = url;
     this.origin = new URL(url).origin;
+    this.originalPathname = new URL(url).pathname;
   }
 
   isThirdParty() {
