@@ -23,11 +23,14 @@ function ClusterRangeSummary({ cluster }: { cluster: RequestCluster }) {
   return (
     <>
       {[
+        "Pańskiego adresu IP",
         range.includes("id")
-          ? "sztucznie nadane id" + (has_cookie_ids ? " z cookie" : "")
+          ? "sztucznie nadanego id" + (has_cookie_ids ? " z cookie" : "")
           : "",
-        range.includes("history") ? "część Pańskiej historii przeglądania" : "",
-        range.includes("location") ? "informacje na temat Pana położenia" : "",
+        range.includes("history")
+          ? "części Pańskiej historii przeglądania"
+          : "",
+        range.includes("location") ? "informacji na temat Pana położenia" : "",
       ]
         .filter((e) => e !== "")
         .join(", ")}
@@ -266,6 +269,8 @@ export default function EmailTemplate2({
             .filter((cluster) => cluster.hasMarks())
             .map((cluster) => (
               <li key={cluster.id}>
+                {" "}
+                style={{ paddingBottom: "1rem" }}
                 ujawniła pańskie dane w zakresie{" "}
                 <em>
                   <ClusterRangeSummary {...{ cluster }} />
