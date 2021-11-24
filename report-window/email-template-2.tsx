@@ -40,7 +40,15 @@ function ClusterRangeSummary({ cluster }: { cluster: RequestCluster }) {
 
 function Placeholder({ children }: { children: string }) {
   return (
-    <span style={{ textDecoration: "underline", fontSize: "0.8em" }}>
+    <span
+      style={{
+        textDecoration: "underline",
+        fontSize: "0.8em",
+        position: "relative",
+        textUnderlineOffset: "4px",
+        bottom: "3px",
+      }}
+    >
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <span style={{ color: "gray" }}>({children})</span>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;
@@ -92,10 +100,9 @@ export default function EmailTemplate2({
             sposobów, w jaki strona przetwarza moje dane osobowe.{" "}
           </p>
           <p>
-            <img {...{ src: config.popup_screenshot_base64 }} />${}
+            <img {...{ src: config.popup_screenshot_base64 }} />
           </p>
           <p>
-            $
             {config.popup_action === "ignored"
               ? /* HTML */ `Nie kliknąłem żadnego przycisku w tym okienku. W
                 szczególności nie kliknąłem przycisku
@@ -116,11 +123,13 @@ export default function EmailTemplate2({
         {Object.values(clusters)
           .filter((cluster) => cluster.hasMarks())
           .map((cluster) => (
-            <DomainSummary cluster={cluster} />
+            <DomainSummary cluster={cluster} key={cluster.id} />
           ))}
       </ul>
       {config.popup_action === "ignored" ? (
-        <p>Dane te zostały wysłane zanim kliknąłem cokolwiek na tej stronie.</p>
+        <p>
+          Dane te zostały wysłane, zanim kliknąłem cokolwiek na tej stronie.
+        </p>
       ) : config.popup_action === "accepted" ? (
         <p>
           Dane te zostały wysłane po tym, jak kliknąłem przycisk „
@@ -166,7 +175,9 @@ export default function EmailTemplate2({
         W przypadku opisywanej przeze mnie mojej wizyty na Państwa stronie nie
         ma zastosowania „Zgoda”, gdyż{" "}
         {config.popup_action === "ignored"
-          ? `nie wyrażałem żadnej zgody na takie przetwarzanie moich danych`
+          ? /* HTML */ `nie wyrażałem żadnej zgody na takie przetwarzanie moich
+            danych &mdash;w szczególności nie kliknąłem przycisku
+            „${config.popup_accept_all_text}”`
           : /* HTML */ `o ile po wejściu na stronę wcisnąłem w wyskakującym
             okienku przycisk „${config.popup_accept_all_text}”, o tyle nie
             stanowi to według mnie ważnej w świetle RODO zgody, gdyż brakowało w
@@ -296,8 +307,9 @@ export default function EmailTemplate2({
                   kogo? jaki podmiot podejmuje wspomniane działania lub jest
                   beneficjentem wspomnianych korzyści?
                 </Placeholder>
-                . Ujawnienie tych danych temu podmiotowi przez naszą stronę było
-                konieczne dla potrzeb wynikających z tego interesu, ponieważ
+                . Ujawnienie <ClusterRangeSummary {...{ cluster }} /> temu
+                podmiotowi przez naszą stronę było konieczne dla potrzeb
+                wynikających z tego interesu, ponieważ
                 <Placeholder>uzasadnienie konieczności</Placeholder>.<br />
               </li>
             ))}
