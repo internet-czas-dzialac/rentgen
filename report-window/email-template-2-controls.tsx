@@ -94,6 +94,48 @@ export default function EmailTemplate2Controls({
           </option>
         </select>
       </div>
+      {config.popup_type !== "none" ? (
+        <div>
+          <input
+            type="checkbox"
+            id="popup_mentions_passive_consent"
+            checked={config.popup_mentions_passive_consent}
+            onChange={(e) =>
+              setConfig((v) => ({
+                ...v,
+                popup_mentions_passive_consent: e.target.checked,
+              }))
+            }
+          />
+          <label htmlFor="popup_mentions_passive_consent">
+            okienko wspomina o pasywnej zgodzie (np. „korzystając ze strony
+            wyrażasz zgodę”)
+          </label>
+        </div>
+      ) : (
+        ""
+      )}
+      {config.popup_mentions_passive_consent ? (
+        <div>
+          <label htmlFor="popup_passive_consent_text">
+            Jak okienko próbuje wmówić Ci, że wyrażasz zgodę? Przeklej z treści
+            okienka:
+          </label>
+          <input
+            id="popup_passive_consent_text"
+            placeholder="Korzystając ze strony wyrażasz zgodę"
+            value={config.popup_passive_consent_text}
+            onChange={(e) =>
+              setConfig((v) => ({
+                ...v,
+                popup_passive_consent_text: e.target.value,
+              }))
+            }
+          />
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 }

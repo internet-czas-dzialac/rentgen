@@ -10,6 +10,8 @@ export type EmailTemplate2Config = {
   popup_action: "ignored" | "accepted";
   popup_screenshot_base64: string | null;
   popup_accept_all_text: string;
+  popup_mentions_passive_consent: boolean;
+  popup_passive_consent_text: string;
 };
 
 function ClusterRangeSummary({ cluster }: { cluster: RequestCluster }) {
@@ -69,6 +71,8 @@ export default function EmailTemplate2({
     popup_action: "ignored",
     popup_screenshot_base64: null,
     popup_accept_all_text: "Zaakceptuj wszystkie",
+    popup_mentions_passive_consent: false,
+    popup_passive_consent_text: "",
   });
 
   const visited_url = entries[0].request.originalURL;
@@ -106,9 +110,9 @@ export default function EmailTemplate2({
             {config.popup_action === "ignored"
               ? /* HTML */ `Nie kliknąłem żadnego przycisku w tym okienku. W
                 szczególności nie kliknąłem przycisku
-                „${config.popup_accept_all_text}”`
+                „${config.popup_accept_all_text}”.`
               : config.popup_action === "accepted"
-              ? `Kliknąlem na widoczną w tym okienku opcję „${config.popup_accept_all_text}”`
+              ? `Kliknąlem na widoczną w tym okienku opcję „${config.popup_accept_all_text}”.`
               : ""}
           </p>
         </>
@@ -139,8 +143,8 @@ export default function EmailTemplate2({
         ""
       )}
       <p>
-        W załączeniu przesyłam zrzuty ekranu, które dokumentują fakt wysłania
-        tych danych przez Państwa stronę.{" "}
+        W załączeniu przesyłam część zrzutów ekranu dokumentujących fakt
+        wysłania tych danych przez Państwa stronę.{" "}
       </p>
       <h3>Podstawa prawna</h3>
       <p>
@@ -174,25 +178,51 @@ export default function EmailTemplate2({
       <p>
         W przypadku opisywanej przeze mnie mojej wizyty na Państwa stronie nie
         ma zastosowania „Zgoda”, gdyż{" "}
-        {config.popup_action === "ignored"
-          ? /* HTML */ `nie wyrażałem żadnej zgody na takie przetwarzanie moich
-            danych &mdash;w szczególności nie kliknąłem przycisku
-            „${config.popup_accept_all_text}”`
-          : /* HTML */ `o ile po wejściu na stronę wcisnąłem w wyskakującym
-            okienku przycisk „${config.popup_accept_all_text}”, o tyle nie
-            stanowi to według mnie ważnej w świetle RODO zgody, gdyż brakowało w
-            tym okienku równie łatwo osiągalnego przycisku, którego kliknięcie
-            skutkowałoby zasygnalizowaniem braku mojej zgody na takie
-            przetwarzanie moich danych. Mówiąc wprost &mdash; wyrażenie „zgody”
-            było łatwiejsze niż jej niewyrażenie. Niewyrażenie zgody wiąże się z
-            negatywną konsekwencją konieczności przechodzenia przez dodatkowe
-            kroki w wyskakującym okienku. Zatem tak otrzymana przez Państwo moja
-            „zgoda” nie jest poprawną podstawą prawną do przetwarzania moich
-            danych osobowych, gdyż nie spełnia warunku dobrowolności
-            wspomnianego w Art. 4. pkt 11. RODO`}
-        . Za zgodę nie można też uznać posiadania włączonej obsługi cookies w
+        {config.popup_action === "ignored" ? (
+          <>
+            nie wyrażałem żadnej zgody na takie przetwarzanie moich danych
+            {config.popup_type === "consent" ? (
+              <>
+                &mdash; w szczególności nie kliknąłem przycisku „
+                {config.popup_accept_all_text}”
+              </>
+            ) : (
+              ""
+            )}
+            .
+          </>
+        ) : (
+          /* HTML */ `o ile po wejściu na stronę wcisnąłem w wyskakującym
+          okienku przycisk „${config.popup_accept_all_text}”, o tyle nie stanowi
+          to według mnie ważnej w świetle RODO zgody, gdyż brakowało w tym
+          okienku równie łatwo osiągalnego przycisku, którego kliknięcie
+          skutkowałoby zasygnalizowaniem braku mojej zgody na takie
+          przetwarzanie moich danych. Mówiąc wprost &mdash; wyrażenie „zgody”
+          było łatwiejsze niż jej niewyrażenie. Niewyrażenie zgody wiąże się z
+          negatywną konsekwencją konieczności przechodzenia przez dodatkowe
+          kroki w wyskakującym okienku. Zatem tak otrzymana przez Państwo moja
+          „zgoda” nie jest poprawną podstawą prawną do przetwarzania moich
+          danych osobowych, gdyż nie spełnia warunku dobrowolności wspomnianego
+          w Art. 4. pkt 11. RODO.`
+        )}{" "}
+        Za zgodę nie można też uznać posiadania włączonej obsługi cookies w
         przeglądarce, jakichkolwiek innych ustawień przeglądarki, ani pasywnych
-        działań z mojej strony (np. „kontynuowanie korzystania ze strony”).
+        działań z mojej strony (np. „kontynuowanie korzystania ze strony”)
+        {config.popup_mentions_passive_consent ? (
+          <>
+            {" "}
+            &mdash; nieprawdą więc jest zawarty na Państwa stronie komunikat „
+            {config.popup_passive_consent_text.trim()}” (por. paragraf 97.{" "}
+            <a href="https://edpb.europa.eu/sites/default/files/files/file1/edpb_guidelines_202005_consent_pl.pdf">
+              oficjalnych wytycznych EROD dotyczących zgody na mocy
+              rozporządzenia 2016/679
+            </a>
+            )
+          </>
+        ) : (
+          ""
+        )}
+        .
       </p>
       <p>
         W mojej ocenie „Niezbędność“ nie ma zastosowania co do opisanych powyżej
