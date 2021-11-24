@@ -272,9 +272,7 @@ export default function EmailTemplate2({
           {Object.values(clusters)
             .filter((cluster) => cluster.hasMarks())
             .map((cluster) => (
-              <li key={cluster.id}>
-                {" "}
-                style={{ paddingBottom: "1rem" }}
+              <li key={cluster.id} style={{ paddingBottom: "1rem" }}>
                 ujawniła pańskie dane w zakresie{" "}
                 <em>
                   <ClusterRangeSummary {...{ cluster }} />
