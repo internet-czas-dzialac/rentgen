@@ -22,7 +22,9 @@ function handleNewFile(
 }
 
 function generateFakeHAR(entries: StolenDataEntry[]) {
-  const requests = entries.map((entry) => entry.request);
+  const requests = entries
+    .sort((entry1, entry2) => entry2.getPriority() - entry1.getPriority())
+    .map((entry) => entry.request);
   return {
     log: {
       version: "1.2",
