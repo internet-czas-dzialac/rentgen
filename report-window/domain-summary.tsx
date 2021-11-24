@@ -22,7 +22,7 @@ export default function DomainSummary({
 }) {
   return (
     <li>
-      Właściciel domeny <strong>{cluster.id}</strong> otrzymał:{" "}
+      Właścicielowi domeny <strong>{cluster.id}</strong> zostały ujawnione:{" "}
       <ul>
         <li>Mój adres IP</li>
         {cluster
