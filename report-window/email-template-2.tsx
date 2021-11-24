@@ -203,7 +203,11 @@ export default function EmailTemplate2({
       <ol>
         <li>
           Administrator danych lub podmiot trzeci, któremu dane są ujawniane
-          musi faktycznie realizować dany konkretny uzasadniony interes (
+          musi{" "}
+          <strong>
+            faktycznie realizować dany konkretny uzasadniony interes
+          </strong>{" "}
+          (
           <a href="https://curia.europa.eu/juris/document/document.jsf?text=&docid=216555&pageIndex=0&doclang=PL&mode=lst&dir=&occ=first&part=1&cid=1254905">
             Wyrok TSUE z dnia 29 lipca 2019 r. w sprawie Fashion ID, C-40/17,
             ECLI:EU:C:2019:629
@@ -211,8 +215,8 @@ export default function EmailTemplate2({
           , pkt 95.)
         </li>
         <li>
-          Takie przetwarzanie danych jest konieczne dla potrzeb wynikających z
-          danego uzasadnionego interesu (
+          Takie przetwarzanie danych jest <strong>konieczne</strong> dla potrzeb
+          wynikających z danego uzasadnionego interesu (
           <a href="https://curia.europa.eu/juris/document/document.jsf?text=&docid=216555&pageIndex=0&doclang=PL&mode=lst&dir=&occ=first&part=1&cid=1254905">
             Wyrok TSUE z dnia 29 lipca 2019 r. w sprawie Fashion ID, C-40/17,
             ECLI:EU:C:2019:629
