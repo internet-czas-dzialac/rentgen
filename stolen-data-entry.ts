@@ -173,16 +173,7 @@ export class StolenDataEntry extends EventEmitter {
 
   private classify(): keyof typeof Classifications {
     let result: keyof typeof Classifications;
-    if (
-      [this.value, decodeURIComponent(this.value)].some((haystack) =>
-        [
-          this.request.origin,
-          this.request.originalURL,
-          this.request.originalPathname,
-          getshorthost(this.request.origin),
-        ].some((needle) => haystack.includes(needle))
-      )
-    ) {
+    if (this.exposesOrigin()) {
       result = "history";
     } else {
       result = "id";
@@ -223,10 +214,13 @@ export class StolenDataEntry extends EventEmitter {
   }
 
   exposesOrigin(): boolean {
-    return (
-      this.value.includes(getshorthost(this.request.origin)) ||
-      this.value.includes(this.request.originalPathname)
+    const result = [this.value, decodeURIComponent(this.value)].some(
+      (haystack) =>
+        haystack.includes(getshorthost(this.request.origin)) ||
+        (this.request.originalPathname !== "/" &&
+          haystack.includes(this.request.originalPathname))
     );
+    return result;
   }
 
   autoMark() {
@@ -236,10 +230,16 @@ export class StolenDataEntry extends EventEmitter {
         this.name.toLowerCase().includes("id") ||
         this.name.toLowerCase().includes("cookie") ||
         this.name.toLowerCase().includes("ga") ||
+        this.name.toLowerCase().includes("ses") ||
         this.name.toLowerCase().includes("fb")) &&
         this.value.length > MIN_COOKIE_LENGTH_FOR_AUTO_MARK)
     ) {
-      if (this.request.shorthost.includes("google") && this.name == "CONSENT") {
+      if (
+        (this.request.shorthost.includes("google") ||
+          this.request.shorthost.includes("youtube")) &&
+        this.name == "CONSENT"
+      ) {
+        // this cookie contains "YES" and might distract the person looking at it into thinking i gave consent on the reported site
         return;
       }
       this.mark();

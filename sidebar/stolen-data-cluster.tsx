@@ -105,12 +105,22 @@ export default function StolenDataCluster({
       <h2>
         <a href={"https://" + cluster.id}>{cluster.id}</a>{" "}
         {cluster.hasCookies() ? "🍪" : ""} x{cluster.requests.length}{" "}
+        {/* <a
+         *   href="#"
+         *   style={{ fontSize: "10px" }}
+         *   onClick={() => getMemory().removeCookiesFor(origin, shorthost)}
+         * >
+         *   Wyczyść cookiesy
+         * </a> */}
         <a
           href="#"
           style={{ fontSize: "10px" }}
-          onClick={() => getMemory().removeCookiesFor(origin, shorthost)}
+          onClick={(e) => {
+            cluster.autoMark();
+            e.preventDefault();
+          }}
         >
-          Wyczyść cookiesy
+          Zaznacz auto
         </a>
       </h2>
       <div>
