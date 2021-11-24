@@ -326,9 +326,11 @@ export default function EmailTemplate2({
         legalizującej dane są przetwarzane przez wspomniane podmioty trzecie,
         lub tak, aby te dane po prostu nie były wysyłane. Pomoże to zachować
         prywatność innym użytkownikom Państwa strony. Polecam Państwa uwadze
-        oficjalne wytyczne EROD dotyczące zgody w kontekście RODO:
-        https://edpb.europa.eu/sites/default/files/files/file1/edpb_guidelines_202005_consent_pl.pdf
-        ). Aby na przykład zapobiec automatycznemu wysyłaniu historii
+        <a href="https://edpb.europa.eu/sites/default/files/files/file1/edpb_guidelines_202005_consent_pl.pdf">
+          {" "}
+          oficjalne wytyczne EROD dotyczące zgody w kontekście RODO
+        </a>
+        . Aby na przykład zapobiec automatycznemu wysyłaniu historii
         przeglądania do podmiotów trzecich przez Państwa stronę, można po prostu
         ustawić odpowiednio treść nagłówka{" "}
         <a href="https://developer.mozilla.org/pl/docs/Web/HTTP/Headers/Referrer-Policy">
