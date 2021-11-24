@@ -32,12 +32,12 @@ export type Request = {
 };
 
 export function getshorthost(host: string) {
-  return host
+  const parts = host
     .replace(/^.*:\/\//, "")
     .replace(/\/.*$/, "")
-    .split(".")
-    .slice(-2)
-    .join(".");
+    .split(".");
+
+  return parts.slice(parts.at(-2).length > 3 ? -2 : -3).join(".");
 }
 
 export function useEmitter(
