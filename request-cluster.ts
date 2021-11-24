@@ -63,8 +63,16 @@ export class RequestCluster extends EventEmitter {
             return -1;
           } else if (indexA > indexB) {
             return 1;
+          } else if (entry1.value.length > entry2.value.length) {
+            return -1;
+          } else if (entry1.value.length < entry2.value.length) {
+            return 1;
+          } else if (entry1.isMarked && !entry2.isMarked) {
+            return -1;
+          } else if (!entry1.isMarked && entry2.isMarked) {
+            return 1;
           } else {
-            return entry1.value.length > entry2.value.length ? -1 : 1;
+            return 0;
           }
         }
       })
@@ -154,5 +162,11 @@ export class RequestCluster extends EventEmitter {
 
   exposesOrigin() {
     return this.requests.some((request) => request.exposesOrigin());
+  }
+
+  autoMark() {
+    this.getRepresentativeStolenData().forEach((entry) => {
+      entry.autoMark();
+    });
   }
 }

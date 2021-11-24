@@ -21,6 +21,7 @@ export const Classifications = <const>{
 };
 
 const ID_PREVIEW_MAX_LENGTH = 20;
+const MIN_COOKIE_LENGTH_FOR_AUTO_MARK = 15;
 
 const id = (function* id() {
   let i = 0;
@@ -147,13 +148,19 @@ export class StolenDataEntry extends EventEmitter {
   }
 
   mark() {
+    const had_been_marked_before = this.marked;
     this.marked = true;
-    this.emit("change");
+    if (!had_been_marked_before) {
+      this.emit("change");
+    }
   }
 
   unmark() {
+    const had_been_marked_before = this.marked;
     this.marked = false;
-    this.emit("change");
+    if (had_been_marked_before) {
+      this.emit("change");
+    }
   }
 
   toggleMark() {
@@ -171,6 +178,7 @@ export class StolenDataEntry extends EventEmitter {
         [
           this.request.origin,
           this.request.originalURL,
+          this.request.originalPathname,
           getshorthost(this.request.origin),
         ].some((needle) => haystack.includes(needle))
       )
@@ -215,6 +223,26 @@ export class StolenDataEntry extends EventEmitter {
   }
 
   exposesOrigin(): boolean {
-    return this.value.includes(getshorthost(this.request.origin));
+    return (
+      this.value.includes(getshorthost(this.request.origin)) ||
+      this.value.includes(this.request.originalPathname)
+    );
+  }
+
+  autoMark() {
+    if (
+      this.classification == "history" ||
+      ((this.source === "cookie" ||
+        this.name.toLowerCase().includes("id") ||
+        this.name.toLowerCase().includes("cookie") ||
+        this.name.toLowerCase().includes("ga") ||
+        this.name.toLowerCase().includes("fb")) &&
+        this.value.length > MIN_COOKIE_LENGTH_FOR_AUTO_MARK)
+    ) {
+      if (this.request.shorthost.includes("google") && this.name == "CONSENT") {
+        return;
+      }
+      this.mark();
+    }
   }
 }
