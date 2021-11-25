@@ -192,18 +192,20 @@ export default function EmailTemplate2({
             .
           </>
         ) : (
-          /* HTML */ `o ile po wejściu na stronę wcisnąłem w wyskakującym
-          okienku przycisk „${config.popup_accept_all_text}”, o tyle nie stanowi
-          to według mnie ważnej w świetle RODO zgody, gdyż brakowało w tym
-          okienku równie łatwo osiągalnego przycisku, którego kliknięcie
-          skutkowałoby zasygnalizowaniem braku mojej zgody na takie
-          przetwarzanie moich danych. Mówiąc wprost &mdash; wyrażenie „zgody”
-          było łatwiejsze niż jej niewyrażenie. Niewyrażenie zgody wiąże się z
-          negatywną konsekwencją konieczności przechodzenia przez dodatkowe
-          kroki w wyskakującym okienku. Zatem tak otrzymana przez Państwo moja
-          „zgoda” nie jest poprawną podstawą prawną do przetwarzania moich
-          danych osobowych, gdyż nie spełnia warunku dobrowolności wspomnianego
-          w Art. 4. pkt 11. RODO.`
+          <>
+            o ile po wejściu na stronę wcisnąłem w wyskakującym okienku przycisk
+            „{config.popup_accept_all_text}”, o tyle nie stanowi to według mnie
+            ważnej w świetle RODO zgody, gdyż brakowało w tym okienku równie
+            łatwo osiągalnego przycisku, którego kliknięcie skutkowałoby
+            zasygnalizowaniem braku mojej zgody na takie przetwarzanie moich
+            danych. Mówiąc wprost &mdash; wyrażenie „zgody” było łatwiejsze niż
+            jej niewyrażenie. Niewyrażenie zgody wiąże się z negatywną
+            konsekwencją konieczności przechodzenia przez dodatkowe kroki w
+            wyskakującym okienku. Zatem tak otrzymana przez Państwo moja „zgoda”
+            nie jest poprawną podstawą prawną do przetwarzania moich danych
+            osobowych, gdyż nie spełnia warunku dobrowolności wspomnianego w
+            Art. 4. pkt 11. RODO.
+          </>
         )}{" "}
         Za zgodę nie można też uznać posiadania włączonej obsługi cookies w
         przeglądarce, jakichkolwiek innych ustawień przeglądarki, ani pasywnych
@@ -380,4 +382,5 @@ export default function EmailTemplate2({
       </p>
     </>
   );
+  return result;
 }

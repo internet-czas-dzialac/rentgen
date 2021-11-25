@@ -1,5 +1,11 @@
 import { EventEmitter } from "events";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import {
+  Dispatch,
+  ReactChildren,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 
 export type Unpromisify<T> = T extends Promise<infer R> ? R : T;
 export type Unarray<T> = T extends Array<infer R> ? R : T;
@@ -39,6 +45,8 @@ export function getshorthost(host: string) {
   let lookback = parts.at(-2).length > 3 ? -2 : -3;
   if (parts.at(-2) == "doubleclick") {
     lookback = -4; // to distinguish between google ads and stats
+  } else if (parts.at(-2) == "google") {
+    lookback = -3; // to distinguish various google services
   }
   return parts.slice(lookback).join(".");
 }
