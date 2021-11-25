@@ -1,6 +1,10 @@
 import React from "react";
 import { RequestCluster } from "../request-cluster";
-import { Classifications, Sources } from "../stolen-data-entry";
+import {
+  Classifications,
+  Sources,
+  StolenDataEntry,
+} from "../stolen-data-entry";
 
 const emailClassifications: Record<keyof typeof Classifications, string> = {
   id: "sztucznie nadane mi ID",
@@ -25,11 +29,10 @@ export default function DomainSummary({
       Właścicielowi domeny <strong>{cluster.id}</strong> zostały ujawnione:{" "}
       <ul>
         <li>Mój adres IP</li>
-        {cluster
-          .getRepresentativeStolenData()
+        {cluster.representativeStolenData
           .filter((entry) => entry.isMarked)
           .map((entry) => (
-            <li>
+            <li key={entry.id}>
               {emailClassifications[entry.classification]}{" "}
               {emailSources[entry.source]} (nazwa: <code>{entry.name}</code>,{" "}
               wartość: <code>{entry.getValuePreview()}</code>)

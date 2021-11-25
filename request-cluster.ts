@@ -13,6 +13,7 @@ const source_priority: Array<Sources> = [
 
 export class RequestCluster extends EventEmitter {
   public requests: ExtendedRequest[] = [];
+  public representativeStolenData: StolenDataEntry[] = [];
   constructor(public id: string) {
     super();
   }
@@ -30,14 +31,14 @@ export class RequestCluster extends EventEmitter {
     return false;
   }
 
-  getRepresentativeStolenData(
+  calculatetRepresentativeStolenData(
     filter: {
       minValueLength: number;
       cookiesOnly: boolean;
       cookiesOrOriginOnly: boolean;
     } = { minValueLength: 0, cookiesOnly: false, cookiesOrOriginOnly: false }
   ): StolenDataEntry[] {
-    return this.requests
+    this.representativeStolenData = this.requests
       .map((request) => request.stolenData)
 
       .reduce((a, b) => a.concat(b), [])
@@ -120,6 +121,7 @@ export class RequestCluster extends EventEmitter {
       .sort((entry1, entry2) =>
         entry1.getPriority() > entry2.getPriority() ? -1 : 1
       );
+    return this.representativeStolenData;
   }
 
   static sortCompare(a: RequestCluster, b: RequestCluster) {
@@ -165,7 +167,8 @@ export class RequestCluster extends EventEmitter {
   }
 
   autoMark() {
-    this.getRepresentativeStolenData().forEach((entry) => {
+    this.calculatetRepresentativeStolenData();
+    this.representativeStolenData.forEach((entry) => {
       entry.autoMark();
     });
   }

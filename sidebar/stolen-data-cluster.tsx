@@ -125,13 +125,15 @@ export default function StolenDataCluster({
       </h2>
       <div>
         {cluster.getFullHosts().map((host) => (
-          <a href={`https://${host}`}>{host}, </a>
+          <a key={host} href={`https://${host}`}>
+            {host},{" "}
+          </a>
         ))}
       </div>
       <table>
         <tbody>
           {cluster
-            .getRepresentativeStolenData({
+            .calculatetRepresentativeStolenData({
               minValueLength,
               cookiesOnly,
               cookiesOrOriginOnly,
