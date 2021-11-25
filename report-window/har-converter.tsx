@@ -22,9 +22,36 @@ function handleNewFile(
 }
 
 function generateFakeHAR(entries: StolenDataEntry[]) {
-  const requests = entries
-    .sort((entry1, entry2) => entry2.getPriority() - entry1.getPriority())
-    .map((entry) => entry.request);
+  const requests = unique(entries.map((entry) => entry.request))
+    .sort((request1, request2) => {
+      if (request1.shorthost < request2.shorthost) {
+        return -1;
+      } else if (request1.shorthost > request2.shorthost) {
+        return 1;
+      } else {
+        return request2.getMaxPriority() - request1.getMaxPriority();
+      }
+    })
+    .filter((_, index, array) => {
+      if (index !== 0 && array[index].shorthost == array[index - 1].shorthost) {
+        return false;
+      }
+      return true;
+    })
+    .sort(
+      (entry1, entry2) => entry2.getMaxPriority() - entry1.getMaxPriority()
+    );
+
+  console.log(
+    "GENERATEHAR! Got",
+    entries.length,
+    "entries, ",
+    unique(entries.map((e) => e.request)),
+    "requests. Filtered down to",
+    requests.length,
+    "requests"
+  );
+
   return {
     log: {
       version: "1.2",
@@ -47,7 +74,7 @@ function generateFakeHAR(entries: StolenDataEntry[]) {
           },
         },
       ],
-      entries: unique(requests).map((r) => r.toHAR()),
+      entries: requests.map((r) => r.toHAR()),
     },
   };
 }

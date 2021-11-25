@@ -303,4 +303,8 @@ export default class ExtendedRequest {
       connection: "443",
     };
   }
+
+  getMaxPriority() {
+    return Math.max(...this.stolenData.map((entry) => entry.getPriority()));
+  }
 }
