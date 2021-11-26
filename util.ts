@@ -104,7 +104,8 @@ export function isJSONObject(
   str: unknown
 ): str is Record<string, unknown> | string | number {
   try {
-    return JSON.stringify(parseToObject(str))[0] == "{";
+    const firstChar = JSON.stringify(parseToObject(str))[0];
+    return ["{", "["].includes(firstChar);
   } catch (e) {
     return false;
   }
@@ -211,7 +212,7 @@ export function flattenObject(
         ret.push([`${key}.${subkey}`, subvalue]);
       }
     } else {
-      ret.push([key, value.toString()]);
+      ret.push([key, value ? value.toString() : "<empty>"]);
     }
   }
   return ret;
@@ -238,4 +239,12 @@ export function maskString(
     "(...)" +
     str.slice(str.length / 2 + amount_of_chars_to_cut / 2)
   );
+}
+
+export function safeDecodeURIComponent(s: string) {
+  try {
+    return decodeURIComponent(s);
+  } catch (e) {
+    return e;
+  }
 }

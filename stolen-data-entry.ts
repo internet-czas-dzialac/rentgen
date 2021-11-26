@@ -10,9 +10,15 @@ import {
   isURL,
   maskString,
   parseToObject,
+  safeDecodeURIComponent,
 } from "./util";
 
-export type Sources = "cookie" | "pathname" | "queryparams" | "header";
+export type Sources =
+  | "cookie"
+  | "pathname"
+  | "queryparams"
+  | "header"
+  | "request_body";
 
 export const Classifications = <const>{
   id: "Sztucznie nadane ID",
@@ -243,14 +249,14 @@ export class StolenDataEntry extends EventEmitter {
   exposesPath() {
     return (
       this.request.originalPathname !== "/" &&
-      [this.value, decodeURIComponent(this.value)].some((haystack) =>
+      [this.value, safeDecodeURIComponent(this.value)].some((haystack) =>
         haystack.includes(this.request.originalPathname)
       )
     );
   }
 
   exposesHost() {
-    return [this.value, decodeURIComponent(this.value)].some((haystack) =>
+    return [this.value, safeDecodeURIComponent(this.value)].some((haystack) =>
       haystack.includes(getshorthost(this.request.origin))
     );
   }

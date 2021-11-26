@@ -4,6 +4,7 @@ import {
   getshorthost,
   parseCookie,
   Request,
+  safeDecodeURIComponent,
 } from "./util";
 
 type NameValue = { name: string; value: string };
@@ -60,22 +61,41 @@ const whitelisted_cookies = [
   /^User-Agent$/,
 ];
 
+type RequestBody = {
+  error?: string;
+  formData?: Record<string, string[]>;
+  raw?: { bytes: ArrayBuffer; file?: string }[];
+};
+
 export default class ExtendedRequest {
   public tabId: number;
   public url: string;
   public shorthost: string;
-  public requestHeaders: Request["requestHeaders"];
+  public requestHeaders: Request["requestHeaders"] = [];
   public originalURL: string;
   public origin: string;
   public initialized = false;
   public stolenData: StolenDataEntry[];
   public originalPathname: string;
+  public requestBody: RequestBody;
+
+  static by_id = {} as Record<string, ExtendedRequest>;
 
   constructor(public data: Request) {
     this.tabId = data.tabId;
     this.url = data.url;
-    this.requestHeaders = data.requestHeaders;
     this.shorthost = getshorthost(data.url);
+    this.requestBody =
+      ((data as any).requestBody as undefined | RequestBody) || {};
+    if (this.url.includes("criteo")) {
+      console.log(this);
+    }
+    ExtendedRequest.by_id[data.requestId] = this;
+  }
+
+  addHeaders(headers: Request["requestHeaders"]) {
+    this.requestHeaders = headers;
+    return this;
   }
 
   async init() {
@@ -93,7 +113,7 @@ export default class ExtendedRequest {
       url = (this.data as any).frameAncestors[0].url || "";
     } else {
       const headers = Object.fromEntries(
-        this.data.requestHeaders.map(({ name, value }) => [name, value])
+        this.requestHeaders.map(({ name, value }) => [name, value])
       );
       if (headers.Referer) {
         url = headers.Referer;
@@ -124,7 +144,7 @@ export default class ExtendedRequest {
 
   getReferer() {
     return (
-      this.data.requestHeaders.filter((h) => h.name === "Referer")[0]?.value ||
+      this.requestHeaders.filter((h) => h.name === "Referer")[0]?.value ||
       "missing-referrer"
     );
   }
@@ -155,6 +175,7 @@ export default class ExtendedRequest {
       ...this.getCookieData(),
       ...this.getQueryParams(),
       ...this.getHeadersData(),
+      ...this.getRequestBodyData(),
     ];
   }
 
@@ -171,12 +192,48 @@ export default class ExtendedRequest {
     ).map(([key, value]) => new StolenDataEntry(this, "cookie", key, value));
   }
 
+  getRequestBodyData(): StolenDataEntry[] {
+    const ret = flattenObjectEntries(
+      Object.entries({
+        ...this.requestBody.formData,
+        ...Object.fromEntries(
+          Object.entries(
+            this.requestBody.raw || {}
+          ).map(([key, value], index) => [`${key}.${index}`, value])
+        ),
+      })
+        .map(([key, value]) => {
+          // to handle how ocdn.eu encrypts POST body on https://businessinsider.com.pl/
+          if (
+            (Array.isArray(value) && value.length === 1 && !value[0]) ||
+            !value
+          ) {
+            return ["requestBody", key];
+          } else if (!Array.isArray(value)) {
+            return [
+              "raw",
+              String.fromCharCode.apply(null, new Uint8Array(value.bytes)),
+            ];
+          } else {
+            return [key, value || ""];
+          }
+        })
+        .map(([key, value]) => {
+          const parsed = StolenDataEntry.parseValue(value);
+          return [key, parsed];
+        }) as [string, unknown][]
+    ).map(
+      ([key, value]) => new StolenDataEntry(this, "request_body", key, value)
+    );
+    return ret;
+  }
+
   hasReferer() {
-    return this.data.requestHeaders.some((h) => h.name === "Referer");
+    return this.requestHeaders.some((h) => h.name === "Referer");
   }
 
   hasCookie() {
-    return this.data.requestHeaders.some((h) => h.name === "Cookie");
+    return this.requestHeaders.some((h) => h.name === "Cookie");
   }
 
   getCookie(): string {
@@ -195,7 +252,10 @@ export default class ExtendedRequest {
         .map((e) => e.split("="))
         .map(([key, value]) => [key, value || ""])
         .map(([key, value]) => {
-          return [key, StolenDataEntry.parseValue(decodeURIComponent(value))];
+          return [
+            key,
+            StolenDataEntry.parseValue(safeDecodeURIComponent(value)),
+          ];
         })
     ).map(([key, value]) => new StolenDataEntry(this, "pathname", key, value));
   }
@@ -206,7 +266,10 @@ export default class ExtendedRequest {
       Array.from((url.searchParams as any).entries())
         .map(([key, value]) => [key, value || ""])
         .map(([key, value]) => {
-          return [key, StolenDataEntry.parseValue(decodeURIComponent(value))];
+          return [
+            key,
+            StolenDataEntry.parseValue(safeDecodeURIComponent(value)),
+          ];
         })
     ).map(([key, value]) => {
       return new StolenDataEntry(this, "queryparams", key, value);
@@ -215,7 +278,7 @@ export default class ExtendedRequest {
 
   getHeadersData(): StolenDataEntry[] {
     return flattenObjectEntries(
-      this.data.requestHeaders
+      this.requestHeaders
         .filter((header) => {
           for (const regex of whitelisted_cookies) {
             if (regex.test(header.name)) {
@@ -261,7 +324,7 @@ export default class ExtendedRequest {
         url: this.data.url,
         headersSize: 100,
         httpVersion: "HTTP/2",
-        headers: this.data.requestHeaders as NameValue[],
+        headers: this.requestHeaders as NameValue[],
         cookies: this.getCookieData().map((cookie) => ({
           name: cookie.name,
           value: cookie.value,

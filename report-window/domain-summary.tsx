@@ -1,10 +1,6 @@
 import React from "react";
 import { RequestCluster } from "../request-cluster";
-import {
-  Classifications,
-  Sources,
-  StolenDataEntry,
-} from "../stolen-data-entry";
+import { Classifications, Sources } from "../stolen-data-entry";
 
 const emailClassifications: Record<keyof typeof Classifications, string> = {
   id: "sztucznie nadane mi ID",
@@ -17,6 +13,7 @@ const emailSources: Record<Sources, string> = {
   cookie: "z pliku Cookie",
   pathname: "jako części adresu URL",
   queryparams: "jako część adresu URL (query-params)",
+  request_body: "w body zapytania POST",
 };
 
 export default function DomainSummary({

@@ -26,9 +26,20 @@ export default class Memory extends EventEmitter {
 
   constructor() {
     super();
+
+    browser.webRequest.onBeforeRequest.addListener(
+      async (request) => {
+        new ExtendedRequest(request);
+      },
+      { urls: ["<all_urls>"] },
+      ["requestBody"]
+    );
     browser.webRequest.onBeforeSendHeaders.addListener(
       async (request) => {
-        this.register(new ExtendedRequest(request));
+        const extendedRequest = ExtendedRequest.by_id[
+          request.requestId
+        ].addHeaders(request.requestHeaders || []);
+        this.register(extendedRequest);
       },
       { urls: ["<all_urls>"] },
       ["requestHeaders"]
