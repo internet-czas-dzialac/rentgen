@@ -245,6 +245,6 @@ export function safeDecodeURIComponent(s: string) {
   try {
     return decodeURIComponent(s);
   } catch (e) {
-    return e;
+    return s;
   }
 }
