@@ -197,31 +197,38 @@ export function isBase64JSON(s: unknown): s is string {
 }
 
 export function flattenObject(
-  obj: Record<string, unknown>
+  obj: unknown,
+  parser: (to_parse: unknown) => string | Record<string, unknown> = (id) =>
+    id.toString(),
+  key = "",
+  ret = [],
+  parsed = false
 ): [string, string][] {
-  const ret: [string, string][] = [];
-  for (const [key, value] of Object.entries(obj)) {
-    const value = obj[key];
-    if (value === null) {
-      ret.push([key, "null"]);
-      continue;
+  if (Array.isArray(obj)) {
+    for (let i in obj) {
+      flattenObject(obj[i], parser, key + "." + i, ret);
     }
-    if (typeof value === "object") {
-      const flattened = flattenObject(value as Record<string, unknown>);
-      for (const [subkey, subvalue] of flattened) {
-        ret.push([`${key}.${subkey}`, subvalue]);
-      }
-    } else {
-      ret.push([key, value ? value.toString() : "<empty>"]);
+  } else if (typeof obj === "object") {
+    for (const [subkey, value] of Object.entries(obj)) {
+      flattenObject(value, parser, key + "." + subkey, ret);
     }
+  } else if (!parsed) {
+    flattenObject(parser(obj), parser, key, ret, true);
+  } else {
+    ret.push([key, obj]);
+  }
+  if (key == "") {
+    console.log("FLATTENING!", obj, ret);
   }
   return ret;
 }
 
 export function flattenObjectEntries(
-  entries: [string, unknown][]
+  entries: [string, unknown][],
+  parser: (to_parse: unknown) => string | Record<string, unknown> = (id) =>
+    id.toString()
 ): [string, string][] {
-  return flattenObject(Object.fromEntries(entries));
+  return flattenObject(Object.fromEntries(entries), parser);
 }
 
 export function maskString(
