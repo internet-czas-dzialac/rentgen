@@ -21,7 +21,11 @@ export type HAREntry = {
     method: string;
     postData?: {
       mimeType: string;
-      params: NameValue[];
+      params: (NameValue & {
+        fileName: string;
+        contentType: string;
+        comment: "";
+      })[];
       text: string;
     };
     queryString: NameValue[];
@@ -201,27 +205,23 @@ export default class ExtendedRequest {
             this.requestBody.raw || {}
           ).map(([key, value], index) => [`${key}.${index}`, value])
         ),
-      })
-        .map(([key, value]) => {
-          // to handle how ocdn.eu encrypts POST body on https://businessinsider.com.pl/
-          if (
-            (Array.isArray(value) && value.length === 1 && !value[0]) ||
-            !value
-          ) {
-            return ["requestBody", key];
-          } else if (!Array.isArray(value)) {
-            return [
-              "raw",
-              String.fromCharCode.apply(null, new Uint8Array(value.bytes)),
-            ];
-          } else {
-            return [key, value || ""];
-          }
-        })
-        .map(([key, value]) => {
-          const parsed = StolenDataEntry.parseValue(value);
-          return [key, parsed];
-        }) as [string, unknown][]
+      }).map(([key, value]) => {
+        // to handle how ocdn.eu encrypts POST body on https://businessinsider.com.pl/
+        if (
+          (Array.isArray(value) && value.length === 1 && !value[0]) ||
+          !value
+        ) {
+          return ["requestBody", key];
+        } else if (!Array.isArray(value)) {
+          return [
+            "raw",
+            String.fromCharCode.apply(null, new Uint8Array(value.bytes)),
+          ];
+        } else {
+          return [key, value || ""];
+        }
+      }),
+      StolenDataEntry.parseValue
     ).map(
       ([key, value]) => new StolenDataEntry(this, "request_body", key, value)
     );
@@ -319,10 +319,14 @@ export default class ExtendedRequest {
       pageref: "page_1",
       startedDateTime: `${new Date().toJSON().replace("Z", "+01:00")}`,
       request: {
-        bodySize: 0,
+        bodySize:
+          JSON.stringify(this.requestBody.formData || {}).length +
+          (this.requestBody.raw || [])
+            .map((e) => e.bytes.byteLength)
+            .reduce((a, b) => a + b, 0),
         method: this.data.method,
         url: this.data.url,
-        headersSize: 100,
+        headersSize: JSON.stringify(this.requestHeaders).length,
         httpVersion: "HTTP/2",
         headers: this.requestHeaders as NameValue[],
         cookies: this.getCookieData().map((cookie) => ({
@@ -333,6 +337,22 @@ export default class ExtendedRequest {
           name: param.name,
           value: param.value,
         })),
+        postData: {
+          mimeType: "application/x-www-form-urlencoded",
+          params: this.stolenData
+            .filter((e) => e.source == "request_body")
+            .map((e) => ({
+              name: e.name,
+              value: e.value,
+              fileName: "--" + Math.ceil(Math.random() * 1000000000),
+              contentType: "text/plain",
+              comment: "",
+            })),
+          text: this.stolenData
+            .filter((e) => e.source == "request_body")
+            .map((e) => `${e.name}:\t${StolenDataEntry.parseValue(e.value)}`)
+            .join("\n\n"),
+        },
       },
       response: {
         status: 200,
