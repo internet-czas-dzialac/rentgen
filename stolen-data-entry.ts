@@ -214,13 +214,7 @@ export class StolenDataEntry extends EventEmitter {
   }
 
   exposesOrigin(): boolean {
-    const result = [this.value, decodeURIComponent(this.value)].some(
-      (haystack) =>
-        haystack.includes(getshorthost(this.request.origin)) ||
-        (this.request.originalPathname !== "/" &&
-          haystack.includes(this.request.originalPathname))
-    );
-    return result;
+    return this.exposesHost() || this.exposesPath();
   }
 
   autoMark() {
@@ -244,5 +238,20 @@ export class StolenDataEntry extends EventEmitter {
       }
       this.mark();
     }
+  }
+
+  exposesPath() {
+    return (
+      this.request.originalPathname !== "/" &&
+      [this.value, decodeURIComponent(this.value)].some((haystack) =>
+        haystack.includes(this.request.originalPathname)
+      )
+    );
+  }
+
+  exposesHost() {
+    return [this.value, decodeURIComponent(this.value)].some((haystack) =>
+      haystack.includes(getshorthost(this.request.origin))
+    );
   }
 }

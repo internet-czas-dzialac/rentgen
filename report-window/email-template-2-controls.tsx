@@ -92,8 +92,30 @@ export default function EmailTemplate2Controls({
           <option value="accepted">
             Kliknięte „{config.popup_accept_all_text}”
           </option>
+          <option value="closed">
+            Zamkn*ł*m okienko (np. przyciskiem "X")
+          </option>
         </select>
       </div>
+      {config.popup_action === "closed" ? (
+        <div>
+          <label htmlFor="popup_closed_how">
+            Jak okienko zostało zamknięte? Poprzez
+          </label>
+          <input
+            id="popup_closed_how"
+            type="text"
+            placeholder="kliknięcie przycisku „X”"
+            value={config.popup_closed_how}
+            style={{ width: "300px" }}
+            onChange={(e) =>
+              setConfig((v) => ({ ...v, popup_closed_how: e.target.value }))
+            }
+          />
+        </div>
+      ) : (
+        ""
+      )}
       {config.popup_type !== "none" ? (
         <div>
           <input

@@ -29,28 +29,20 @@ function generateFakeHAR(entries: StolenDataEntry[]) {
       } else if (request1.shorthost > request2.shorthost) {
         return 1;
       } else {
-        return request2.getMaxPriority() - request1.getMaxPriority();
+        return request2.getBalancedPriority() - request1.getBalancedPriority();
       }
     })
     .filter((_, index, array) => {
-      if (index !== 0 && array[index].shorthost == array[index - 1].shorthost) {
+      if (index == 0) return true;
+      if (array[index].shorthost == array[index - 1].shorthost) {
         return false;
       }
       return true;
     })
     .sort(
-      (entry1, entry2) => entry2.getMaxPriority() - entry1.getMaxPriority()
+      (entry1, entry2) =>
+        entry2.getBalancedPriority() - entry1.getBalancedPriority()
     );
-
-  console.log(
-    "GENERATEHAR! Got",
-    entries.length,
-    "entries, ",
-    unique(entries.map((e) => e.request)),
-    "requests. Filtered down to",
-    requests.length,
-    "requests"
-  );
 
   return {
     log: {

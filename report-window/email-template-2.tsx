@@ -7,7 +7,8 @@ import EmailTemplate2Controls from "./email-template-2-controls";
 
 export type EmailTemplate2Config = {
   popup_type: "none" | "passive_cookie_banner" | "consent";
-  popup_action: "ignored" | "accepted";
+  popup_action: "ignored" | "accepted" | "closed";
+  popup_closed_how: string;
   popup_screenshot_base64: string | null;
   popup_accept_all_text: string;
   popup_mentions_passive_consent: boolean;
@@ -73,6 +74,7 @@ export default function EmailTemplate2({
     popup_accept_all_text: "Zaakceptuj wszystkie",
     popup_mentions_passive_consent: false,
     popup_passive_consent_text: "",
+    popup_closed_how: "kliknięcie  przycisku „X”",
   });
 
   const visited_url = entries[0].request.originalURL;
@@ -191,7 +193,7 @@ export default function EmailTemplate2({
             )}
             .
           </>
-        ) : (
+        ) : config.popup_action === "accepted" ? (
           <>
             o ile po wejściu na stronę wcisnąłem w wyskakującym okienku przycisk
             „{config.popup_accept_all_text}”, o tyle nie stanowi to według mnie
@@ -206,10 +208,20 @@ export default function EmailTemplate2({
             osobowych, gdyż nie spełnia warunku dobrowolności wspomnianego w
             Art. 4. pkt 11. RODO.
           </>
+        ) : config.popup_action === "closed" ? (
+          <>
+            zamknąłem okienko pytające o zgodę poprzez {config.popup_closed_how}
+            . Nie może być to uznane za zgodę, bo nie spełnia to warunku
+            jednoznaczności opisanego w motywie (32) Rozporządzenia 2016/679.{" "}
+          </>
+        ) : (
+          ""
         )}{" "}
         Za zgodę nie można też uznać posiadania włączonej obsługi cookies w
-        przeglądarce, jakichkolwiek innych ustawień przeglądarki, ani pasywnych
-        działań z mojej strony (np. „kontynuowanie korzystania ze strony”)
+        przeglądarce (gdyż aby zgoda była ważna, musi być szczegółowa dla
+        każdego celów z osobna), jakichkolwiek innych ustawień przeglądarki, ani
+        pasywnych działań z mojej strony (np. „kontynuowanie korzystania ze
+        strony”)
         {config.popup_mentions_passive_consent ? (
           <>
             {" "}
@@ -382,5 +394,4 @@ export default function EmailTemplate2({
       </p>
     </>
   );
-  return result;
 }

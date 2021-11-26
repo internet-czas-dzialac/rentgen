@@ -279,7 +279,7 @@ export default class ExtendedRequest {
         cookies: [],
         content: {
           mimeType: "text/plain",
-          size: 15,
+          size: this.getBalancedPriority(),
           encoding: "base64",
           text: "ZG9lc24ndCBtYXR0ZXIK",
         },
@@ -304,7 +304,27 @@ export default class ExtendedRequest {
     };
   }
 
-  getMaxPriority() {
+  getMaxPriority(): number {
     return Math.max(...this.stolenData.map((entry) => entry.getPriority()));
+  }
+
+  getBalancedPriority(): number {
+    let result = 0;
+    if (this.stolenData.some((e) => e.exposesPath())) {
+      result += 50;
+    }
+    if (this.stolenData.some((e) => e.exposesHost())) {
+      result += 50;
+    }
+    if (this.hasCookie()) {
+      result += 50;
+    }
+    if (this.stolenData.some((e) => e.classification === "location")) {
+      result += 300;
+    }
+    if (this.url.includes("facebook")) {
+      result += 50;
+    }
+    return result;
   }
 }
