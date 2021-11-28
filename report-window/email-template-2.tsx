@@ -59,6 +59,10 @@ function Placeholder({ children }: { children: string }) {
   );
 }
 
+function Base64Image({ base64 }: { base64: string }) {
+  return <img style={{ maxWidth: "100%" }} {...{ src: base64 }} />;
+}
+
 export default function EmailTemplate2({
   entries,
   clusters,
@@ -96,7 +100,7 @@ export default function EmailTemplate2({
         <>
           <p>Na stronie była widoczna informacja o plikach Cookie. </p>
           <p>
-            <img {...{ src: config.popup_screenshot_base64 }} />
+            <Base64Image {...{ base64: config.popup_screenshot_base64 }} />
           </p>
         </>
       ) : (
@@ -106,7 +110,7 @@ export default function EmailTemplate2({
             sposobów, w jaki strona przetwarza moje dane osobowe.{" "}
           </p>
           <p>
-            <img {...{ src: config.popup_screenshot_base64 }} />
+            <Base64Image {...{ base64: config.popup_screenshot_base64 }} />
           </p>
           <p>
             {config.popup_action === "ignored"
