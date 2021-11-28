@@ -210,7 +210,7 @@ export default function EmailTemplate2({
             wyskakującym okienku. Zatem tak otrzymana przez Państwo moja „zgoda”
             nie jest poprawną podstawą prawną do przetwarzania moich danych
             osobowych, gdyż nie spełnia warunku dobrowolności wspomnianego w
-            Art. 4. pkt 11. RODO.
+            motywie (42) RODO.
           </>
         ) : config.popup_action === "closed" ? (
           <>
