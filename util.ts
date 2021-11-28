@@ -204,21 +204,23 @@ export function flattenObject(
   ret = [],
   parsed = false
 ): [string, string][] {
+  const prefix = key === "" ? "" : `${key}.`;
   if (Array.isArray(obj)) {
-    for (let i in obj) {
-      flattenObject(obj[i], parser, key + "." + i, ret);
+    if (obj.length == 1) {
+      flattenObject(obj[0], parser, key, ret);
+    } else {
+      for (let i in obj) {
+        flattenObject(obj[i], parser, prefix + i, ret);
+      }
     }
   } else if (typeof obj === "object") {
     for (const [subkey, value] of Object.entries(obj)) {
-      flattenObject(value, parser, key + "." + subkey, ret);
+      flattenObject(value, parser, prefix + subkey, ret);
     }
   } else if (!parsed) {
     flattenObject(parser(obj), parser, key, ret, true);
   } else {
     ret.push([key, obj]);
-  }
-  if (key == "") {
-    console.log("FLATTENING!", obj, ret);
   }
   return ret;
 }

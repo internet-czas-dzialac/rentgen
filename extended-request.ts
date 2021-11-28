@@ -188,11 +188,11 @@ export default class ExtendedRequest {
       return [];
     }
     return flattenObjectEntries(
-      Object.entries(parseCookie(this.getCookie()))
-        .map(([key, value]) => [key, value || ""])
-        .map(([key, value]) => {
-          return [key, StolenDataEntry.parseValue(value)];
-        })
+      Object.entries(parseCookie(this.getCookie())).map(([key, value]) => [
+        key,
+        value || "",
+      ]),
+      StolenDataEntry.parseValue
     ).map(([key, value]) => new StolenDataEntry(this, "cookie", key, value));
   }
 
@@ -290,7 +290,7 @@ export default class ExtendedRequest {
         .map((header) => {
           return [
             header.name,
-            StolenDataEntry.parseValue(decodeURIComponent(header.value)),
+            StolenDataEntry.parseValue(safeDecodeURIComponent(header.value)),
           ];
         })
     ).map(([key, value]) => new StolenDataEntry(this, "header", key, value));
