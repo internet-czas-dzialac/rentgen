@@ -52,6 +52,7 @@ function StolenDataRow({ entry }: { entry: StolenDataEntry }) {
           width: "100px",
           overflowWrap: "anywhere",
         }}
+        title={"Źródło: " + entry.source}
         onClick={() => entry.toggleMark()}
       >
         {entry.name}
