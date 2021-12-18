@@ -85,8 +85,6 @@ export class RequestCluster extends EventEmitter {
         if (
           array[index].getValuePreview() ===
             array[index - 1].getValuePreview() ||
-          (array[index].classification === "history" &&
-            array[index - 1].classification === "history") || // if they're both history, then the first one is the longest
           isSameURL(array[index].value, array[index - 1].value)
         ) {
           return false;
