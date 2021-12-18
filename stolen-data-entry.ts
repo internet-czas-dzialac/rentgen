@@ -21,7 +21,7 @@ export type Sources =
   | "request_body";
 
 export const Classifications = <const>{
-  id: "Sztucznie nadane ID",
+  id: "Identyfikator internetowy",
   history: "Część historii przeglądania",
   location: "Informacje na temat mojego położenia",
 };
@@ -122,9 +122,11 @@ export class StolenDataEntry extends EventEmitter {
         }
       }
       const searchParams = Object.fromEntries(
-        ((url.searchParams as unknown) as {
-          entries: () => Iterable<[string, string]>;
-        }).entries()
+        (
+          url.searchParams as unknown as {
+            entries: () => Iterable<[string, string]>;
+          }
+        ).entries()
       );
       if (typeof hash !== "object" && Object.keys(searchParams).length === 0) {
         return value; // just a string;

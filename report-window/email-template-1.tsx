@@ -19,9 +19,8 @@ export default function EmailTemplate1({
   const [acceptAllName, setAcceptAllName] = useState<string>(
     "Zaakceptuj wszystkie"
   );
-  const [popupScreenshotBase64, setPopupScreenshotBase64] = useState<string>(
-    null
-  );
+  const [popupScreenshotBase64, setPopupScreenshotBase64] =
+    useState<string>(null);
 
   return (
     <div>
@@ -154,9 +153,9 @@ export default function EmailTemplate1({
         pkt 1 lit. b) RODO (niezbędność takiego przetwarzania do wykonania
         umowy), proszę o wskazanie, w jaki sposób ta konieczność zachodzi, oraz
         co sprawia, że Państwa zdaniem nie można wykonać umowy związanej z
-        wyświetleniem Państwa strony bez przekazywania sztucznie nadanego ID w
-        plikach Cookies lub historii przeglądania w nagłówku Referer do
-        wskazanych podmiotów trzecich.
+        wyświetleniem Państwa strony bez przekazywania identyfikatora
+        internetowego z plików Cookies lub historii przeglądania w nagłówku
+        Referer do wskazanych podmiotów trzecich.
       </p>
       <p>
         Jeżeli wskazaną przez Państwa przesłanką legalizującą dany element

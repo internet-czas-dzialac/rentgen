@@ -6,7 +6,7 @@ function renderDataList() {
           właściciel domeny <i>${shorthost}</i> otrzymał mój adres IP i część
           mojej historii
           przeglądania${atLeastOneCookiedRequest(requests)
-            ? " <strong>opatrzoną sztucznie nadanym mi ID z Cookies</strong>"
+            ? " <strong>opatrzoną moim identyfikatorem internetowym z Cookies</strong>"
             : ""};
         </li>`
       )

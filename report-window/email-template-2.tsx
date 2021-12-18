@@ -28,7 +28,8 @@ function ClusterRangeSummary({ cluster }: { cluster: RequestCluster }) {
       {[
         "Pańskiego adresu IP",
         range.includes("id")
-          ? "sztucznie nadanego id" + (has_cookie_ids ? " z cookie" : "")
+          ? "Pańskiego identyfikatora interenetowego" +
+            (has_cookie_ids ? " z cookie" : "")
           : "",
         range.includes("history")
           ? "części Pańskiej historii przeglądania"

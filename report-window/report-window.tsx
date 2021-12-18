@@ -59,7 +59,7 @@ function DataPreview({
               >
                 {[
                   ["history", "Historia przeglądania"],
-                  ["id", "Sztucznie nadane id"],
+                  ["id", "Identyfikator internetowy"],
                   ["location", "Lokalizacja"],
                 ].map(([key, name]) => (
                   <option key={key} value={key}>
