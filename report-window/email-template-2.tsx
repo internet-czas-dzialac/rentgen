@@ -170,7 +170,7 @@ export default function EmailTemplate2({
       </p>
       <p>
         W kontekście stron internetowych są właściwie dopuszczalne tylko trzy z
-        sześciu wymienionych w Art. 6 pkt 1 RODO podstaw prawne dla
+        sześciu wymienionych w Art. 6 pkt 1 RODO podstaw prawnych dla
         przetwarzania danych osobowych:
       </p>
       <ol>
