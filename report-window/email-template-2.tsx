@@ -53,9 +53,9 @@ function Placeholder({ children }: { children: string }) {
         bottom: "3px",
       }}
     >
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      {"&nbsp;".repeat(12)}
       <span style={{ color: "gray" }}>({children})</span>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;
+      {"&nbsp;".repeat(12)}
     </span>
   );
 }
@@ -154,6 +154,20 @@ export default function EmailTemplate2({
         wysłania tych danych przez Państwa stronę.{" "}
       </p>
       <h3>Podstawa prawna</h3>
+      <p>
+        Ustawa Prawo Telekomunikacyjne w art. 173 reguluje warunki, które musi
+        spełnić administrator strony, aby jego strona mogła zapisywać i czytać
+        treść plików cookie. Nie reguluje jednak tego, jakim podmiotom i w jakim
+        zakresie dane mogą być <em>ujawniane</em> przez stronę. Tym zajmuje się
+        Rozporządzenie 2016/679 Parlamentu Europejskiego i Rady (UE) z dnia 27
+        kwietnia 2016 r. w sprawie ochrony osób fizycznych w związku z
+        przetwarzaniem danych osobowych i w sprawie swobodnego przepływu takich
+        danych oraz uchylenia dyrektywy 95/46/WE (ogólne rozporządzenie o
+        ochronie danych) – RODO. Zapis/odczyt plików cookie a ujawnianie ich
+        treści podmiotom trzecim to dwa różne procesy. Niniejsza wiadomość i
+        pytania w niej zawarte dotyczą właśnie <em>ujawniania</em> moich danych
+        osobowych (pochodzących m.in. z Cookies) podmiotom trzecim.
+      </p>
       <p>
         W kontekście stron internetowych są właściwie dopuszczalne tylko trzy z
         sześciu wymienionych w Art. 6 pkt 1 RODO podstaw prawne dla
@@ -318,7 +332,10 @@ export default function EmailTemplate2({
         Jeżeli istnieją jednak inne niż uzasadniony interes ważne podstawy
         prawne do takiego przetwarzania moich danych osobowych przez Państwa
         stronę, proszę o ich wskazanie,{" "}
-        <em>dla każdego z wymienionych podmiotów z osobna</em>. W przeciwnym
+        <em>dla każdego z wymienionych podmiotów z osobna</em>. (Przypominam, że
+        Art. 173 ustawy Prawo Telekomunikacyjne nie ma tutaj zastosowania,
+        ponieważ nie pytam o zapis/odczyt plików na moim komputerze, tylko o
+        ujawnianie moich danych osobowych podmiotom trzecim). W przeciwnym
         wypadku, aby ustalić, czy moje dane były przez Państwa przetwarzane na
         mocy uzasadnionego interesu zgodnie z prawem, proszę o wypełnienie
         następującego szablonu (lub udzielenie tych samych informacji w innej
