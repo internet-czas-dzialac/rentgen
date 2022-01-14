@@ -53,9 +53,9 @@ function Placeholder({ children }: { children: string }) {
         bottom: "3px",
       }}
     >
-      {"&nbsp;".repeat(12)}
+      <span dangerouslySetInnerHTML={{ __html: "&nbsp;".repeat(12) }}></span>
       <span style={{ color: "gray" }}>({children})</span>
-      {"&nbsp;".repeat(12)}
+      <span dangerouslySetInnerHTML={{ __html: "&nbsp;".repeat(12) }}></span>
     </span>
   );
 }
