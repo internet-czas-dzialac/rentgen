@@ -134,7 +134,7 @@ export default function StolenDataCluster({
       <table>
         <tbody>
           {cluster
-            .calculatetRepresentativeStolenData({
+            .calculateRepresentativeStolenData({
               minValueLength,
               cookiesOnly,
               cookiesOrOriginOnly,

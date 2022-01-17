@@ -1,0 +1,35 @@
+@import './colors.scss';
+
+header {
+    display: grid;
+    grid-template-columns: 8rem 1fr 1rem;
+    max-height: 4rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid $light-grey;
+
+    .webpage-metadata {
+        word-break: break-all;
+        display: flex;
+        flex-flow: column;
+        flex-wrap: nowrap;
+        font-size: 0.875rem;
+        font-weight: 600;
+        justify-content: center;
+        padding-left: 1rem;
+        color: #000;
+        // height: 1rem;
+
+        &--hyperlink {
+            font-weight: 400;
+            color: $mid-grey;
+            max-height: 2rem;
+            overflow: hidden;
+        }
+    }
+
+    button {
+        border: none;
+        background: transparent;
+        cursor: pointer;
+    }
+}

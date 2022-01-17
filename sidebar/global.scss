@@ -1,0 +1,49 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    text-rendering: optimizelegibility;
+    font-smooth: auto;
+    -webkit-font-smoothing: auto;
+}
+
+html {
+    font-size: 1rem;
+}
+
+button {
+    display: inline-block;
+    line-height: 3rem;
+    padding: 0 1rem;
+    white-space: nowrap;
+}
+
+select {
+    height: 3rem;
+    line-height: 3rem;
+    flex-shrink: 1;
+}
+
+#tab_dropdown {
+    flex-basis: 20px;
+    width: 100px !important;
+    flex-grow: 1;
+}
+
+#selector {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+}
+
+#app {
+    user-select: text;
+    padding: 0.5rem 1rem;
+    display: flex;
+    flex-flow: column;
+    justify-content: flex-start;
+}
+
+tr:hover {
+    background-color: hsla(0, 0%, 0%, 0.1);
+}

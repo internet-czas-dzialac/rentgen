@@ -14,11 +14,17 @@ const source_priority: Array<Sources> = [
 export class RequestCluster extends EventEmitter {
   public requests: ExtendedRequest[] = [];
   public representativeStolenData: StolenDataEntry[] = [];
+  public expanded: boolean;
   constructor(public id: string) {
     super();
   }
   add(request: ExtendedRequest) {
     this.requests.push(request);
+    this.emit("change");
+  }
+
+  toggleExpanded(state: boolean) {
+    this.expanded = state;
     this.emit("change");
   }
 
@@ -31,7 +37,7 @@ export class RequestCluster extends EventEmitter {
     return false;
   }
 
-  calculatetRepresentativeStolenData(
+  calculateRepresentativeStolenData(
     filter: {
       minValueLength: number;
       cookiesOnly: boolean;
@@ -165,7 +171,7 @@ export class RequestCluster extends EventEmitter {
   }
 
   autoMark() {
-    this.calculatetRepresentativeStolenData();
+    this.calculateRepresentativeStolenData();
     this.representativeStolenData.forEach((entry) => {
       entry.autoMark();
     });

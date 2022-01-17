@@ -17,7 +17,7 @@ export default function Options({
 }) {
   return (
     <fieldset>
-      <h3>Zaawansowane ustawienia</h3>
+      <h3>Zaawansowane ustawienia 💛</h3>
       <label htmlFor="minValueLength">
         Pokazuj tylko wartości o długości co najmniej{" "}
       </label>

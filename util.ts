@@ -42,7 +42,7 @@ export function getshorthost(host: string) {
     .replace(/^.*:\/\//, "")
     .replace(/\/.*$/, "")
     .split(".");
-  let lookback = parts.at(-2).length > 3 ? -2 : -3;
+  let lookback = !['co','com'].includes(parts.at(-2)) ? -2 : -3;
   if (parts.at(-2) == "doubleclick" || parts.at(-2) == "google") {
     lookback = -4; // to distinguish between google ads and stats
   } else if (parts.at(-2) == "google") {

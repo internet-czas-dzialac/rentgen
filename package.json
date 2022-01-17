@@ -2,15 +2,16 @@
   "name": "problematic-requests",
   "version": "1.0.0",
   "description": "",
-  "main": "email-template-harsh.js",
+  "main": "esbuild.config.js",
+  "type": "module",
   "scripts": {
-    "build": "npx esbuild  sidebar/sidebar.tsx test.ts --bundle report-window/report-window.tsx --bundle  background.ts --bundle --outdir=./lib",
+    "build": "node esbuild.config.js",
     "watch": "npm run build -- --watch",
     "typecheck": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
-    "url": "https://git.kuba-orlik.name/kuba/problematic-requests.git"
+    "url": "https://git.internet-czas-dzialac.pl/icd/problematic-requests.git"
   },
   "author": "",
   "license": "ISC",
@@ -26,6 +27,8 @@
   "devDependencies": {
     "@types/events": "^3.0.0",
     "@types/react-dom": "^17.0.9",
+    "esbuild-plugin-sass": "^1.0.1",
+    "esbuild-plugin-svgr": "^1.0.0",
     "web-ext-types": "^3.2.1"
   }
 }
