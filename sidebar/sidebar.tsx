@@ -56,7 +56,7 @@ const Sidebar = () => {
             }
         }
         return setMarksOccurrence(false);
-    }, [counter]);
+    }, [counter, origin]);
 
 
     return (
@@ -99,7 +99,7 @@ const Sidebar = () => {
                     <SettingsIcon />
                     <span>Ustawienia wtyczki</span>
                 </button>
-                <button
+                {/* <button
                     onClick={() => {
                         getMemory().removeCookiesFor(
                             origin,
@@ -108,11 +108,9 @@ const Sidebar = () => {
                         setMarksOccurrence(false);
                     }}
                 >
-                    {/* {stolenDataView ? 'Options' : 'Data'}
-                     */}
                     <TrashIcon />
                     <span>Wyczyść ciasteczka first-party</span>
-                </button>
+                </button> */}
                 <button
                     onClick={() => {
                         getMemory().removeRequestsFor(origin);
@@ -123,7 +121,7 @@ const Sidebar = () => {
                     {/* {stolenDataView ? 'Options' : 'Data'}
                      */}
                     <TrashIcon />
-                    <span>Wyczyść pamięć</span>
+                    <span>Wyczyść ciasteczka</span>
                 </button>
                 <button
                     disabled={!marksOccurrence}
