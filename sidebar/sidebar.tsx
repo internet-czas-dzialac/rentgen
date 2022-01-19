@@ -2,9 +2,14 @@ import React, { Fragment, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Options from '../options';
 import { StolenData } from './stolen-data';
-import { useEmitter } from '../util';
+import { getshorthost, useEmitter } from '../util';
 import { getMemory } from '../memory';
-import InfoCircle from '../assets/icons/info_circle_outline.svg';
+import { RequestCluster } from '../request-cluster';
+import InfoCircleIcon from '../assets/icons/info_circle_outline.svg';
+import SettingsIcon from '../assets/icons/settings.svg';
+import TrashIcon from '../assets/icons/trash_full.svg';
+import MailIcon from '../assets/icons/mail.svg';
+import ShortLeftIcon from '../assets/icons/short_left.svg';
 
 async function getCurrentTab() {
     const [tab] = await browser.tabs.query({
@@ -64,14 +69,54 @@ const Sidebar = () => {
                         {origin}
                     </span>
                 </div>
-                <a href="https://internet-czas-dzialac.pl">
-                    <InfoCircle />
-                </a>
+                {stolenDataView ? (
+                    <a href="https://internet-czas-dzialac.pl">
+                        <InfoCircleIcon />
+                    </a>
+                ) : (
+                    <button onClick={() => setStolenDataView(true)}>
+                        <ShortLeftIcon />
+                    </button>
+                )}
             </header>
 
             <nav>
                 <button onClick={() => setStolenDataView(!stolenDataView)}>
-                    {stolenDataView ? 'Options' : 'Data'}
+                    {/* {stolenDataView ? 'Options' : 'Data'}
+                     */}
+                    <SettingsIcon />
+                    <span>Ustawienia wtyczki</span>
+                </button>
+                <button
+                    onClick={() => {
+                        getMemory().removeCookiesFor(
+                            origin,
+                            getshorthost(new URL(origin).host)
+                        );
+                    }}
+                >
+                    {/* {stolenDataView ? 'Options' : 'Data'}
+                     */}
+                    <TrashIcon />
+                    <span>Wyczyść ciasteczka tej domeny</span>
+                </button>
+                <button
+                    // disabled={RequestCluster.hasMarks()}
+                    onClick={() => {
+                        const params = [
+                            'height=' + screen.height,
+                            'width=' + screen.width,
+                            'fullscreen=yes',
+                        ].join(',');
+                        window.open(
+                            `/report-window/report-window.html?origin=${origin}`,
+                            'new_window',
+                            params
+                        );
+                    }}
+                >
+                    <MailIcon />
+                    <span>Utwórz wiadomość dla administratora tej witryny</span>
                 </button>
             </nav>
 

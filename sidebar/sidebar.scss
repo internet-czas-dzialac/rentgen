@@ -4,8 +4,12 @@ header {
     display: grid;
     grid-template-columns: 8rem 1fr 1rem;
     max-height: 4rem;
+    padding-top: 0.5rem;
     padding-bottom: 0.5rem;
     border-bottom: 1px solid $light-grey;
+    position: sticky;
+    top: 0;
+    background: #fff;
 
     .webpage-metadata {
         word-break: break-all;
@@ -31,5 +35,37 @@ header {
         border: none;
         background: transparent;
         cursor: pointer;
+        padding: 0;
+    }
+}
+
+nav {
+    padding: 0.25rem 0;
+    border-bottom: 1px solid $light-grey;
+
+    button {
+        border: none;
+        cursor: pointer;
+        color: $mid-grey;
+        padding: 0.25rem 0rem;
+        display: flex;
+        flex-wrap: nowrap;
+        line-height: 1rem;
+        line-height: 1.5rem;
+        background: #fff;
+        width: 100%;
+
+        &:hover {
+            color: #000;
+            text-decoration: underline;
+            svg path {
+                fill: #000;
+            }
+        }
+
+        span {
+            padding-left: 0.5rem;
+            font-size: 0.875rem;
+        }
     }
 }
