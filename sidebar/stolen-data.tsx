@@ -56,9 +56,10 @@ export function StolenData({
                     Wyczyść pamięć
                 </button> */}
                 <button
-                    onClick={() =>
-                        clusters.forEach((cluster) => cluster.autoMark())
-                    }
+                    onClick={() => {
+                        clusters.forEach((cluster) => cluster.autoMark());
+                        refresh();
+                    }}
                 >
                     Zaznacz automatycznie
                 </button>
@@ -81,6 +82,7 @@ export function StolenData({
                             origin={origin}
                             shorthost={cluster.id}
                             key={cluster.id + origin}
+                            refresh={refresh}
                             refreshToken={refreshToken}
                             minValueLength={minValueLength}
                             cookiesOnly={cookiesOnly}

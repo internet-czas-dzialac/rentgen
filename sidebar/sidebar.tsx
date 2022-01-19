@@ -4,7 +4,6 @@ import Options from '../options';
 import { StolenData } from './stolen-data';
 import { getshorthost, useEmitter } from '../util';
 import { getMemory } from '../memory';
-import { RequestCluster } from '../request-cluster';
 import InfoCircleIcon from '../assets/icons/info_circle_outline.svg';
 import SettingsIcon from '../assets/icons/settings.svg';
 import TrashIcon from '../assets/icons/trash_full.svg';
@@ -30,6 +29,7 @@ const Sidebar = () => {
     const [cookiesOrOriginOnly, setCookiesOrOriginOnly] =
         useState<boolean>(false);
     const [counter, setCounter] = useEmitter(getMemory());
+    const [marksOccurrence, setMarksOccurrence] = useState<boolean>(false);
 
     useEffect(() => {
         const listener = async (data: any) => {
@@ -46,6 +46,18 @@ const Sidebar = () => {
             browser.tabs.onUpdated.removeListener(listener);
         };
     });
+
+    useEffect(() => {
+        for (const cluster of Object.values(
+            getMemory().getClustersForOrigin(origin)
+        )) {
+            if (cluster.hasMarks()) {
+                return setMarksOccurrence(true);
+            }
+        }
+        return setMarksOccurrence(false);
+    }, [counter]);
+
 
     return (
         <Fragment>
@@ -93,15 +105,28 @@ const Sidebar = () => {
                             origin,
                             getshorthost(new URL(origin).host)
                         );
+                        setMarksOccurrence(false);
                     }}
                 >
                     {/* {stolenDataView ? 'Options' : 'Data'}
                      */}
                     <TrashIcon />
-                    <span>Wyczyść ciasteczka tej domeny</span>
+                    <span>Wyczyść ciasteczka first-party</span>
                 </button>
                 <button
-                    // disabled={RequestCluster.hasMarks()}
+                    onClick={() => {
+                        getMemory().removeRequestsFor(origin);
+                        setCounter((c) => c + 1);
+                        setMarksOccurrence(false);
+                    }}
+                >
+                    {/* {stolenDataView ? 'Options' : 'Data'}
+                     */}
+                    <TrashIcon />
+                    <span>Wyczyść pamięć</span>
+                </button>
+                <button
+                    disabled={!marksOccurrence}
                     onClick={() => {
                         const params = [
                             'height=' + screen.height,
@@ -142,7 +167,7 @@ const Sidebar = () => {
                 )}
             </section>
 
-            <footer>Footer</footer>
+            <footer>Footer marks → {JSON.stringify(marksOccurrence)}</footer>
         </Fragment>
     );
 };
