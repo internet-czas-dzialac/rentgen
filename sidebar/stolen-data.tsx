@@ -55,14 +55,7 @@ export function StolenData({
                 >
                     Wyczyść pamięć
                 </button> */}
-                <button
-                    onClick={() => {
-                        clusters.forEach((cluster) => cluster.autoMark());
-                        refresh();
-                    }}
-                >
-                    Zaznacz automatycznie
-                </button>
+
                 {/* <button
                     style={{ marginLeft: '1rem' }}
                     onClick={() =>
@@ -74,6 +67,15 @@ export function StolenData({
                     }
                 >
                     Generuj maila
+                </button> */}
+
+                {/* <button
+                    onClick={() => {
+                        clusters.forEach((cluster) => cluster.autoMark());
+                        refresh();
+                    }}
+                >
+                    Zaznacz automatycznie
                 </button> */}
 
                 {clusters.map((cluster) => {

@@ -128,7 +128,11 @@ const Sidebar = () => {
                         </button>
                         <button
                             disabled={!marksOccurrence}
-                            title={marksOccurrence ? 'Kliknij, aby wygenerować wiadomość': 'Zaznacz poniżej elementy, aby móc wygenerować wiadomość' }
+                            title={
+                                marksOccurrence
+                                    ? 'Kliknij, aby wygenerować wiadomość'
+                                    : 'Zaznacz poniżej elementy, aby móc wygenerować wiadomość'
+                            }
                             onClick={() => {
                                 const params = [
                                     'height=' + screen.height,
