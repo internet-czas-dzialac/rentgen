@@ -58,7 +58,6 @@ const Sidebar = () => {
         return setMarksOccurrence(false);
     }, [counter, origin]);
 
-
     return (
         <Fragment>
             {/* <div id="selector">
@@ -93,13 +92,17 @@ const Sidebar = () => {
             </header>
 
             <nav>
-                <button onClick={() => setStolenDataView(!stolenDataView)}>
-                    {/* {stolenDataView ? 'Options' : 'Data'}
-                     */}
-                    <SettingsIcon />
-                    <span>Ustawienia wtyczki</span>
-                </button>
-                {/* <button
+                {stolenDataView ? (
+                    <Fragment>
+                        <button
+                            onClick={() => setStolenDataView(!stolenDataView)}
+                        >
+                            {/* {stolenDataView ? 'Options' : 'Data'}
+                             */}
+                            <SettingsIcon />
+                            <span>Ustawienia wtyczki</span>
+                        </button>
+                        {/* <button
                     onClick={() => {
                         getMemory().removeCookiesFor(
                             origin,
@@ -111,36 +114,41 @@ const Sidebar = () => {
                     <TrashIcon />
                     <span>Wyczyść ciasteczka first-party</span>
                 </button> */}
-                <button
-                    onClick={() => {
-                        getMemory().removeRequestsFor(origin);
-                        setCounter((c) => c + 1);
-                        setMarksOccurrence(false);
-                    }}
-                >
-                    {/* {stolenDataView ? 'Options' : 'Data'}
-                     */}
-                    <TrashIcon />
-                    <span>Wyczyść ciasteczka</span>
-                </button>
-                <button
-                    disabled={!marksOccurrence}
-                    onClick={() => {
-                        const params = [
-                            'height=' + screen.height,
-                            'width=' + screen.width,
-                            'fullscreen=yes',
-                        ].join(',');
-                        window.open(
-                            `/report-window/report-window.html?origin=${origin}`,
-                            'new_window',
-                            params
-                        );
-                    }}
-                >
-                    <MailIcon />
-                    <span>Utwórz wiadomość dla administratora tej witryny</span>
-                </button>
+                        <button
+                            onClick={() => {
+                                getMemory().removeRequestsFor(origin);
+                                setCounter((c) => c + 1);
+                                setMarksOccurrence(false);
+                            }}
+                        >
+                            {/* {stolenDataView ? 'Options' : 'Data'}
+                             */}
+                            <TrashIcon />
+                            <span>Wyczyść ciasteczka</span>
+                        </button>
+                        <button
+                            disabled={!marksOccurrence}
+                            title={marksOccurrence ? 'Kliknij, aby wygenerować wiadomość': 'Zaznacz poniżej elementy, aby móc wygenerować wiadomość' }
+                            onClick={() => {
+                                const params = [
+                                    'height=' + screen.height,
+                                    'width=' + screen.width,
+                                    'fullscreen=yes',
+                                ].join(',');
+                                window.open(
+                                    `/report-window/report-window.html?origin=${origin}`,
+                                    'new_window',
+                                    params
+                                );
+                            }}
+                        >
+                            <MailIcon />
+                            <span>
+                                Utwórz wiadomość dla administratora tej witryny
+                            </span>
+                        </button>
+                    </Fragment>
+                ) : null}
             </nav>
 
             <section>
@@ -165,7 +173,7 @@ const Sidebar = () => {
                 )}
             </section>
 
-            <footer>Footer marks → {JSON.stringify(marksOccurrence)}</footer>
+            {/* <footer>Footer marks → {JSON.stringify(marksOccurrence)}</footer> */}
         </Fragment>
     );
 };
