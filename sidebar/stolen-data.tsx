@@ -83,7 +83,7 @@ export function StolenData({
                     Zaznacz automatycznie
                 </button> */}
 
-            <span>Domeny otrzymujące informacje</span>
+            <span>Domeny, które pozyskały informacje</span>
 
             {clusters.map((cluster) => {
                 return (

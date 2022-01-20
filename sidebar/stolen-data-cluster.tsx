@@ -12,8 +12,10 @@ const MAX_STRING_VALUE_LENGTH = 100;
 
 function StolenDataValue({
     entry,
+    refresh,
 }: {
     entry: StolenDataEntry;
+    refresh: Function;
     prefixKey?: string;
 }) {
     const [version] = useEmitter(entry);
@@ -32,8 +34,10 @@ function StolenDataValue({
             className="value"
             onClick={(e) => {
                 entry.toggleMark();
+                refresh();
                 e.stopPropagation();
             }}
+            title={maskString(entry.value, 1, MAX_STRING_VALUE_LENGTH)}
             // style={{ color: entry.isMarked ? 'black' : 'gray' }}
         >
             {body}
@@ -66,8 +70,7 @@ function StolenDataRow({
                 />
             </td>
             <th
-                // className={`${entry.isMarked ? 'toggled' : 'untoggled'}`}
-                title={'Źródło: ' + entry.source}
+                title={`Nazwa: ${entry.name}\nŹródło: ${entry.source}`}
                 onClick={() => {
                     entry.toggleMark();
                     refresh();
@@ -119,7 +122,7 @@ function StolenDataRow({
             </td>
             {/* <td style={{ wordWrap: 'anywhere' as any }}> */}
 
-            <StolenDataValue entry={entry} />
+            <StolenDataValue refresh={refresh} entry={entry} />
         </tr>
     );
 }
