@@ -10,6 +10,10 @@
     user-select: none;
 }
 
+body {
+    min-width: 24rem;
+}
+
 html {
     font-size: 1rem;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,

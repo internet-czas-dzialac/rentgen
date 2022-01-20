@@ -99,7 +99,7 @@ const Sidebar = () => {
                         >
                             {/* {stolenDataView ? 'Options' : 'Data'}
                              */}
-                            <SettingsIcon />
+                            <SettingsIcon width={20} height={20} />
                             <span>Ustawienia wtyczki</span>
                         </button>
                         {/* <button
@@ -123,7 +123,7 @@ const Sidebar = () => {
                         >
                             {/* {stolenDataView ? 'Options' : 'Data'}
                              */}
-                            <TrashIcon />
+                            <TrashIcon width={20} height={20} />
                             <span>Wyczyść ciasteczka</span>
                         </button>
                         <button
@@ -146,7 +146,7 @@ const Sidebar = () => {
                                 );
                             }}
                         >
-                            <MailIcon />
+                            <MailIcon width={20} height={20} />
                             <span>
                                 Utwórz wiadomość dla administratora tej witryny
                             </span>

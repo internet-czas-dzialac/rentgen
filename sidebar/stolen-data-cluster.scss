@@ -41,6 +41,7 @@
 
         tr {
             vertical-align: middle;
+            line-height: 1rem;
 
             &:hover {
                 background-color: $icd-yellow;
@@ -80,6 +81,7 @@
             overflow: hidden;
             word-break: break-all;
             text-overflow: clip;
+            padding-left: 0.25rem;
         }
 
         .icons {
@@ -87,25 +89,27 @@
             padding: 0 0.25rem;
             position: relative;
             top: 2px;
+            max-width: 10%;
+            min-width: 5%;
 
             .cookie-data {
                 path {
-                    fill: #000;
+                    fill: $mid-grey;
                 }
             }
             .request-with-cookie {
                 path {
-                    fill: #000;
+                    fill: $mid-grey;
                 }
             }
             .show-history-part {
                 path {
-                    fill: #000;
+                    fill: $mid-grey;
                 }
             }
             .request-with-history-part {
                 path {
-                    fill: #000;
+                    fill: $mid-grey;
                 }
             }
         }
