@@ -1,79 +1,83 @@
 @import './colors.scss';
 
-header {
-    display: grid;
-    grid-template-columns: 8rem 1fr 1rem;
-    max-height: 4rem;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid $light-grey;
-    position: sticky;
-    top: 0;
-    background: #fff;
-
-    .webpage-metadata {
-        word-break: break-all;
-        display: flex;
-        flex-flow: column;
-        flex-wrap: nowrap;
-        font-size: 0.875rem;
-        font-weight: 600;
-        justify-content: center;
-        padding-left: 1rem;
-        color: #000;
-        // height: 1rem;
-
-        &--hyperlink {
-            font-weight: 400;
-            color: $mid-grey;
-            max-height: 2rem;
-            overflow: hidden;
-        }
-    }
-
-    button {
-        border: none;
-        background: transparent;
-        cursor: pointer;
-        padding: 0;
-    }
-}
-
-nav {
-    padding: 0.25rem 0;
-    border-bottom: 1px solid $light-grey;
-
-    button {
-        border: none;
-        cursor: pointer;
-        color: $mid-grey;
-        padding: 0.25rem 0rem;
-        display: flex;
-        flex-wrap: nowrap;
-        line-height: 1rem;
-        line-height: 1.5rem;
+.sidebar {
+    .header {
+        display: grid;
+        grid-template-columns: 8rem 1fr 1rem;
+        max-height: 4rem;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid $light-grey;
+        position: sticky;
+        top: 0;
         background: #fff;
-        width: 100%;
+        z-index: 1;
 
-        &:hover {
-            color: #000;
-            text-decoration: underline;
-            svg path {
-                fill: #000;
-            }
-        }
-
-        &:disabled {
-            color: $light-grey;
-            svg path {
-                fill: $light-grey;
-            }
-        }
-
-        span {
-            padding-left: 0.5rem;
+        .webpage-metadata {
+            word-break: break-all;
+            display: flex;
+            flex-flow: column;
+            flex-wrap: nowrap;
             font-size: 0.875rem;
-            font-weight: 500;
+            font-weight: 600;
+            justify-content: center;
+            padding-left: 1rem;
+            color: #000;
+            // height: 1rem;
+
+            &--hyperlink {
+                font-weight: 400;
+                color: $mid-grey;
+                max-height: 2rem;
+                overflow: hidden;
+            }
+        }
+
+        button {
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            padding: 0;
+        }
+    }
+
+    nav {
+        padding: 0.25rem 0;
+        border-bottom: 1px solid $light-grey;
+
+        button {
+            border: none;
+            cursor: pointer;
+            color: $mid-grey;
+            padding: 0.25rem 0rem;
+            display: flex;
+            flex-wrap: nowrap;
+            line-height: 1rem;
+            line-height: 1.5rem;
+            background: #fff;
+            width: 100%;
+
+            &:hover {
+                color: #000;
+                text-decoration: underline;
+                svg path {
+                    fill: #000;
+                }
+            }
+
+            &:disabled {
+                cursor: not-allowed;
+                color: $disabled-grey;
+                svg path {
+                    fill: $disabled-grey;
+                }
+            }
+
+            span {
+                padding-left: 0.5rem;
+                font-size: 0.875rem;
+                font-weight: 500;
+            }
         }
     }
 }

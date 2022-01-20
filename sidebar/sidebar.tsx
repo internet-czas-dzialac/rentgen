@@ -59,7 +59,7 @@ const Sidebar = () => {
     }, [counter, origin]);
 
     return (
-        <Fragment>
+        <div className="sidebar">
             {/* <div id="selector">
         <TabDropdown setPickedTab={setPickedTab} pickedTab={pickedTab} />
         <button
@@ -69,7 +69,7 @@ const Sidebar = () => {
           Wybierz aktywną kartę{" "}
         </button>
       </div> */}
-            <header>
+            <header className="header">
                 <img
                     src="../assets/logo-internet-czas-dzialac.svg"
                     height={48}
@@ -178,7 +178,7 @@ const Sidebar = () => {
             </section>
 
             {/* <footer>Footer marks → {JSON.stringify(marksOccurrence)}</footer> */}
-        </Fragment>
+        </div>
     );
 };
 

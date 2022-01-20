@@ -12,6 +12,7 @@ esbuild
         ],
         bundle: true,
         outdir: './lib',
+        loader: { '.woff': 'file', '.woff2': 'file' },
         plugins: [scss(), svg()],
         watch: {
             onRebuild(error, result) {

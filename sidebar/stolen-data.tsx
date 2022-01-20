@@ -5,6 +5,8 @@ import StolenDataCluster from './stolen-data-cluster';
 import { getshorthost } from '../util';
 import { getMemory } from '../memory';
 
+import './stolen-data.scss';
+
 export function StolenData({
     origin,
     minValueLength,
@@ -21,7 +23,11 @@ export function StolenData({
     cookiesOrOriginOnly: boolean;
 }) {
     if (!origin) {
-        return <div></div>;
+        return (
+            <div className="stolen-data-container">
+                <span>Otwórz nową kartę z wybraną stroną internetową</span>
+            </div>
+        );
     }
     const clusters = Object.values(getMemory().getClustersForOrigin(origin))
         .sort(RequestCluster.sortCompare)
@@ -33,9 +39,8 @@ export function StolenData({
                 cluster.exposesOrigin()
         );
     return (
-        <div style={{ padding: '5px' }}>
-            <div>
-                {/* <button
+        <div className="stolen-data-container">
+            {/* <button
                     style={{ marginLeft: '1rem' }}
                     onClick={() =>
                         getMemory().removeCookiesFor(
@@ -56,7 +61,7 @@ export function StolenData({
                     Wyczyść pamięć
                 </button> */}
 
-                {/* <button
+            {/* <button
                     style={{ marginLeft: '1rem' }}
                     onClick={() =>
                         window.open(
@@ -69,7 +74,7 @@ export function StolenData({
                     Generuj maila
                 </button> */}
 
-                {/* <button
+            {/* <button
                     onClick={() => {
                         clusters.forEach((cluster) => cluster.autoMark());
                         refresh();
@@ -78,21 +83,22 @@ export function StolenData({
                     Zaznacz automatycznie
                 </button> */}
 
-                {clusters.map((cluster) => {
-                    return (
-                        <StolenDataCluster
-                            origin={origin}
-                            shorthost={cluster.id}
-                            key={cluster.id + origin}
-                            refresh={refresh}
-                            refreshToken={refreshToken}
-                            minValueLength={minValueLength}
-                            cookiesOnly={cookiesOnly}
-                            cookiesOrOriginOnly={cookiesOrOriginOnly}
-                        />
-                    );
-                })}
-            </div>
+            <span>Domeny otrzymujące informacje</span>
+
+            {clusters.map((cluster) => {
+                return (
+                    <StolenDataCluster
+                        origin={origin}
+                        shorthost={cluster.id}
+                        key={cluster.id + origin}
+                        refresh={refresh}
+                        refreshToken={refreshToken}
+                        minValueLength={minValueLength}
+                        cookiesOnly={cookiesOnly}
+                        cookiesOrOriginOnly={cookiesOrOriginOnly}
+                    />
+                );
+            })}
         </div>
     );
 }

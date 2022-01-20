@@ -56,7 +56,7 @@ export default class Memory extends EventEmitter {
       }
       return true;
     } catch (e) {
-      debugger;
+    //   debugger;
     }
   }
 
