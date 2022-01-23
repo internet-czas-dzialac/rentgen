@@ -3,10 +3,10 @@
   "name": "Problematyczne requesty",
   "version": "1.0",
 
-  "description": "Adds a red border to all webpages matching mozilla.org.",
+  "description": "",
 
   "sidebar_action": {
-    "default_title": "ICD Skaner",
+    "default_title": "ICD",
     "default_panel": "sidebar/sidebar.html",
     "default_icon": "sidebar_icon.png"
   },

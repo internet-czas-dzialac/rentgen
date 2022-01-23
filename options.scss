@@ -1,0 +1,30 @@
+@import './sidebar/colors.scss';
+
+.options-container {
+    padding-top: 0.5rem;
+    span {
+        color: $mid-grey;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+
+    fieldset {
+        padding: 0.5rem 0;
+        border: none;
+        display: flex;
+        flex-flow: column;
+
+        .label-checkbox {
+            cursor: pointer;
+            margin-left: 0.5rem;
+        }
+
+        .input-container{
+            padding-bottom: .25rem;
+        }
+
+        #minValueLength {
+            width: 3rem;
+        }
+    }
+}

@@ -9,6 +9,7 @@ import SettingsIcon from '../assets/icons/settings.svg';
 import TrashIcon from '../assets/icons/trash_full.svg';
 import MailIcon from '../assets/icons/mail.svg';
 import ShortLeftIcon from '../assets/icons/short_left.svg';
+import CloseBigIcon from '../assets/icons/close_big.svg';
 
 async function getCurrentTab() {
     const [tab] = await browser.tabs.query({
@@ -30,6 +31,9 @@ const Sidebar = () => {
         useState<boolean>(false);
     const [counter, setCounter] = useEmitter(getMemory());
     const [marksOccurrence, setMarksOccurrence] = useState<boolean>(false);
+    const [readWarningDataDialog, setReadWarningDataDialog] = useState<
+        string | null
+    >(localStorage.getItem('readWarningDataDialog'));
 
     useEffect(() => {
         const listener = async (data: any) => {
@@ -91,18 +95,15 @@ const Sidebar = () => {
                 )}
             </header>
 
-            <nav>
-                {stolenDataView ? (
-                    <Fragment>
-                        <button
-                            onClick={() => setStolenDataView(!stolenDataView)}
-                        >
-                            {/* {stolenDataView ? 'Options' : 'Data'}
-                             */}
-                            <SettingsIcon width={20} height={20} />
-                            <span>Ustawienia wtyczki</span>
-                        </button>
-                        {/* <button
+            {stolenDataView ? (
+                <nav>
+                    <button onClick={() => setStolenDataView(!stolenDataView)}>
+                        {/* {stolenDataView ? 'Options' : 'Data'}
+                         */}
+                        <SettingsIcon width={20} height={20} />
+                        <span>Ustawienia wtyczki</span>
+                    </button>
+                    {/* <button
                     onClick={() => {
                         getMemory().removeCookiesFor(
                             origin,
@@ -114,57 +115,80 @@ const Sidebar = () => {
                     <TrashIcon />
                     <span>Wyczyść ciasteczka first-party</span>
                 </button> */}
-                        <button
-                            onClick={() => {
-                                getMemory().removeRequestsFor(origin);
-                                setCounter((c) => c + 1);
-                                setMarksOccurrence(false);
-                            }}
-                        >
-                            {/* {stolenDataView ? 'Options' : 'Data'}
-                             */}
-                            <TrashIcon width={20} height={20} />
-                            <span>Wyczyść ciasteczka</span>
-                        </button>
-                        <button
-                            disabled={!marksOccurrence}
-                            title={
-                                marksOccurrence
-                                    ? 'Kliknij, aby wygenerować wiadomość'
-                                    : 'Zaznacz poniżej elementy, aby móc wygenerować wiadomość'
-                            }
-                            onClick={() => {
-                                const params = [
-                                    'height=' + screen.height,
-                                    'width=' + screen.width,
-                                    'fullscreen=yes',
-                                ].join(',');
-                                window.open(
-                                    `/report-window/report-window.html?origin=${origin}`,
-                                    'new_window',
-                                    params
-                                );
-                            }}
-                        >
-                            <MailIcon width={20} height={20} />
-                            <span>
-                                Utwórz wiadomość dla administratora tej witryny
-                            </span>
-                        </button>
-                    </Fragment>
-                ) : null}
-            </nav>
+                    <button
+                        onClick={() => {
+                            getMemory().removeRequestsFor(origin);
+                            setCounter((c) => c + 1);
+                            setMarksOccurrence(false);
+                        }}
+                    >
+                        {/* {stolenDataView ? 'Options' : 'Data'}
+                         */}
+                        <TrashIcon width={20} height={20} />
+                        <span>Wyczyść ciasteczka</span>
+                    </button>
+                    <button
+                        disabled={!marksOccurrence}
+                        title={
+                            marksOccurrence
+                                ? 'Kliknij, aby wygenerować wiadomość'
+                                : 'Zaznacz poniżej elementy, aby móc wygenerować wiadomość'
+                        }
+                        onClick={() => {
+                            const params = [
+                                'height=' + screen.height,
+                                'width=' + screen.width,
+                                'fullscreen=yes',
+                            ].join(',');
+                            window.open(
+                                `/report-window/report-window.html?origin=${origin}`,
+                                'new_window',
+                                params
+                            );
+                        }}
+                    >
+                        <MailIcon width={20} height={20} />
+                        <span>
+                            Utwórz wiadomość dla administratora tej witryny
+                        </span>
+                    </button>
+                </nav>
+            ) : null}
 
             <section>
                 {stolenDataView ? (
-                    <StolenData
-                        origin={origin}
-                        refreshToken={counter}
-                        refresh={() => setCounter((c) => c + 1)}
-                        minValueLength={minValueLength}
-                        cookiesOnly={cookiesOnly}
-                        cookiesOrOriginOnly={cookiesOrOriginOnly}
-                    />
+                    <Fragment>
+                        {readWarningDataDialog != '1' ? (
+                            <section className="warning-container">
+                                <span>
+                                    <strong>Uwaga!</strong> Niekoniecznie każda
+                                    przechwycona poniżej informacja jest daną
+                                    osobową. Niektóre z podanych domen mogą
+                                    należeć do właściciela strony i nie
+                                    reprezentować podmiotów trzecich.
+                                </span>
+                                <button
+                                    onClick={() => {
+                                        setReadWarningDataDialog('1');
+                                        localStorage.setItem(
+                                            'readWarningDataDialog',
+                                            '1'
+                                        );
+                                    }}
+                                >
+                                    <CloseBigIcon width={16} height={16} />
+                                </button>
+                            </section>
+                        ) : null}
+                        <StolenData
+                            origin={origin}
+                            refreshToken={counter}
+                            refresh={() => setCounter((c) => c + 1)}
+                            minValueLength={minValueLength}
+                            cookiesOnly={cookiesOnly}
+                            cookiesOrOriginOnly={cookiesOrOriginOnly}
+                        />
+                    </Fragment>
                 ) : (
                     <Options
                         minValueLength={minValueLength}
@@ -173,6 +197,8 @@ const Sidebar = () => {
                         setCookiesOnly={setCookiesOnly}
                         cookiesOrOriginOnly={cookiesOrOriginOnly}
                         setCookiesOrOriginOnly={setCookiesOrOriginOnly}
+                        readWarningDataDialog={readWarningDataDialog}
+                        setReadWarningDataDialog={setReadWarningDataDialog}
                     />
                 )}
             </section>

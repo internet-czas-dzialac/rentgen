@@ -79,4 +79,30 @@
             }
         }
     }
+
+    .warning-container {
+        background-color: $pale-yellow;
+        border-left: 4px solid $contrast-yellow;
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+        display: grid;
+        grid-template-columns: calc(100% - 2rem) 2rem;
+        align-items: flex-start;
+
+        span {
+            padding: 1rem;
+        }
+
+        button {
+            justify-content: flex-end;
+            border: none;
+            cursor: pointer;
+            color: $mid-grey;
+            line-height: 1.25rem;
+            background: transparent;
+            padding: 0.5rem 0.5rem;
+            display: flex;
+            align-self: flex-start;
+        }
+    }
 }
