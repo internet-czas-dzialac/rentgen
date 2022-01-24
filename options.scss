@@ -9,7 +9,7 @@
     }
 
     fieldset {
-        padding: 0.5rem 0;
+        padding: 0.5rem 0 1rem;
         border: none;
         display: flex;
         flex-flow: column;
@@ -19,8 +19,8 @@
             margin-left: 0.5rem;
         }
 
-        .input-container{
-            padding-bottom: .25rem;
+        .input-container {
+            padding-bottom: 0.25rem;
         }
 
         #minValueLength {

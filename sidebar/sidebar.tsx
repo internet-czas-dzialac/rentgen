@@ -31,11 +31,19 @@ const Sidebar = () => {
         useState<boolean>(false);
     const [counter, setCounter] = useEmitter(getMemory());
     const [marksOccurrence, setMarksOccurrence] = useState<boolean>(false);
-    const [readWarningDataDialog, setReadWarningDataDialog] = useState<
-        string | null
-    >(localStorage.getItem('readWarningDataDialog'));
-    const [logoVisibility, setLogoVisibility] = useState<string | null>(
-        localStorage.getItem('setLogoVisibility')
+    const [warningDataDialogAck, setWarningDataDialogAck] = useState<boolean>(
+        localStorage.getItem('warningDataDialogAck') === null
+            ? true
+            : localStorage.getItem('warningDataDialogAck') == 'true'
+            ? true
+            : false
+    );
+    const [logoVisibility, setLogoVisibility] = useState<boolean>(
+        localStorage.getItem('logoVisibility') === null
+            ? true
+            : localStorage.getItem('logoVisibility') == 'true'
+            ? true
+            : false
     );
 
     useEffect(() => {
@@ -76,12 +84,23 @@ const Sidebar = () => {
           Wybierz aktywną kartę{" "}
         </button>
       </div> */}
-            <header className="header">
+            <header
+                className={
+                    logoVisibility ? 'header' : 'header header--without-logo'
+                }
+            >
                 <img
                     src="../assets/logo-internet-czas-dzialac.svg"
                     height={40}
+                    style={!logoVisibility ? { display: 'none' } : null}
                 ></img>
-                <div className="webpage-metadata">
+                <div
+                    className={
+                        logoVisibility
+                            ? 'webpage-metadata'
+                            : 'webpage-metadata webpage-metadata--without-logo'
+                    }
+                >
                     {origin ? (
                         <Fragment>
                             <span>Analiza strony</span>
@@ -167,7 +186,7 @@ const Sidebar = () => {
             <section>
                 {stolenDataView ? (
                     <Fragment>
-                        {readWarningDataDialog != '1' ? (
+                        {warningDataDialogAck ? (
                             <section className="warning-container">
                                 <span>
                                     <strong>Uwaga!</strong> Niekoniecznie każda
@@ -178,10 +197,10 @@ const Sidebar = () => {
                                 </span>
                                 <button
                                     onClick={() => {
-                                        setReadWarningDataDialog('1');
+                                        setWarningDataDialogAck(false);
                                         localStorage.setItem(
-                                            'readWarningDataDialog',
-                                            '1'
+                                            'warningDataDialogAck',
+                                            false as unknown as string
                                         );
                                     }}
                                 >
@@ -206,8 +225,8 @@ const Sidebar = () => {
                         setCookiesOnly={setCookiesOnly}
                         cookiesOrOriginOnly={cookiesOrOriginOnly}
                         setCookiesOrOriginOnly={setCookiesOrOriginOnly}
-                        readWarningDataDialog={readWarningDataDialog}
-                        setReadWarningDataDialog={setReadWarningDataDialog}
+                        warningDataDialogAck={warningDataDialogAck}
+                        setWarningDataDialogAck={setWarningDataDialogAck}
                         logoVisibility={logoVisibility}
                         setLogoVisibility={setLogoVisibility}
                     />

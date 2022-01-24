@@ -8,8 +8,8 @@ export default function Options({
     setCookiesOnly,
     cookiesOrOriginOnly,
     setCookiesOrOriginOnly,
-    readWarningDataDialog,
-    setReadWarningDataDialog,
+    warningDataDialogAck,
+    setWarningDataDialogAck,
     logoVisibility,
     setLogoVisibility,
 }: {
@@ -19,52 +19,50 @@ export default function Options({
     setCookiesOnly: (b: boolean) => void;
     cookiesOrOriginOnly: boolean;
     setCookiesOrOriginOnly: (b: boolean) => void;
-    readWarningDataDialog: string;
-    setReadWarningDataDialog: (s: string) => void;
-    logoVisibility: string;
-    setLogoVisibility: (s: string) => void;
+    warningDataDialogAck: boolean;
+    setWarningDataDialogAck: (b: boolean) => void;
+    logoVisibility: boolean;
+    setLogoVisibility: (b: boolean) => void;
 }) {
     return (
         <div className="options-container">
-            <span>Ustawienia interfejsu</span>
+            <span>Interfejs</span>
             <fieldset>
                 <div className="input-container">
                     <input
                         type="checkbox"
-                        id="readWarningDataDialog"
-                        checked={readWarningDataDialog != '1'}
-                        onChange={(e) => {
-                            setReadWarningDataDialog(
-                                e.target.checked ? '0' : '1'
-                            );
-                            localStorage.setItem(
-                                'readWarningDataDialog',
-                                e.target.checked ? '0' : '1'
-                            );
-                        }}
-                    />
-                    <label
-                        className="label-checkbox"
-                        htmlFor="readWarningDataDialog"
-                    >
-                        Wyświetlaj komunikat o pozyskiwanych danych
-                    </label>
-                </div>
-                <div className="input-container">
-                    <input
-                        type="checkbox"
                         id="logoVisibility"
-                        checked={logoVisibility != '0'}
+                        checked={logoVisibility}
                         onChange={(e) => {
-                            setLogoVisibility(e.target.checked ? '1' : '0');
+                            setLogoVisibility(e.target.checked);
                             localStorage.setItem(
                                 'logoVisibility',
-                                e.target.checked ? '1' : '0'
+                                e.target.checked as unknown as string
                             );
                         }}
                     />
                     <label className="label-checkbox" htmlFor="logoVisibility">
                         Wyświetlaj logo <i>Internet. Czas działać!</i>
+                    </label>
+                </div>
+                <div className="input-container">
+                    <input
+                        type="checkbox"
+                        id="warningDataDialogAck"
+                        checked={warningDataDialogAck}
+                        onChange={(e) => {
+                            setWarningDataDialogAck(e.target.checked);
+                            localStorage.setItem(
+                                'warningDataDialogAck',
+                                e.target.checked as unknown as string
+                            );
+                        }}
+                    />
+                    <label
+                        className="label-checkbox"
+                        htmlFor="warningDataDialogAck"
+                    >
+                        Wyświetlaj komunikat o pozyskiwanych danych
                     </label>
                 </div>
             </fieldset>
