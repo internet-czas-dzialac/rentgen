@@ -1,33 +1,35 @@
 {
-  "manifest_version": 2,
-  "name": "Problematyczne requesty",
-  "version": "1.0",
+    "manifest_version": 2,
+    "name": "Problematyczne requesty",
+    "version": "1.0",
 
-  "description": "",
+    "description": "",
 
-  "sidebar_action": {
-    "default_title": "ICD",
-    "default_panel": "sidebar/sidebar.html",
-    "default_icon": "sidebar_icon.png"
-  },
-  "background": {
-    "scripts": ["lib/background.js"]
-  },
-  "icons": {
-    "48": "icons/border-48.png"
-  },
-  "permissions": [
-    "proxy",
-    "storage",
-    "<all_urls>",
-    "webRequest",
-    "webRequestBlocking",
-    "cookies",
-    "privacy"
-  ],
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "problematic-requests@internet-czas-dzialac.pl"
+    "sidebar_action": {
+        "default_title": "Problematic requests",
+        "default_panel": "sidebar/sidebar.html",
+        "default_icon": "icons/logo-black-square.svg",
+        "browser_style": true,
+        "open_at_install": true
+    },
+    "background": {
+        "scripts": ["lib/background.js"]
+    },
+    "icons": {
+        "48": "icons/border-48.png"
+    },
+    "permissions": [
+        "proxy",
+        "storage",
+        "<all_urls>",
+        "webRequest",
+        "webRequestBlocking",
+        "cookies",
+        "privacy"
+    ],
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "problematic-requests@internet-czas-dzialac.pl"
+        }
     }
-  }
 }

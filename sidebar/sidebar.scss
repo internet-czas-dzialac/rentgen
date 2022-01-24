@@ -3,8 +3,9 @@
 .sidebar {
     .header {
         display: grid;
-        grid-template-columns: 8rem 1fr 1rem;
-        max-height: 4rem;
+        grid-template-columns: 6.67rem 1fr 1rem;
+        align-items: flex-start;
+        max-height: 3.5rem;
         padding-top: 0.5rem;
         padding-bottom: 0.5rem;
         border-bottom: 1px solid $light-grey;

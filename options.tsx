@@ -10,6 +10,8 @@ export default function Options({
     setCookiesOrOriginOnly,
     readWarningDataDialog,
     setReadWarningDataDialog,
+    logoVisibility,
+    setLogoVisibility,
 }: {
     minValueLength: number;
     setMinValueLength: (n: number) => void;
@@ -19,6 +21,8 @@ export default function Options({
     setCookiesOrOriginOnly: (b: boolean) => void;
     readWarningDataDialog: string;
     setReadWarningDataDialog: (s: string) => void;
+    logoVisibility: string;
+    setLogoVisibility: (s: string) => void;
 }) {
     return (
         <div className="options-container">
@@ -43,7 +47,24 @@ export default function Options({
                         className="label-checkbox"
                         htmlFor="readWarningDataDialog"
                     >
-                        Wyświetlaj informację o pozyskiwanych danych
+                        Wyświetlaj komunikat o pozyskiwanych danych
+                    </label>
+                </div>
+                <div className="input-container">
+                    <input
+                        type="checkbox"
+                        id="logoVisibility"
+                        checked={logoVisibility != '0'}
+                        onChange={(e) => {
+                            setLogoVisibility(e.target.checked ? '1' : '0');
+                            localStorage.setItem(
+                                'logoVisibility',
+                                e.target.checked ? '1' : '0'
+                            );
+                        }}
+                    />
+                    <label className="label-checkbox" htmlFor="logoVisibility">
+                        Wyświetlaj logo <i>Internet. Czas działać!</i>
                     </label>
                 </div>
             </fieldset>

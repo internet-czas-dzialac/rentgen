@@ -34,6 +34,9 @@ const Sidebar = () => {
     const [readWarningDataDialog, setReadWarningDataDialog] = useState<
         string | null
     >(localStorage.getItem('readWarningDataDialog'));
+    const [logoVisibility, setLogoVisibility] = useState<string | null>(
+        localStorage.getItem('setLogoVisibility')
+    );
 
     useEffect(() => {
         const listener = async (data: any) => {
@@ -76,13 +79,19 @@ const Sidebar = () => {
             <header className="header">
                 <img
                     src="../assets/logo-internet-czas-dzialac.svg"
-                    height={48}
+                    height={40}
                 ></img>
                 <div className="webpage-metadata">
-                    <span>Analiza strony</span>
-                    <span className="webpage-metadata--hyperlink">
-                        {origin}
-                    </span>
+                    {origin ? (
+                        <Fragment>
+                            <span>Analiza strony</span>
+                            <span className="webpage-metadata--hyperlink">
+                                {origin}
+                            </span>
+                        </Fragment>
+                    ) : (
+                        <span>Przejdź do wybranej strony internetowej</span>
+                    )}
                 </div>
                 {stolenDataView ? (
                     <a href="https://internet-czas-dzialac.pl">
@@ -199,6 +208,8 @@ const Sidebar = () => {
                         setCookiesOrOriginOnly={setCookiesOrOriginOnly}
                         readWarningDataDialog={readWarningDataDialog}
                         setReadWarningDataDialog={setReadWarningDataDialog}
+                        logoVisibility={logoVisibility}
+                        setLogoVisibility={setLogoVisibility}
                     />
                 )}
             </section>
