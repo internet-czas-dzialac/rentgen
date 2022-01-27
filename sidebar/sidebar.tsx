@@ -10,6 +10,8 @@ import TrashIcon from '../assets/icons/trash_full.svg';
 import MailIcon from '../assets/icons/mail.svg';
 import ShortLeftIcon from '../assets/icons/short_left.svg';
 import CloseBigIcon from '../assets/icons/close_big.svg';
+import CookiesIcon from '../assets/icons/cookie.svg';
+import DataIcon from '../assets/icons/data.svg';
 
 async function getCurrentTab() {
     const [tab] = await browser.tabs.query({
@@ -75,15 +77,6 @@ const Sidebar = () => {
 
     return (
         <div className="sidebar">
-            {/* <div id="selector">
-        <TabDropdown setPickedTab={setPickedTab} pickedTab={pickedTab} />
-        <button
-          id="get_current_tab_button"
-          onClick={async () => setPickedTab(await getCurrentTab())}
-        >
-          Wybierz aktywną kartę{" "}
-        </button>
-      </div> */}
             <header
                 className={
                     logoVisibility ? 'header' : 'header header--without-logo'
@@ -126,23 +119,9 @@ const Sidebar = () => {
             {stolenDataView ? (
                 <nav>
                     <button onClick={() => setStolenDataView(!stolenDataView)}>
-                        {/* {stolenDataView ? 'Options' : 'Data'}
-                         */}
                         <SettingsIcon width={20} height={20} />
-                        <span>Ustawienia wtyczki</span>
+                        <span>Ustawienia</span>
                     </button>
-                    {/* <button
-                    onClick={() => {
-                        getMemory().removeCookiesFor(
-                            origin,
-                            getshorthost(new URL(origin).host)
-                        );
-                        setMarksOccurrence(false);
-                    }}
-                >
-                    <TrashIcon />
-                    <span>Wyczyść ciasteczka first-party</span>
-                </button> */}
                     <button
                         onClick={() => {
                             getMemory().removeRequestsFor(origin);
@@ -150,9 +129,21 @@ const Sidebar = () => {
                             setMarksOccurrence(false);
                         }}
                     >
-                        {/* {stolenDataView ? 'Options' : 'Data'}
-                         */}
                         <TrashIcon width={20} height={20} />
+                        <span>Wyczyść historię wtyczki</span>
+                    </button>
+                    <button
+                        onClick={() => {
+                            getMemory().removeCookiesFor(origin);
+                            // getMemory().removeCookiesFor(
+                            //     origin,
+                            //     getshorthost(new URL(origin).host)
+                            // );
+                            setCounter((c) => c + 1);
+                            setMarksOccurrence(false);
+                        }}
+                    >
+                        <CookiesIcon width={20} height={20} />
                         <span>Wyczyść ciasteczka</span>
                     </button>
                     <button
@@ -177,7 +168,7 @@ const Sidebar = () => {
                     >
                         <MailIcon width={20} height={20} />
                         <span>
-                            Utwórz wiadomość dla administratora tej witryny
+                            Utwórz wiadomość dla administratora witryny
                         </span>
                     </button>
                 </nav>
@@ -232,8 +223,6 @@ const Sidebar = () => {
                     />
                 )}
             </section>
-
-            {/* <footer>Footer marks → {JSON.stringify(marksOccurrence)}</footer> */}
         </div>
     );
 };

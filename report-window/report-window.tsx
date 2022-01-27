@@ -114,7 +114,6 @@ function Report() {
     console.time('rendering template');
     const result = (
         <div {...{ 'data-version': counter }}>
-            {/*<DataPreview {...{entries, refresh}} */}
             <h1>Generuj treść maila dla {origin}</h1>
             <EmailTemplate {...{ entries, clusters, version: counter }} />
             <HARConverter {...{ entries }} />

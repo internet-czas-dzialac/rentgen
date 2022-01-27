@@ -40,49 +40,6 @@ export function StolenData({
         );
     return (
         <div className="stolen-data-container">
-            {/* <button
-                    style={{ marginLeft: '1rem' }}
-                    onClick={() =>
-                        getMemory().removeCookiesFor(
-                            origin,
-                            getshorthost(new URL(origin).host)
-                        )
-                    }
-                >
-                    Wyczyść cookiesy 1st party
-                </button>
-                <button
-                    style={{ marginLeft: '1rem' }}
-                    onClick={() => {
-                        getMemory().removeRequestsFor(origin);
-                        refresh();
-                    }}
-                >
-                    Wyczyść pamięć
-                </button> */}
-
-            {/* <button
-                    style={{ marginLeft: '1rem' }}
-                    onClick={() =>
-                        window.open(
-                            `/report-window/report-window.html?origin=${origin}`,
-                            'new_window',
-                            'width=800,height=600'
-                        )
-                    }
-                >
-                    Generuj maila
-                </button> */}
-
-            {/* <button
-                    onClick={() => {
-                        clusters.forEach((cluster) => cluster.autoMark());
-                        refresh();
-                    }}
-                >
-                    Zaznacz automatycznie
-                </button> */}
-
             <span>Domeny oraz przesłane informacje</span>
 
             {clusters.map((cluster) => {

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { getMemory } from '../memory';
 import { StolenDataEntry } from '../stolen-data-entry';
 
@@ -38,7 +38,6 @@ function StolenDataValue({
                 e.stopPropagation();
             }}
             title={maskString(entry.value, 1, MAX_STRING_VALUE_LENGTH)}
-            // style={{ color: entry.isMarked ? 'black' : 'gray' }}
         >
             {body}
         </td>
@@ -120,8 +119,6 @@ function StolenDataRow({
                     </span>
                 ) : null}
             </td>
-            {/* <td style={{ wordWrap: 'anywhere' as any }}> */}
-
             <StolenDataValue refresh={refresh} entry={entry} />
         </tr>
     );
@@ -194,56 +191,5 @@ export default function StolenDataCluster({
                 </table>
             </section>
         </div>
-
-        // <div>
-        //     <h2>
-        //         <a href={'https://' + cluster.id}>{cluster.id}</a>{' '}
-        //         {cluster.hasCookies() ? '🍪' : ''} x{cluster.requests.length}{' '}
-        //         {/* <a
-        //          *   href="#"
-        //          *   style={{ fontSize: "10px" }}
-        //          *   onClick={() => getMemory().removeCookiesFor(origin, shorthost)}
-        //          * >
-        //          *   Wyczyść cookiesy
-        //          * </a> */}
-        //         <a
-        //             href="#"
-        //             style={{ fontSize: '10px' }}
-        //             onClick={(e) => {
-        //                 cluster.autoMark();
-        //                 refresh();
-        //                 e.preventDefault();
-        //             }}
-        //         >
-        //             Zaznacz auto
-        //         </a>
-        //     </h2>
-        //     <div>
-        //         {cluster.getFullHosts().map((host) => (
-        //             <a key={host} href={`https://${host}`}>
-        //                 {host},{' '}
-        //             </a>
-        //         ))}
-        //     </div>
-        //     <table>
-        //         <tbody>
-        //             {cluster
-        //                 .calculateRepresentativeStolenData({
-        //                     minValueLength,
-        //                     cookiesOnly,
-        //                     cookiesOrOriginOnly,
-        //                 })
-        //                 .map((entry) => (
-        //                     <StolenDataRow
-        //                         refresh={refresh}
-        //                         {...{
-        //                             entry,
-        //                             key: entry.id,
-        //                         }}
-        //                     />
-        //                 ))}
-        //         </tbody>
-        //     </table>
-        // </div>
     );
 }

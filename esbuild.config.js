@@ -25,5 +25,3 @@ esbuild
         },
     })
     .catch(() => process.exit(1));
-
-//   npx esbuild sidebar/sidebar.tsx test.ts --bundle report-window/report-window.tsx --bundle background.ts --bundle --outdir=./lib
