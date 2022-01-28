@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "node esbuild.config.js",
-    "watch": "npm run build -- --watch",
+    "watch": "node esbuild.config.js --watch",
     "typecheck": "tsc --noEmit"
   },
   "repository": {

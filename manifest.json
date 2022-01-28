@@ -1,22 +1,21 @@
 {
+    "description": "Wtyczka pokazująca, jakie dane zostały ~~wykradzione~~ wysłane do podmiotów trzecich przez odwiedzane strony.",
     "manifest_version": 2,
     "name": "Problematyczne requesty",
     "version": "1.0",
-
-    "description": "",
-
+    "homepage_url": "https://git.internet-czas-dzialac.pl/icd/problematic-requests",
+    "background": {
+        "scripts": ["lib/background.js"]
+    },
     "sidebar_action": {
-        "default_title": "Problematic requests",
+        "default_title": "Problematyczne requesty",
         "default_panel": "sidebar/sidebar.html",
         "default_icon": "icons/logo-black-square.svg",
         "browser_style": true,
         "open_at_install": true
     },
-    "background": {
-        "scripts": ["lib/background.js"]
-    },
     "icons": {
-        "48": "icons/border-48.png"
+        "48": "icons/logo-black-square.svg"
     },
     "permissions": [
         "proxy",
