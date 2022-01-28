@@ -152,8 +152,8 @@ export default function EmailTemplate2({
                 <p>
                     W tym samym czasie rejestrowałem ruch sieciowy generowany
                     przez tę stronę za pomocą narzędzi w przeglądarce Firefox.
-                    Okazało się, że Państwa strona wysłała była moje dane
-                    osobowe do następujących podmiotów:
+                    Okazało się, że Państwa strona wysłała moje dane osobowe do
+                    następujących podmiotów:
                 </p>
                 <ul>
                     {Object.values(clusters)

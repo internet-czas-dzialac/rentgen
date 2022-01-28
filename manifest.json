@@ -1,5 +1,5 @@
 {
-    "description": "Wtyczka pokazująca, jakie dane zostały ~~wykradzione~~ wysłane do podmiotów trzecich przez odwiedzane strony.",
+    "description": "Wtyczka Problematyczne zapytania pokazuje jakie dane zostały ~~wykradzione~~ wysłane do podmiotów trzecich przez odwiedzane strony.",
     "manifest_version": 2,
     "name": "Problematyczne requesty",
     "version": "0.0.1",
