@@ -11,7 +11,6 @@ import MailIcon from '../assets/icons/mail.svg';
 import ShortLeftIcon from '../assets/icons/short_left.svg';
 import CloseBigIcon from '../assets/icons/close_big.svg';
 import CookiesIcon from '../assets/icons/cookie.svg';
-import DataIcon from '../assets/icons/data.svg';
 
 async function getCurrentTab() {
     const [tab] = await browser.tabs.query({

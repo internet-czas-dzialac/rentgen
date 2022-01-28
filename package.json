@@ -1,6 +1,6 @@
 {
   "name": "problematic-requests",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "esbuild.config.js",
   "type": "module",
