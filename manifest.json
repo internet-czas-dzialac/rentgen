@@ -2,7 +2,7 @@
     "description": "Wtyczka pokazująca, jakie dane zostały ~~wykradzione~~ wysłane do podmiotów trzecich przez odwiedzane strony.",
     "manifest_version": 2,
     "name": "Problematyczne requesty",
-    "version": "1.0",
+    "version": "0.0.1",
     "homepage_url": "https://git.internet-czas-dzialac.pl/icd/problematic-requests",
     "background": {
         "scripts": ["lib/background.js"]
