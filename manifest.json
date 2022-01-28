@@ -1,14 +1,14 @@
 {
-    "description": "Wtyczka Problematyczne zapytania pokazuje jakie dane zostały ~~wykradzione~~ wysłane do podmiotów trzecich przez odwiedzane strony.",
+    "description": "Wtyczka Rentgen pokazuje jakie dane zostały ~~wykradzione~~ wysłane do podmiotów trzecich przez odwiedzane strony.",
     "manifest_version": 2,
-    "name": "Problematyczne requesty",
+    "name": "Rentgen",
     "version": "0.0.1",
-    "homepage_url": "https://git.internet-czas-dzialac.pl/icd/problematic-requests",
+    "homepage_url": "https://git.internet-czas-dzialac.pl/icd/rentgen",
     "background": {
         "scripts": ["lib/background.js"]
     },
     "sidebar_action": {
-        "default_title": "Problematyczne requesty",
+        "default_title": "Rentgen",
         "default_panel": "sidebar/sidebar.html",
         "default_icon": "icons/logo-black-square.svg",
         "browser_style": true,
@@ -28,7 +28,7 @@
     ],
     "browser_specific_settings": {
         "gecko": {
-            "id": "problematic-requests@internet-czas-dzialac.pl"
+            "id": "rentgen@internet-czas-dzialac.pl"
         }
     }
 }

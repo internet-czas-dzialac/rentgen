@@ -1,5 +1,5 @@
 {
-  "name": "problematic-requests",
+  "name": "rentgen",
   "version": "0.0.1",
   "description": "",
   "main": "esbuild.config.js",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://git.internet-czas-dzialac.pl/icd/problematic-requests.git"
+    "url": "https://git.internet-czas-dzialac.pl/icd/rentgen.git"
   },
   "author": "",
   "license": "ISC",
