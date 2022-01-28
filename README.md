@@ -5,6 +5,8 @@
 Wtyczka pokazująca, jakie dane zostały ~~wykradzione~~ wysłane do podmiotów trzecich przez odwiedzane strony.
 
 ![screenshot](./screenshot.png)
+![screenshot](./screenshot2.png)
+![screenshot](./screenshot3.png)
 
 ## EN
 
