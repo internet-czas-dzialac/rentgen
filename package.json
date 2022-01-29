@@ -8,6 +8,7 @@
         "build": "node esbuild.config.js",
         "watch": "node esbuild.config.js --watch",
         "ext-test": "web-ext run",
+        "create-package": "web-ext build",
         "typecheck": "tsc --noEmit"
     },
     "repository": {
