@@ -41,9 +41,11 @@
         "cookies",
         "privacy"
     ],
+
     "browser_specific_settings": {
         "gecko": {
-            "id": "rentgen@internet-czas-dzialac.pl"
+            "id": "rentgen@internet-czas-dzialac.pl",
+            "strict_min_version": "91.1.0"
         }
     }
 }
