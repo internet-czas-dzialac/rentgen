@@ -44,6 +44,8 @@ function ClusterRangeSummary({ cluster }: { cluster: RequestCluster }) {
 }
 
 function Placeholder({ children }: { children: string }) {
+    const invisbleCharacter = ' ';
+
     return (
         <span
             style={{
@@ -54,13 +56,9 @@ function Placeholder({ children }: { children: string }) {
                 bottom: '3px',
             }}
         >
-            <span
-                dangerouslySetInnerHTML={{ __html: '&nbsp;'.repeat(12) }}
-            ></span>
+            <span>{invisbleCharacter.repeat(6)}</span>
             <span style={{ color: 'gray' }}>({children})</span>
-            <span
-                dangerouslySetInnerHTML={{ __html: '&nbsp;'.repeat(12) }}
-            ></span>
+            <span>{invisbleCharacter.repeat(6)}</span>
         </span>
     );
 }
