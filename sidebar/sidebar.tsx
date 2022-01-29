@@ -2,15 +2,8 @@ import React, { Fragment, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Options from '../options';
 import { StolenData } from './stolen-data';
-import { getshorthost, useEmitter } from '../util';
+import { useEmitter } from '../util';
 import { getMemory } from '../memory';
-import InfoCircleIcon from '../assets/icons/info_circle_outline.svg';
-import SettingsIcon from '../assets/icons/settings.svg';
-import TrashIcon from '../assets/icons/trash_full.svg';
-import MailIcon from '../assets/icons/mail.svg';
-import ShortLeftIcon from '../assets/icons/short_left.svg';
-import CloseBigIcon from '../assets/icons/close_big.svg';
-import CookiesIcon from '../assets/icons/cookie.svg';
 
 async function getCurrentTab() {
     const [tab] = await browser.tabs.query({
@@ -110,11 +103,19 @@ const Sidebar = () => {
                 </div>
                 {stolenDataView ? (
                     <a href="https://internet-czas-dzialac.pl">
-                        <InfoCircleIcon />
+                        <img
+                            src="/assets/icons/info_circle_outline.svg"
+                            width="20"
+                            height="20"
+                        />
                     </a>
                 ) : (
                     <button onClick={() => setStolenDataView(true)}>
-                        <ShortLeftIcon />
+                        <img
+                            src="/assets/icons/short_left.svg"
+                            width="20"
+                            height="20"
+                        />
                     </button>
                 )}
             </header>
@@ -122,7 +123,11 @@ const Sidebar = () => {
             {stolenDataView ? (
                 <nav>
                     <button onClick={() => setStolenDataView(!stolenDataView)}>
-                        <SettingsIcon width={20} height={20} />
+                        <img
+                            src="/assets/icons/settings.svg"
+                            width="20"
+                            height="20"
+                        />
                         <span>Ustawienia</span>
                     </button>
                     <button
@@ -132,7 +137,11 @@ const Sidebar = () => {
                             setMarksOccurrence(false);
                         }}
                     >
-                        <TrashIcon width={20} height={20} />
+                        <img
+                            src="/assets/icons/trash_full.svg"
+                            width="20"
+                            height="20"
+                        />
                         <span>Wyczyść historię wtyczki</span>
                     </button>
                     <button
@@ -142,7 +151,11 @@ const Sidebar = () => {
                             setMarksOccurrence(false);
                         }}
                     >
-                        <CookiesIcon width={20} height={20} />
+                        <img
+                            src="/assets/icons/cookie.svg"
+                            width="20"
+                            height="20"
+                        />
                         <span>Wyczyść ciasteczka</span>
                     </button>
                     <button
@@ -165,7 +178,11 @@ const Sidebar = () => {
                             );
                         }}
                     >
-                        <MailIcon width={20} height={20} />
+                        <img
+                            src="/assets/icons/mail.svg"
+                            width="20"
+                            height="20"
+                        />
                         <span>Utwórz wiadomość dla administratora witryny</span>
                     </button>
                 </nav>
@@ -192,7 +209,11 @@ const Sidebar = () => {
                                         );
                                     }}
                                 >
-                                    <CloseBigIcon width={16} height={16} />
+                                    <img
+                                        src="/assets/icons/close_big.svg"
+                                        width="16"
+                                        height="16"
+                                    />
                                 </button>
                             </section>
                         ) : null}

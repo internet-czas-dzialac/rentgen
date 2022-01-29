@@ -154,6 +154,11 @@ export class StolenDataEntry extends EventEmitter {
         let object = StolenDataEntry.parseValue(this.value);
         for (const key of key_path.split('.')) {
             if (key === '') continue;
+            if (typeof key === 'string') {
+                throw new Error(
+                    'something went wrong when parsing ' + key_path
+                );
+            }
             object = StolenDataEntry.parseValue(object[key]);
         }
         return object;

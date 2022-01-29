@@ -3,8 +3,6 @@ import { getMemory } from '../memory';
 import { StolenDataEntry } from '../stolen-data-entry';
 
 import { maskString, useEmitter } from '../util';
-import CookieIcon from '../assets/icons/cookie.svg';
-import WarningIcon from '../assets/icons/warning.svg';
 
 import './stolen-data-cluster.scss';
 
@@ -80,7 +78,8 @@ function StolenDataRow({
             <td className="icons">
                 {entry.source === 'cookie' ? (
                     <span title="Dane przechowywane w Cookies">
-                        <CookieIcon
+                        <img
+                            src="/assets/icons/cookie.svg"
                             height={16}
                             width={16}
                             className="cookie-data"
@@ -91,7 +90,8 @@ function StolenDataRow({
                         title="Wysłane w zapytaniu opatrzonym Cookies"
                         style={{ opacity: 0.25 }}
                     >
-                        <CookieIcon
+                        <img
+                            src="/assets/icons/cookie.svg"
                             height={16}
                             width={16}
                             className="request-with-cookie"
@@ -100,7 +100,8 @@ function StolenDataRow({
                 ) : null}
                 {entry.exposesOrigin() ? (
                     <span title="Pokazuje część historii przeglądania">
-                        <WarningIcon
+                        <img
+                            src="/assets/icons/warning.svg"
                             height={16}
                             width={16}
                             className="show-history-part"
@@ -111,7 +112,8 @@ function StolenDataRow({
                         title="Jest częścią zapytania, które ujawnia historię przeglądania"
                         style={{ opacity: 0.25 }}
                     >
-                        <WarningIcon
+                        <img
+                            src="/assets/icons/warning.svg"
                             height={16}
                             width={16}
                             className="request-with-history-part"

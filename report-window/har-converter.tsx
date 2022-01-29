@@ -6,7 +6,7 @@ import { getshorthost, unique } from '../util';
 function handleNewFile(
     element: HTMLInputElement,
     entries: StolenDataEntry[],
-    setFiltered: (Blob) => void
+    setFiltered: (arg0: Blob) => void
 ): void {
     const reader = new FileReader();
     reader.addEventListener('load', () => {
