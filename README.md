@@ -1,4 +1,4 @@
-<h1><img src="./assets/icon-addon-2048.png" alt="drawing" style="margin-right: 8px;" width="48"/> Rentgen</h1>
+<h1 style="display: flex; align-items: center;"><img src="./assets/icon-addon-2048.png" alt="Rentgen logo" style="margin-right: 1rem;" width="48"/> Rentgen</h1>
 
 <strong>Rentgen</strong> to wtyczka dla przeglądarek opartych o Firefoxa, która wizualizuje, jakie dane zostały ~~wykradzione~~ wysłane do podmiotów trzecich przez odwiedzane strony.
 
