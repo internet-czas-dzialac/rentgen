@@ -1,6 +1,6 @@
 <h1 style="display: flex; align-items: center;"><img src="./assets/icon-addon-2048.png" alt="Rentgen logo" style="margin-right: 1rem;" width="48"/> Rentgen</h1>
 
-<strong>Rentgen</strong> to wtyczka dla przeglądarek opartych o Firefoxa, która wizualizuje, jakie dane zostały ~~wykradzione~~ wysłane do podmiotów trzecich przez odwiedzane strony.
+<strong>Rentgen</strong> to wtyczka dla przeglądarek opartych o Firefoxa, która automatycznie wizualizuje, jakie dane zostały ~~wykradzione~~ wysłane do podmiotów trzecich przez odwiedzane strony.
 
 <strong>Rentgen</strong> is an add-on prepared for Firefox based browsers. This extension will automatically visualize all the data that a given website sends to third parties.
 
