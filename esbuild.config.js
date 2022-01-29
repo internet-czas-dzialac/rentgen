@@ -18,7 +18,7 @@ esbuild
             'background.ts',
         ],
         bundle: true,
-        minify: true,
+        // minify: true,
         outdir: './lib',
         loader: { '.woff': 'file', '.woff2': 'file' },
         plugins: [scss(), svg()],

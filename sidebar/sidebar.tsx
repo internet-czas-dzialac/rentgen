@@ -25,7 +25,6 @@ import './sidebar.scss';
 
 const Sidebar = () => {
     const [origin, setOrigin] = useState<string | null>(null);
-    // const [minValueLength, setMinValueLength] = useState<number | null>(7);
     const [minValueLength, setMinValueLength] = useState<number | null>(
         localStorage.getItem('minValueLength') === null
             ? 7
@@ -139,10 +138,6 @@ const Sidebar = () => {
                     <button
                         onClick={() => {
                             getMemory().removeCookiesFor(origin);
-                            // getMemory().removeCookiesFor(
-                            //     origin,
-                            //     getshorthost(new URL(origin).host)
-                            // );
                             setCounter((c) => c + 1);
                             setMarksOccurrence(false);
                         }}

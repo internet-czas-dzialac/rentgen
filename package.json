@@ -41,6 +41,7 @@
     "devDependencies": {
         "@types/events": "^3.0.0",
         "@types/react-dom": "^17.0.9",
+        "addons-linter": "^4.7.0",
         "esbuild": "^0.14.14",
         "esbuild-plugin-sass": "^1.0.1",
         "esbuild-plugin-svgr": "^1.0.0",
