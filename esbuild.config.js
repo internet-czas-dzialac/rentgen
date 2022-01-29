@@ -1,11 +1,43 @@
 import esbuild from 'esbuild';
 import scss from 'esbuild-plugin-sass';
-import svg from 'esbuild-plugin-svgr';
 
 const watch = process.argv.includes('--watch') && {
     onRebuild(error) {
         if (error) console.error('[watch] build failed', error);
         else console.log('[watch] build finished');
+    },
+};
+
+// see https://github.com/evanw/esbuild/issues/806#issuecomment-779138268
+let skipReactImports = {
+    name: 'skipReactImports',
+    setup(build) {
+        build.onResolve({ filter: /^react(-dom)?$/ }, (args) => {
+            return {
+                path: args.path,
+                namespace: `globalExternal_${args.path}`,
+            };
+        });
+
+        build.onLoad(
+            { filter: /.*/, namespace: 'globalExternal_react' },
+            () => {
+                return {
+                    contents: `module.exports = globalThis.React`,
+                    loader: 'js',
+                };
+            }
+        );
+
+        build.onLoad(
+            { filter: /.*/, namespace: 'globalExternal_react-dom' },
+            () => {
+                return {
+                    contents: `module.exports = globalThis.ReactDOM`,
+                    loader: 'js',
+                };
+            }
+        );
     },
 };
 
@@ -21,7 +53,8 @@ esbuild
         // minify: true,
         outdir: './lib',
         loader: { '.woff': 'file', '.woff2': 'file' },
-        plugins: [scss(), svg()],
+        plugins: [scss(), skipReactImports],
+        external: ['react', 'react-dom'],
         watch,
     })
     .then(() => console.log('Add-on was built'))
