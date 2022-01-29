@@ -1,11 +1,20 @@
 {
-    "description": "Wtyczka Rentgen pokazuje jakie dane zostały ~~wykradzione~~ wysłane do podmiotów trzecich przez odwiedzane strony.",
+    "description": "Rentgen to wtyczka dla przeglądarek opartych o Firefoxa, która automatycznie wizualizuje, jakie dane zostały wykradzione wysłane do podmiotów trzecich przez odwiedzane strony.",
     "manifest_version": 2,
     "name": "Rentgen",
+    "short_name": "Rentgen",
     "version": "0.0.1",
+    "author": "Kuba Orlik, Arkadiusz Wieczorek (Internet. Czas działać!)",
     "homepage_url": "https://git.internet-czas-dzialac.pl/icd/rentgen",
     "background": {
         "scripts": ["lib/background.js"]
+    },
+    "commands": {
+        "_execute_sidebar_action": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+U"
+            }
+        }
     },
     "sidebar_action": {
         "default_title": "Rentgen",
