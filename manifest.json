@@ -3,7 +3,7 @@
     "manifest_version": 2,
     "name": "Rentgen",
     "short_name": "Rentgen",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "author": "Kuba Orlik, Arkadiusz Wieczorek (Internet. Czas działać!)",
     "homepage_url": "https://git.internet-czas-dzialac.pl/icd/rentgen",
     "background": {

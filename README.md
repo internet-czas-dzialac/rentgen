@@ -10,9 +10,10 @@ Note: At the moment, we support Polish language because this extension generates
 
 ## How build and run add-on
 
-1. `npm install`
-2. `npm run build`
-3. The build code is located in the `lib/` directory
+1. Use latest node 16.x and npm 8.x
+2. `npm install`
+3. `npm run build`
+4. The build code is located in the `lib/` directory
 
 ![screenshot](./screenshot.png)
 ![screenshot](./screenshot2.png)
