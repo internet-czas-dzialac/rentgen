@@ -76,9 +76,13 @@ export default function Options({
                         type="number"
                         id="minValueLength"
                         value={minValueLength}
-                        onChange={(e) =>
-                            setMinValueLength(parseInt(e.target.value))
-                        }
+                        onChange={(e) => {
+                            setMinValueLength(parseInt(e.target.value));
+                            localStorage.setItem(
+                                'minValueLength',
+                                e.target.value
+                            );
+                        }}
                     />
                 </div>
                 <div className="input-container">

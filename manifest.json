@@ -10,12 +10,18 @@
     "sidebar_action": {
         "default_title": "Rentgen",
         "default_panel": "sidebar/sidebar.html",
-        "default_icon": "icons/logo-black-square.svg",
+        "default_icon": {
+            "16": "assets/logo.svg",
+            "32": "assets/logo.svg",
+            "64": "assets/logo.svg"
+        },
         "browser_style": true,
         "open_at_install": true
     },
     "icons": {
-        "48": "icons/logo-black-square.svg"
+        "16": "assets/logo.svg",
+        "32": "assets/logo.svg",
+        "64": "assets/logo.svg"
     },
     "permissions": [
         "proxy",

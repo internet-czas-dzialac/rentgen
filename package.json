@@ -13,7 +13,8 @@
     "type": "git",
     "url": "https://git.internet-czas-dzialac.pl/icd/rentgen.git"
   },
-  "author": "Kuba Orlik, Arkadiusz Wieczorek (internet-czas-dzialac.pl)",
+  "homepage": "https://git.internet-czas-dzialac.pl/icd/rentgen",
+  "author": "Kuba Orlik, Arkadiusz Wieczorek",
   "license": "GPL-3.0-or-later",
   "dependencies": {
     "@iabtcf/core": "^1.3.1",

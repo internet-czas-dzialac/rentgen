@@ -25,7 +25,12 @@ import './sidebar.scss';
 
 const Sidebar = () => {
     const [origin, setOrigin] = useState<string | null>(null);
-    const [minValueLength, setMinValueLength] = useState<number | null>(7);
+    // const [minValueLength, setMinValueLength] = useState<number | null>(7);
+    const [minValueLength, setMinValueLength] = useState<number | null>(
+        localStorage.getItem('minValueLength') === null
+            ? 7
+            : (localStorage.getItem('minValueLength') as unknown as number)
+    );
     const [cookiesOnly, setCookiesOnly] = useState<boolean>(false);
     const [stolenDataView, setStolenDataView] = useState<boolean>(true);
     const [cookiesOrOriginOnly, setCookiesOrOriginOnly] =
@@ -41,7 +46,7 @@ const Sidebar = () => {
     );
     const [logoVisibility, setLogoVisibility] = useState<boolean>(
         localStorage.getItem('logoVisibility') === null
-            ? true
+            ? false
             : localStorage.getItem('logoVisibility') == 'true'
             ? true
             : false
@@ -166,9 +171,7 @@ const Sidebar = () => {
                         }}
                     >
                         <MailIcon width={20} height={20} />
-                        <span>
-                            Utwórz wiadomość dla administratora witryny
-                        </span>
+                        <span>Utwórz wiadomość dla administratora witryny</span>
                     </button>
                 </nav>
             ) : null}
