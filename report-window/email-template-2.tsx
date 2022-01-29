@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { RequestCluster } from '../request-cluster';
 import { StolenDataEntry } from '../stolen-data-entry';
 import { getDate, unique } from '../util';
@@ -75,7 +75,7 @@ export default function EmailTemplate2({
     clusters: Record<string, RequestCluster>;
     version: number;
 }): JSX.Element {
-    const [config, setConfig] = useState<EmailTemplate2Config>({
+    const [config, setConfig] = React.useState<EmailTemplate2Config>({
         popup_type: 'none',
         popup_action: 'ignored',
         popup_screenshot_base64: null,

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import { getMemory } from '../memory';
 import { Classifications, StolenDataEntry } from '../stolen-data-entry';
@@ -88,15 +88,12 @@ function Report() {
     console.time('useMemory');
     const [counter, setCounter] = useEmitter(getMemory());
     console.timeEnd('useMemory');
-    function refresh() {
-        setCounter((c) => c + 1);
-    }
     console.time('getClustersForOrigin');
     const clusters = getMemory().getClustersForOrigin(origin);
     console.timeEnd('getClustersForOrigin');
-    const [entries, setEntries] = useState<StolenDataEntry[]>([]);
+    const [entries, setEntries] = React.useState<StolenDataEntry[]>([]);
     console.time('useEffect report-window');
-    useEffect(() => {
+    React.useEffect(() => {
         setEntries(
             Object.values(clusters)
                 .map((cluster) => {

@@ -1,5 +1,4 @@
 import React from 'react';
-import { Dispatch, SetStateAction } from 'react';
 import { toBase64 } from '../util';
 import { EmailTemplate2Config } from './email-template-2';
 
@@ -8,7 +7,7 @@ export default function EmailTemplate2Controls({
     setConfig,
 }: {
     config: EmailTemplate2Config;
-    setConfig: Dispatch<SetStateAction<EmailTemplate2Config>>;
+    setConfig: React.Dispatch<React.SetStateAction<EmailTemplate2Config>>;
 }): JSX.Element {
     return (
         <div>

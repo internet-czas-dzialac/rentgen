@@ -1,5 +1,4 @@
 import React from 'react';
-import { useState } from 'react';
 import { RequestCluster } from '../request-cluster';
 import { StolenDataEntry } from '../stolen-data-entry';
 import { getDate, toBase64 } from '../util';
@@ -15,12 +14,13 @@ export default function EmailTemplate1({
     clusters: Record<string, RequestCluster>;
     version: number;
 }): JSX.Element {
-    const [popupState, setPopupState] = useState<PopupState>('not_clicked');
-    const [acceptAllName, setAcceptAllName] = useState<string>(
+    const [popupState, setPopupState] =
+        React.useState<PopupState>('not_clicked');
+    const [acceptAllName, setAcceptAllName] = React.useState<string>(
         'Zaakceptuj wszystkie'
     );
     const [popupScreenshotBase64, setPopupScreenshotBase64] =
-        useState<string>(null);
+        React.useState<string>(null);
 
     return (
         <div>

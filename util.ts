@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import React from 'react';
 
 export type Unpromisify<T> = T extends Promise<infer R> ? R : T;
 export type Unarray<T> = T extends Array<infer R> ? R : T;
@@ -47,9 +47,9 @@ export function getshorthost(host: string) {
 
 export function useEmitter(
     e: EventEmitter
-): [number, Dispatch<SetStateAction<number>>] {
-    const [counter, setCounter] = useState<number>(0);
-    useEffect(() => {
+): [number, React.Dispatch<React.SetStateAction<number>>] {
+    const [counter, setCounter] = React.useState<number>(0);
+    React.useEffect(() => {
         const callback = () => {
             setCounter((counter) => counter + 1);
         };

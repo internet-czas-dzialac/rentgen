@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
 import Options from '../options';
 import { StolenData } from './stolen-data';
@@ -17,26 +17,28 @@ import './global.scss';
 import './sidebar.scss';
 
 const Sidebar = () => {
-    const [origin, setOrigin] = useState<string | null>(null);
-    const [minValueLength, setMinValueLength] = useState<number | null>(
+    const [origin, setOrigin] = React.useState<string | null>(null);
+    const [minValueLength, setMinValueLength] = React.useState<number | null>(
         localStorage.getItem('minValueLength') === null
             ? 7
             : (localStorage.getItem('minValueLength') as unknown as number)
     );
-    const [cookiesOnly, setCookiesOnly] = useState<boolean>(false);
-    const [stolenDataView, setStolenDataView] = useState<boolean>(true);
+    const [cookiesOnly, setCookiesOnly] = React.useState<boolean>(false);
+    const [stolenDataView, setStolenDataView] = React.useState<boolean>(true);
     const [cookiesOrOriginOnly, setCookiesOrOriginOnly] =
-        useState<boolean>(false);
+        React.useState<boolean>(false);
     const [counter, setCounter] = useEmitter(getMemory());
-    const [marksOccurrence, setMarksOccurrence] = useState<boolean>(false);
-    const [warningDataDialogAck, setWarningDataDialogAck] = useState<boolean>(
-        localStorage.getItem('warningDataDialogAck') === null
-            ? true
-            : localStorage.getItem('warningDataDialogAck') == 'true'
-            ? true
-            : false
-    );
-    const [logoVisibility, setLogoVisibility] = useState<boolean>(
+    const [marksOccurrence, setMarksOccurrence] =
+        React.useState<boolean>(false);
+    const [warningDataDialogAck, setWarningDataDialogAck] =
+        React.useState<boolean>(
+            localStorage.getItem('warningDataDialogAck') === null
+                ? true
+                : localStorage.getItem('warningDataDialogAck') == 'true'
+                ? true
+                : false
+        );
+    const [logoVisibility, setLogoVisibility] = React.useState<boolean>(
         localStorage.getItem('logoVisibility') === null
             ? false
             : localStorage.getItem('logoVisibility') == 'true'
@@ -44,7 +46,7 @@ const Sidebar = () => {
             : false
     );
 
-    useEffect(() => {
+    React.useEffect(() => {
         const listener = async (data: any) => {
             console.log('tab change!');
             const tab = await getCurrentTab();
@@ -60,7 +62,7 @@ const Sidebar = () => {
         };
     });
 
-    useEffect(() => {
+    React.useEffect(() => {
         for (const cluster of Object.values(
             getMemory().getClustersForOrigin(origin)
         )) {
@@ -91,12 +93,12 @@ const Sidebar = () => {
                     }
                 >
                     {origin ? (
-                        <Fragment>
+                        <>
                             <span>Analiza strony</span>
                             <span className="webpage-metadata--hyperlink">
                                 {origin}
                             </span>
-                        </Fragment>
+                        </>
                     ) : (
                         <span>Przejdź do wybranej strony internetowej</span>
                     )}
@@ -190,7 +192,7 @@ const Sidebar = () => {
 
             <section>
                 {stolenDataView ? (
-                    <Fragment>
+                    <>
                         {warningDataDialogAck ? (
                             <section className="warning-container">
                                 <span>
@@ -225,7 +227,7 @@ const Sidebar = () => {
                             cookiesOnly={cookiesOnly}
                             cookiesOrOriginOnly={cookiesOrOriginOnly}
                         />
-                    </Fragment>
+                    </>
                 ) : (
                     <Options
                         minValueLength={minValueLength}

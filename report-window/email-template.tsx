@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { RequestCluster } from '../request-cluster';
 import { StolenDataEntry } from '../stolen-data-entry';
 import EmailTemplate1 from './email-template-1';
@@ -13,7 +13,7 @@ export default function EmailTemplate({
     clusters: Record<string, RequestCluster>;
     version: number;
 }) {
-    const [templateVersion, setTemplateVersion] = useState('2');
+    const [templateVersion, setTemplateVersion] = React.useState('2');
     return (
         <div>
             <select

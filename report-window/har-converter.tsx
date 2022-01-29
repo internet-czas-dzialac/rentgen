@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { HAREntry } from '../extended-request';
 import { StolenDataEntry } from '../stolen-data-entry';
 import { getshorthost, unique } from '../util';
@@ -80,11 +80,11 @@ export default function HARConverter({
 }: {
     entries: StolenDataEntry[];
 }) {
-    const [filtered, setFiltered] = useState<Blob | null>(null);
-    const [filename, setFilename] = useState('');
+    const [filtered, setFiltered] = React.useState<Blob | null>(null);
+    const [filename, setFilename] = React.useState('');
     const [fakeHAR, setFakeHAR] =
-        useState<ReturnType<typeof generateFakeHAR>>();
-    useEffect(() => {
+        React.useState<ReturnType<typeof generateFakeHAR>>();
+    React.useEffect(() => {
         setFakeHAR(generateFakeHAR(entries));
     }, []);
 
