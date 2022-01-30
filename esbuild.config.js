@@ -54,6 +54,10 @@ esbuild
         outdir: './lib',
         loader: { '.woff': 'file', '.woff2': 'file' },
         plugins: [scss(), skipReactImports],
+        define: {
+            PLUGIN_NAME: '"Rentgen"',
+            PLUGIN_URL: '"https://git.internet-czas-dzialac.pl/icd/rentgen"',
+        },
         external: ['react', 'react-dom'],
         watch,
     })

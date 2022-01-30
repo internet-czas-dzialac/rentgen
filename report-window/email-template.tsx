@@ -1,8 +1,6 @@
-import React from 'react';
 import { RequestCluster } from '../request-cluster';
 import { StolenDataEntry } from '../stolen-data-entry';
-import EmailTemplate1 from './email-template-1';
-import EmailTemplate2 from './email-template-2';
+import EmailTemplate3 from './email-template-3';
 
 export default function EmailTemplate({
     entries,
@@ -13,21 +11,9 @@ export default function EmailTemplate({
     clusters: Record<string, RequestCluster>;
     version: number;
 }) {
-    const [templateVersion, setTemplateVersion] = React.useState('2');
     return (
         <div>
-            <select
-                value={templateVersion}
-                onChange={(e) => setTemplateVersion(e.target.value)}
-            >
-                <option value="1">wersja 1</option>
-                <option value="2">wersja 2</option>
-            </select>
-            {templateVersion === '1' ? (
-                <EmailTemplate1 {...{ entries, clusters, version }} />
-            ) : (
-                <EmailTemplate2 {...{ entries, clusters, version }} />
-            )}
+            <EmailTemplate3 {...{ entries, clusters, version }} />
         </div>
     );
 }

@@ -80,44 +80,39 @@ function DataPreview({
 }
 
 function Report() {
-    console.time('getOrigin');
-    const origin = new URL(document.location.toString()).searchParams.get(
-        'origin'
-    );
-    console.timeEnd('getOrigin');
-    console.time('useMemory');
-    const [counter, setCounter] = useEmitter(getMemory());
-    console.timeEnd('useMemory');
-    console.time('getClustersForOrigin');
-    const clusters = getMemory().getClustersForOrigin(origin);
-    console.timeEnd('getClustersForOrigin');
-    const [entries, setEntries] = React.useState<StolenDataEntry[]>([]);
-    console.time('useEffect report-window');
-    React.useEffect(() => {
-        setEntries(
-            Object.values(clusters)
-                .map((cluster) => {
-                    cluster.calculateRepresentativeStolenData();
-                    return cluster.representativeStolenData;
-                })
-                .reduce(reduceConcat, [])
-                .filter((entry) => entry.isMarked)
+    try {
+        const origin = new URL(document.location.toString()).searchParams.get(
+            'origin'
         );
-    }, []);
-    console.timeEnd('useEffect report-window');
-    if (entries.length == 0) {
-        return <>Wczytywanie...</>;
+        const [counter, setCounter] = useEmitter(getMemory());
+        const clusters = getMemory().getClustersForOrigin(origin);
+        const [entries, setEntries] = React.useState<StolenDataEntry[]>([]);
+        React.useEffect(() => {
+            setEntries(
+                Object.values(clusters)
+                    .map((cluster) => {
+                        cluster.calculateRepresentativeStolenData();
+                        return cluster.representativeStolenData;
+                    })
+                    .reduce(reduceConcat, [])
+                    .filter((entry) => entry.isMarked)
+            );
+        }, []);
+        if (entries.length == 0) {
+            return <>Wczytywanie...</>;
+        }
+        const result = (
+            <div {...{ 'data-version': counter }}>
+                <h1>Generuj treść maila dla {origin}</h1>
+                <EmailTemplate {...{ entries, clusters, version: counter }} />
+                {/* <HARConverter {...{ entries }} /> */}
+            </div>
+        );
+        return result;
+    } catch (e) {
+        console.error(e);
+        return <div>ERRO! {JSON.stringify(e)}</div>;
     }
-    console.time('rendering template');
-    const result = (
-        <div {...{ 'data-version': counter }}>
-            <h1>Generuj treść maila dla {origin}</h1>
-            <EmailTemplate {...{ entries, clusters, version: counter }} />
-            <HARConverter {...{ entries }} />
-        </div>
-    );
-    console.timeEnd('rendering template');
-    return result;
 }
 
 ReactDOM.render(<Report />, document.getElementById('app'));
