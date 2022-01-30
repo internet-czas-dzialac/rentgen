@@ -1,38 +1,8 @@
 import React from 'react';
 import { toBase64 } from '../util';
+import ConsentProblems from './consent-problems';
+import emailHostSettings from './email-host-settings';
 import { EmailTemplate3Config } from './email-template-3';
-
-function setHostSetting<
-    P1 extends keyof EmailTemplate3Config['hosts_settings'],
-    P2 extends keyof EmailTemplate3Config['hosts_settings'][P1]
->(
-    setConfig: React.Dispatch<React.SetStateAction<EmailTemplate3Config>>,
-    [p1, p2]: [P1, P2],
-    value: EmailTemplate3Config['hosts_settings'][P1][P2]
-) {
-    setConfig((v) => {
-        console.log(v, {
-            ...v,
-            hosts_settings: {
-                ...v.hosts_settings,
-                [p1]: {
-                    ...v.hosts_settings[p2],
-                    [p2]: value,
-                },
-            },
-        });
-        return {
-            ...v,
-            hosts_settings: {
-                ...v.hosts_settings,
-                [p1]: {
-                    ...v.hosts_settings[p1],
-                    [p2]: value,
-                },
-            },
-        };
-    });
-}
 
 export default function EmailTemplate3Controls({
     config,
@@ -92,82 +62,7 @@ export default function EmailTemplate3Controls({
                     </option>
                 </select>
             </div>
-            {config.policy_readable !== 'null' ? (
-                <div>
-                    {Object.entries(config.hosts_settings).map(([id, settings]) => (
-                        <div key={id}>
-                            <h5>{id}</h5>
-                            <p>
-                                Cele przetwarzania danych przez właściciela domeny {id}{' '}
-                                <select
-                                    value={settings.presence}
-                                    onChange={(e) =>
-                                        setHostSetting(
-                                            setConfig,
-                                            [id, 'presence'],
-                                            e.target
-                                                .value as EmailTemplate3Config['hosts_settings'][string]['presence']
-                                        )
-                                    }
-                                >
-                                    <option value="null" disabled>
-                                        wybierz opcję
-                                    </option>
-                                    <option value="not_mentioned">
-                                        nie są nigdzie na stronie opisane{' '}
-                                    </option>
-                                    <option
-                                        value="mentioned_in_policy"
-                                        disabled={config.policy_readable !== 'yes'}
-                                    >
-                                        są opisane w polityce prywatności{' '}
-                                    </option>
-                                    <option value="mentioned_in_popup">
-                                        są opisane w okienku RODO{' '}
-                                    </option>
-                                </select>
-                            </p>
-                            {!['not_mentioned', 'null'].includes(settings.presence) ? (
-                                <p>
-                                    Wskazana przez administratora podstawa prawna dla{' '}
-                                    <strong> tego konkretnego celu</strong>{' '}
-                                    <select
-                                        value={settings.legal_basis_type}
-                                        onChange={(e) =>
-                                            setHostSetting(
-                                                setConfig,
-                                                [id, 'legal_basis_type'],
-                                                e.target
-                                                    .value as EmailTemplate3Config['hosts_settings'][string]['legal_basis_type']
-                                            )
-                                        }
-                                    >
-                                        <option value="null" disabled>
-                                            wybierz opcję
-                                        </option>
-                                        <option value="consent">to zgoda.</option>
-                                        <option value="legitimate_interest">
-                                            to uzasadniony interes.
-                                        </option>
-                                        <option value="not_mentioned">
-                                            nie jest wskazana nigdzie na stronie.
-                                        </option>
-                                    </select>
-                                </p>
-                            ) : (
-                                ''
-                            )}
-                            {!['not_mentioned', 'null'].includes(settings.legal_basis_type) ? (
-                                <div>dodatkowe pytania</div>
-                            ) : (
-                                ''
-                            )}
-                        </div>
-                    ))}
-                </div>
-            ) : (
-                ''
-            )}
+            {emailHostSettings(config, setConfig)}
             <div>
                 <label htmlFor="poup_type">Typ okienka o RODO: </label>
                 <select
@@ -201,26 +96,6 @@ export default function EmailTemplate3Controls({
                                     popup_screenshot_base64,
                                 }));
                             },
-                        }}
-                    />
-                </div>
-            ) : (
-                ''
-            )}
-            {config.popup_type === 'consent' ? (
-                <div>
-                    <label htmlFor="acceptAllName">
-                        Tekst na przycisku do zatwierdzania wszystkich zgód:
-                    </label>
-                    <input
-                        {...{
-                            type: 'text',
-                            value: config.popup_accept_all_text,
-                            onChange: (e) =>
-                                setConfig((v) => ({
-                                    ...v,
-                                    popup_accept_all_text: e.target.value,
-                                })),
                         }}
                     />
                 </div>

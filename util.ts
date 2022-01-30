@@ -87,17 +87,13 @@ export function parseToObject(str: unknown): Record<string | symbol, unknown> {
         result = JSON.parse(str);
     } else if (typeof str == 'object') {
         result = str as Record<string | symbol, unknown>;
-        original_string =
-            (result[Symbol.for('originalString')] as string) ||
-            JSON.stringify(str);
+        original_string = (result[Symbol.for('originalString')] as string) || JSON.stringify(str);
     }
     result[Symbol.for('originalString')] = original_string;
     return result;
 }
 
-export function isJSONObject(
-    str: unknown
-): str is Record<string, unknown> | string | number {
+export function isJSONObject(str: unknown): str is Record<string, unknown> | string | number {
     try {
         const firstChar = JSON.stringify(parseToObject(str))[0];
         return ['{', '['].includes(firstChar);
@@ -137,9 +133,10 @@ export function reduceConcat<T>(a: T[], b: T[]): T[] {
 
 export function getDate() {
     const d = new Date();
-    return `${d.getFullYear()}-${(d.getMonth() + 1)
+    return `${d.getFullYear()}-${(d.getMonth() + 1).toString().padStart(2, '0')}-${d
+        .getDate()
         .toString()
-        .padStart(2, '0')}-${d.getDate().toString().padStart(2, '0')}`;
+        .padStart(2, '0')}`;
 }
 
 export function toBase64(file: File): Promise<string> {
@@ -193,8 +190,7 @@ export function isBase64JSON(s: unknown): s is string {
 
 export function flattenObject(
     obj: unknown,
-    parser: (to_parse: unknown) => string | Record<string, unknown> = (id) =>
-        id.toString(),
+    parser: (to_parse: unknown) => string | Record<string, unknown> = (id) => id.toString(),
     key = '',
     ret = [] as [string, string][],
     parsed = false
@@ -224,8 +220,7 @@ export function flattenObject(
 
 export function flattenObjectEntries(
     entries: [string, unknown][],
-    parser: (to_parse: unknown) => string | Record<string, unknown> = (id) =>
-        id.toString()
+    parser: (to_parse: unknown) => string | Record<string, unknown> = (id) => id.toString()
 ): [string, string][] {
     return flattenObject(Object.fromEntries(entries), parser);
 }
@@ -236,8 +231,7 @@ export function maskString(
     max_chars_total: number
 ): string {
     const amount_of_chars_to_cut =
-        str.length -
-        Math.min(str.length * max_fraction_remaining, max_chars_total);
+        str.length - Math.min(str.length * max_fraction_remaining, max_chars_total);
     if (amount_of_chars_to_cut == 0) {
         return str;
     }
@@ -254,4 +248,8 @@ export function safeDecodeURIComponent(s: string) {
     } catch (e) {
         return s;
     }
+}
+
+export function normalizeForClassname(string: string) {
+    return string.replace(/[^a-z0-9]/gi, '-');
 }

@@ -15,11 +15,14 @@ export type EmailTemplate3Config = {
         {
             presence: 'null' | 'not_mentioned' | 'mentioned_in_popup' | 'mentioned_in_policy';
             legal_basis_type: 'null' | 'consent' | 'legitimate_interest' | 'not_mentioned';
-            problems: {
-                claims_consent_but_sends_before_consent: boolean;
-                claims_consent_but_there_was_no_easy_refuse: boolean;
-                claims_legitimate_interest_but_its_not_legitimate: boolean;
-            };
+            consent_problems?:
+                | 'claims_consent_but_sends_before_consent'
+                | 'claims_consent_but_there_was_no_easy_refuse'
+                | 'none'
+                | 'null';
+
+            legitimate_interest_activity_specified: 'null' | 'no' | 'precise' | 'vague';
+            legitimate_interest_activity_description: string;
         }
     >;
     popup_type: 'none' | 'passive_cookie_banner' | 'consent';
@@ -51,11 +54,9 @@ export default function EmailTemplate3({
                     presence: 'null',
                     legal_basis_presence: 'null',
                     legal_basis_type: 'null',
-                    problems: {
-                        claims_consent_but_sends_before_consent: false,
-                        claims_consent_but_there_was_no_easy_refuse: false,
-                        claims_legitimate_interest_but_its_not_legitimate: false,
-                    },
+                    consent_problems: 'null',
+                    legitimate_interest_activity_specified: 'null',
+                    legitimate_interest_activity_description: '',
                 },
             ])
         ),
@@ -112,7 +113,7 @@ export default function EmailTemplate3({
                     szansę przeczytać Państwa politykę prywatności i w jakikolwiek czynny i
                     jednoznaczny sposób wyrazić zgodę na takie przetwarzanie moich danych osobowych.
                 </p>
-                {config.policy_readable !== 'yes' ? (
+                {!['yes', 'null'].includes(config.policy_readable) ? (
                     <p>
                         {['Chciałem', 'Chciałam', 'Chciałom', 'Chcieliśmy'][p]} przeczytać Państwa
                         politykę prywatności przed akceptacją, ale{' '}
@@ -137,9 +138,8 @@ export default function EmailTemplate3({
                     stronie. Z tego powodu zwracam{p == 3 ? 'y' : ''} się do Państwa z pytaniem:
                     jakie były podstawy prawne takiego ujawnienia{' '}
                     {['moich', 'moich', 'moich', 'naszych'][p]} danych osobowych wyżej wymienionym
-                    podmiotom? Uprzejmie
-                    {['proszę', 'proszę', 'proszę', 'prosimy'][p]} o wskazanie podstawy prawnej dla
-                    każdego z tych podmiotów z osobna.
+                    podmiotom? Uprzejmie {['proszę', 'proszę', 'proszę', 'prosimy'][p]} o wskazanie
+                    podstawy prawnej dla każdego z tych podmiotów z osobna.
                 </p>
             </article>
         </div>
