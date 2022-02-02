@@ -1,0 +1,27 @@
+@import '../sidebar/fonts.scss';
+@import '../sidebar/colors.scss';
+
+.mail-wrapper {
+    display: grid;
+    grid-template-columns: 0.75fr minmax(20rem, 60rem);
+    height: calc(100vh - 5rem);
+    background-color: $ultra-light-grey;
+}
+
+.mail-content-wrapper {
+    background-color: $ultra-light-grey;
+    height: 100%;
+    display: block;
+}
+
+.mail-controls {
+    padding: 1rem;
+    background-color: #fff;
+}
+
+.mail-content {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    background-color: #fff;
+    padding: 2rem 1.75rem;
+    margin: 1rem;
+}

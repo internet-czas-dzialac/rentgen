@@ -25,19 +25,16 @@ const Sidebar = () => {
     );
     const [cookiesOnly, setCookiesOnly] = React.useState<boolean>(false);
     const [stolenDataView, setStolenDataView] = React.useState<boolean>(true);
-    const [cookiesOrOriginOnly, setCookiesOrOriginOnly] =
-        React.useState<boolean>(false);
+    const [cookiesOrOriginOnly, setCookiesOrOriginOnly] = React.useState<boolean>(false);
     const [counter, setCounter] = useEmitter(getMemory());
-    const [marksOccurrence, setMarksOccurrence] =
-        React.useState<boolean>(false);
-    const [warningDataDialogAck, setWarningDataDialogAck] =
-        React.useState<boolean>(
-            localStorage.getItem('warningDataDialogAck') === null
-                ? true
-                : localStorage.getItem('warningDataDialogAck') == 'true'
-                ? true
-                : false
-        );
+    const [marksOccurrence, setMarksOccurrence] = React.useState<boolean>(false);
+    const [warningDataDialogAck, setWarningDataDialogAck] = React.useState<boolean>(
+        localStorage.getItem('warningDataDialogAck') === null
+            ? true
+            : localStorage.getItem('warningDataDialogAck') == 'true'
+            ? true
+            : false
+    );
     const [logoVisibility, setLogoVisibility] = React.useState<boolean>(
         localStorage.getItem('logoVisibility') === null
             ? false
@@ -63,9 +60,7 @@ const Sidebar = () => {
     });
 
     React.useEffect(() => {
-        for (const cluster of Object.values(
-            getMemory().getClustersForOrigin(origin)
-        )) {
+        for (const cluster of Object.values(getMemory().getClustersForOrigin(origin))) {
             if (cluster.hasMarks()) {
                 return setMarksOccurrence(true);
             }
@@ -75,11 +70,7 @@ const Sidebar = () => {
 
     return (
         <div className="sidebar">
-            <header
-                className={
-                    logoVisibility ? 'header' : 'header header--without-logo'
-                }
-            >
+            <header className={logoVisibility ? 'header' : 'header header--without-logo'}>
                 <img
                     src="../assets/logo-internet-czas-dzialac.svg"
                     height={40}
@@ -95,9 +86,7 @@ const Sidebar = () => {
                     {origin ? (
                         <>
                             <span>Analiza strony</span>
-                            <span className="webpage-metadata--hyperlink">
-                                {origin}
-                            </span>
+                            <span className="webpage-metadata--hyperlink">{origin}</span>
                         </>
                     ) : (
                         <span>Przejdź do wybranej strony internetowej</span>
@@ -105,19 +94,11 @@ const Sidebar = () => {
                 </div>
                 {stolenDataView ? (
                     <a href="https://internet-czas-dzialac.pl">
-                        <img
-                            src="/assets/icons/info_circle_outline.svg"
-                            width="20"
-                            height="20"
-                        />
+                        <img src="/assets/icons/info_circle_outline.svg" width="20" height="20" />
                     </a>
                 ) : (
                     <button onClick={() => setStolenDataView(true)}>
-                        <img
-                            src="/assets/icons/short_left.svg"
-                            width="20"
-                            height="20"
-                        />
+                        <img src="/assets/icons/short_left.svg" width="20" height="20" />
                     </button>
                 )}
             </header>
@@ -125,11 +106,7 @@ const Sidebar = () => {
             {stolenDataView ? (
                 <nav>
                     <button onClick={() => setStolenDataView(!stolenDataView)}>
-                        <img
-                            src="/assets/icons/settings.svg"
-                            width="20"
-                            height="20"
-                        />
+                        <img src="/assets/icons/settings.svg" width="20" height="20" />
                         <span>Ustawienia</span>
                     </button>
                     <button
@@ -139,11 +116,7 @@ const Sidebar = () => {
                             setMarksOccurrence(false);
                         }}
                     >
-                        <img
-                            src="/assets/icons/trash_full.svg"
-                            width="20"
-                            height="20"
-                        />
+                        <img src="/assets/icons/trash_full.svg" width="20" height="20" />
                         <span>Wyczyść historię wtyczki</span>
                     </button>
                     <button
@@ -153,11 +126,7 @@ const Sidebar = () => {
                             setMarksOccurrence(false);
                         }}
                     >
-                        <img
-                            src="/assets/icons/cookie.svg"
-                            width="20"
-                            height="20"
-                        />
+                        <img src="/assets/icons/cookie.svg" width="20" height="20" />
                         <span>Wyczyść ciasteczka</span>
                     </button>
                     <button
@@ -180,11 +149,19 @@ const Sidebar = () => {
                             );
                         }}
                     >
-                        <img
-                            src="/assets/icons/mail.svg"
+                        <svg
                             width="20"
                             height="20"
-                        />
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                d="M20 20H4C2.89543 20 2 19.1046 2 18V5.913C2.04661 4.84255 2.92853 3.99899 4 4H20C21.1046 4 22 4.89543 22 6V18C22 19.1046 21.1046 20 20 20ZM4 7.868V18H20V7.868L12 13.2L4 7.868ZM4.8 6L12 10.8L19.2 6H4.8Z"
+                                fill="#2E3A59"
+                            />
+                        </svg>
+
                         <span>Utwórz wiadomość dla administratora witryny</span>
                     </button>
                 </nav>
@@ -196,11 +173,10 @@ const Sidebar = () => {
                         {warningDataDialogAck ? (
                             <section className="warning-container">
                                 <span>
-                                    <strong>Uwaga!</strong> Niekoniecznie każda
-                                    przechwycona poniżej informacja jest daną
-                                    osobową. Niektóre z podanych domen mogą
-                                    należeć do właściciela strony i nie
-                                    reprezentować podmiotów trzecich.
+                                    <strong>Uwaga!</strong> Niekoniecznie każda przechwycona poniżej
+                                    informacja jest daną osobową. Niektóre z podanych domen mogą
+                                    należeć do właściciela strony i nie reprezentować podmiotów
+                                    trzecich.
                                 </span>
                                 <button
                                     onClick={() => {
@@ -211,11 +187,7 @@ const Sidebar = () => {
                                         );
                                     }}
                                 >
-                                    <img
-                                        src="/assets/icons/close_big.svg"
-                                        width="16"
-                                        height="16"
-                                    />
+                                    <img src="/assets/icons/close_big.svg" width="16" height="16" />
                                 </button>
                             </section>
                         ) : null}

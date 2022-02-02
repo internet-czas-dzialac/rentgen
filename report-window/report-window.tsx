@@ -6,13 +6,9 @@ import { reduceConcat, useEmitter } from '../util';
 import EmailTemplate from './email-template';
 import HARConverter from './har-converter';
 
-function DataPreview({
-    entries,
-    refresh,
-}: {
-    entries: StolenDataEntry[];
-    refresh: () => void;
-}) {
+import './report-window.scss';
+
+function DataPreview({ entries, refresh }: { entries: StolenDataEntry[]; refresh: () => void }) {
     // currently not used, maybe scraped entirely in the future
     return (
         <table>
@@ -29,10 +25,7 @@ function DataPreview({
                     <tr
                         key={entry.id}
                         style={{
-                            backgroundColor:
-                                entry.classification == 'id'
-                                    ? 'yellow'
-                                    : 'white',
+                            backgroundColor: entry.classification == 'id' ? 'yellow' : 'white',
                         }}
                     >
                         <td>{entry.request.shorthost}</td>
@@ -43,9 +36,7 @@ function DataPreview({
                             style={{
                                 width: '400px',
                                 overflowWrap: 'anywhere',
-                                backgroundColor: entry.isRelatedToID()
-                                    ? '#ffff0054'
-                                    : 'white',
+                                backgroundColor: entry.isRelatedToID() ? '#ffff0054' : 'white',
                             }}
                         >
                             {entry.getValuePreview()}
@@ -81,9 +72,7 @@ function DataPreview({
 
 function Report() {
     try {
-        const origin = new URL(document.location.toString()).searchParams.get(
-            'origin'
-        );
+        const origin = new URL(document.location.toString()).searchParams.get('origin');
         const [counter, setCounter] = useEmitter(getMemory());
         const clusters = getMemory().getClustersForOrigin(origin);
         const [entries, setEntries] = React.useState<StolenDataEntry[]>([]);
@@ -103,7 +92,11 @@ function Report() {
         }
         const result = (
             <div {...{ 'data-version': counter }}>
-                <h1>Generuj treść maila dla {origin}</h1>
+                <nav>
+                    <img src="../assets/icon-addon.svg" width={48} height={48}></img>{' '}
+                    <h1>Rentgen - Generuj treść maila dla {origin}</h1>
+                </nav>
+
                 <EmailTemplate {...{ entries, clusters, version: counter }} />
                 {/* <HARConverter {...{ entries }} /> */}
             </div>
@@ -111,7 +104,7 @@ function Report() {
         return result;
     } catch (e) {
         console.error(e);
-        return <div>ERRO! {JSON.stringify(e)}</div>;
+        return <div>ERROR! {JSON.stringify(e)}</div>;
     }
 }
 

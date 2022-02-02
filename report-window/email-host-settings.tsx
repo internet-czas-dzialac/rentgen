@@ -45,7 +45,7 @@ export default function emailHostSettings(
     }
     const p = config.pronoun;
     return (
-        <div>
+        <aside>
             {Object.entries(config.hosts_settings).map(([host_id, settings]) => (
                 <div key={host_id}>
                     <h5>
@@ -103,6 +103,6 @@ export default function emailHostSettings(
                     )}
                 </div>
             ))}
-        </div>
+        </aside>
     );
 }

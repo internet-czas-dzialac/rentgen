@@ -1,3 +1,40 @@
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M21.2659 20.998H2.73288C2.37562 20.998 2.04551 20.8074 1.86688 20.498C1.68825 20.1886 1.68825 19.8074 1.86688 19.498L11.1329 3.49799C11.3117 3.1891 11.6415 2.9989 11.9984 2.9989C12.3553 2.9989 12.6851 3.1891 12.8639 3.49799L22.1299 19.498C22.3084 19.8072 22.3085 20.1882 22.1301 20.4975C21.9518 20.8069 21.622 20.9976 21.2649 20.998H21.2659ZM10.9999 15.998V17.998H11.9329H11.9979H12.0629H12.9979V15.998H10.9999ZM10.9999 8.99799V13.998H12.9999V8.99799H10.9999Z" fill="#2E3A59"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   fill="none"
+   version="1.1"
+   id="svg1282"
+   sodipodi:docname="warning.svg"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1286" />
+  <sodipodi:namedview
+     id="namedview1284"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="31.291667"
+     inkscape:cx="12.015979"
+     inkscape:cy="11.984021"
+     inkscape:window-width="1920"
+     inkscape:window-height="1024"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1282" />
+  <path
+     d="M21.2659 20.998H2.73288C2.37562 20.998 2.04551 20.8074 1.86688 20.498C1.68825 20.1886 1.68825 19.8074 1.86688 19.498L11.1329 3.49799C11.3117 3.1891 11.6415 2.9989 11.9984 2.9989C12.3553 2.9989 12.6851 3.1891 12.8639 3.49799L22.1299 19.498C22.3084 19.8072 22.3085 20.1882 22.1301 20.4975C21.9518 20.8069 21.622 20.9976 21.2649 20.998H21.2659ZM10.9999 15.998V17.998H11.9329H11.9979H12.0629H12.9979V15.998H10.9999ZM10.9999 8.99799V13.998H12.9999V8.99799H10.9999Z"
+     fill="#2E3A59"
+     id="path1280"
+     style="fill:#000000" />
 </svg>
