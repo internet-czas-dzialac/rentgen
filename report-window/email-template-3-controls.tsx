@@ -1,10 +1,82 @@
 import React from 'react';
+import * as Survey from 'survey-react';
 import { toBase64 } from '../util';
-import ConsentProblems from './consent-problems';
 import emailHostSettings from './email-host-settings';
 import { EmailTemplate3Config } from './email-template-3';
 
-export default function EmailTemplate3Controls({
+var json = {
+    showQuestionNumbers: 'off',
+    elements: [
+        {
+            type: 'radiogroup',
+            name: 'haveKids',
+            title: 'Do you have a kid(s)?',
+            isRequired: true,
+            choices: ['Yes', 'No'],
+            colCount: 0,
+        },
+        {
+            type: 'dropdown',
+            name: 'kids',
+            title: 'How many kids do you have',
+            visibleIf: "{haveKids}='Yes'",
+            isRequired: true,
+            choices: [1, 2, 3, 4, 5],
+        },
+        {
+            type: 'dropdown',
+            name: 'kid1Age',
+            title: 'The first kid age:',
+            visibleIf: "{haveKids}='Yes' and {kids} >= 1",
+            isRequired: true,
+            choicesMax: 18,
+        },
+        {
+            type: 'dropdown',
+            name: 'kid2Age',
+            title: 'The second kid age:',
+            visibleIf: "{haveKids}='Yes' and {kids} >= 2",
+            isRequired: true,
+            startWithNewLine: false,
+            choicesMax: 18,
+        },
+        {
+            type: 'dropdown',
+            name: 'kid3Age',
+            title: 'The third kid age:',
+            visibleIf: "{haveKids}='Yes' and {kids} >= 3",
+            isRequired: true,
+            startWithNewLine: false,
+            choicesMax: 18,
+        },
+        {
+            type: 'dropdown',
+            name: 'kid4Age',
+            title: 'The fourth kid age:',
+            visibleIf: "{haveKids}='Yes' and {kids} >= 4",
+            isRequired: true,
+            startWithNewLine: false,
+            choicesMax: 18,
+        },
+        {
+            type: 'dropdown',
+            name: 'kid5Age',
+            title: 'The fifth kid age:',
+            visibleIf: "{haveKids}='Yes' and {kids} >= 5",
+            isRequired: true,
+            startWithNewLine: false,
+            choicesMax: 18,
+        },
+    ],
+};
+
+const survey = new Survey.Model(json);
+
+export default function EmailTemplate3Controls() {
+    return <Survey.Survey model={survey} />;
+}
+
+export function _EmailTemplate3Controls({
     config,
     setConfig,
 }: {

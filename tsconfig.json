@@ -3,6 +3,7 @@
         "jsx": "react-jsx",
         "noImplicitAny": true,
         "esModuleInterop": true,
+        "moduleResolution": "node",
         "lib": ["es2017", "dom", "es2019"],
         "typeRoots": ["node_modules/@types", "node_modules/web-ext-types"],
         "target": "es2019",
