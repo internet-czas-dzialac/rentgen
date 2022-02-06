@@ -1,7 +1,6 @@
 import React from 'react';
 import { setHostSetting } from './email-host-settings';
 import { EmailTemplate3Config } from './email-template-3';
-import hostSettingsDropdown from './host-setting-dropdown';
 
 export default function LegitimateInteresProblems({
     settings,
@@ -22,7 +21,7 @@ export default function LegitimateInteresProblems({
             <div>
                 Czy administrator strony opisał szczegółowo, na czym polega uzasadniony interes w
                 kontekście tego celu?
-                {hostSettingsDropdown({
+                {/* {hostSettingsDropdown({
                     settings,
                     host_id,
                     setConfig,
@@ -35,7 +34,7 @@ export default function LegitimateInteresProblems({
                         vague: ['Wskazuje tylko ogólnie, jak np. „marketing” czy „statystyki”.'],
                         no: ['Nie. Nie wiadomo, na czym ten uzasadniony interes polega.'],
                     },
-                })}
+                })} */}
             </div>
             {settings.legitimate_interest_activity_specified === 'vague' ? (
                 <div>

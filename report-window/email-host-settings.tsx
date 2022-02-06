@@ -1,8 +1,8 @@
 import { EmailTemplate3Config } from './email-template-3';
-import hostSettingsDropdown from './host-setting-dropdown';
-import ConsentProblems from './consent-problems';
+/* import hostSettingsDropdown from './host-setting-dropdown'; */
+/* import ConsentProblems from './consent-problems'; */
 import LegitimateInteresProblems from './legitimate-interest-problems';
-import { hostNeedsQuestions } from './host-needs-questions';
+/* import { hostNeedsQuestions } from './host-needs-questions'; */
 
 export function setHostSetting<
     P1 extends keyof EmailTemplate3Config['hosts_settings'],
@@ -48,12 +48,10 @@ export default function emailHostSettings(
         <aside>
             {Object.entries(config.hosts_settings).map(([host_id, settings]) => (
                 <div key={host_id}>
-                    <h5>
-                        {host_id}, {hostNeedsQuestions(settings).toString()}
-                    </h5>
+                    <h5>{/* {host_id}, {hostNeedsQuestions(settings).toString()} */}</h5>
                     <p>
                         Cele przetwarzania danych przez właściciela domeny {host_id}{' '}
-                        {hostSettingsDropdown({
+                        {/* {hostSettingsDropdown({
                             host_id,
                             setConfig,
                             settings,
@@ -67,13 +65,13 @@ export default function emailHostSettings(
                                 ],
                                 mentioned_in_popup: ['są opisane w okienku RODO'],
                             },
-                        })}
+                        })} */}
                     </p>
                     {!['not_mentioned', 'null'].includes(settings.presence) ? (
                         <p>
                             Wskazana przez administratora podstawa prawna dla{' '}
                             <strong> tego konkretnego celu</strong>{' '}
-                            {hostSettingsDropdown({
+                            {/* {hostSettingsDropdown({
                                 host_id,
                                 setConfig,
                                 settings,
@@ -84,7 +82,7 @@ export default function emailHostSettings(
                                     legitimate_interest: ['to uzasadniony interes.'],
                                     not_mentioned: ['nie jest wskazana nigdzie na stronie.'],
                                 },
-                            })}
+                            })} */}
                         </p>
                     ) : (
                         ''

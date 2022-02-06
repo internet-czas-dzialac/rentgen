@@ -3,74 +3,64 @@ import * as Survey from 'survey-react';
 import { toBase64 } from '../util';
 import emailHostSettings from './email-host-settings';
 import { EmailTemplate3Config } from './email-template-3';
+import verbs from './verbs';
 
 var json = {
     showQuestionNumbers: 'off',
-    elements: [
+    pages: [
         {
-            type: 'radiogroup',
-            name: 'haveKids',
-            title: 'Do you have a kid(s)?',
-            isRequired: true,
-            choices: ['Yes', 'No'],
-            colCount: 0,
+            title: 'Zaimki',
+            elements: [
+                {
+                    type: 'dropdown',
+                    name: 'zaimek',
+                    title: 'Forma czasownika:',
+                    isRequired: true,
+                    choices: [
+                        { value: 0, text: 'Wysłałem' },
+                        { value: 1, text: 'Wysłałam' },
+                        { value: 2, text: 'Wysłałom' },
+                        { value: 3, text: 'Wysłaliśmy' },
+                    ],
+                },
+            ],
         },
         {
-            type: 'dropdown',
-            name: 'kids',
-            title: 'How many kids do you have',
-            visibleIf: "{haveKids}='Yes'",
-            isRequired: true,
-            choices: [1, 2, 3, 4, 5],
-        },
-        {
-            type: 'dropdown',
-            name: 'kid1Age',
-            title: 'The first kid age:',
-            visibleIf: "{haveKids}='Yes' and {kids} >= 1",
-            isRequired: true,
-            choicesMax: 18,
-        },
-        {
-            type: 'dropdown',
-            name: 'kid2Age',
-            title: 'The second kid age:',
-            visibleIf: "{haveKids}='Yes' and {kids} >= 2",
-            isRequired: true,
-            startWithNewLine: false,
-            choicesMax: 18,
-        },
-        {
-            type: 'dropdown',
-            name: 'kid3Age',
-            title: 'The third kid age:',
-            visibleIf: "{haveKids}='Yes' and {kids} >= 3",
-            isRequired: true,
-            startWithNewLine: false,
-            choicesMax: 18,
-        },
-        {
-            type: 'dropdown',
-            name: 'kid4Age',
-            title: 'The fourth kid age:',
-            visibleIf: "{haveKids}='Yes' and {kids} >= 4",
-            isRequired: true,
-            startWithNewLine: false,
-            choicesMax: 18,
-        },
-        {
-            type: 'dropdown',
-            name: 'kid5Age',
-            title: 'The fifth kid age:',
-            visibleIf: "{haveKids}='Yes' and {kids} >= 5",
-            isRequired: true,
-            startWithNewLine: false,
-            choicesMax: 18,
+            title: 'Polityka prywatności',
+            elements: [
+                {
+                    type: 'dropdown',
+                    title: 'Czy polityka prywatności jest dostępna i czytelna?',
+                    isRequired: true,
+                    choices: [
+                        { value: 'yes', text: 'dostępna i czytelna' },
+                        {
+                            value: 'entirely_obscured_by_popup',
+                            text: 'dostępna, ale nieczytelna. Zasłania ją popup o RODO',
+                        },
+                        {
+                            value: 'cant_find',
+                            text: `Niedostępna. {Szukałem}, ale nie {znalazłem} jej na stronie`,
+                        },
+                    ],
+                },
+            ],
         },
     ],
 };
 
 const survey = new Survey.Model(json);
+survey.onProcessTextValue.add(function (
+    sender: Survey.SurveyModel,
+    options: { name: string; value?: string }
+) {
+    if (verbs[options.name.toLowerCase()]) {
+        options.value = verbs[options.name.toLowerCase()][sender.valuesHash.zaimek];
+        if (options.name[0] == options.name[0].toUpperCase()) {
+            options.value = [options.value[0].toUpperCase(), ...options.value.slice(1)].join('');
+        }
+    }
+});
 
 export default function EmailTemplate3Controls() {
     return <Survey.Survey model={survey} />;
@@ -83,57 +73,8 @@ export function _EmailTemplate3Controls({
     config: EmailTemplate3Config;
     setConfig: React.Dispatch<React.SetStateAction<EmailTemplate3Config>>;
 }): JSX.Element {
-    const p = config.pronoun;
     return (
         <div>
-            <div>
-                <label htmlFor="pronoun">Forma czasownika:</label>
-                <select
-                    id="pronoun"
-                    value={config.pronoun}
-                    onChange={(e) =>
-                        setConfig((v) => ({
-                            ...v,
-                            pronoun: parseInt(e.target.value) as EmailTemplate3Config['pronoun'],
-                        }))
-                    }
-                >
-                    <option value="0">Wysłałem</option>
-                    <option value="1">Wysłałam</option>
-                    <option value="2">Wysłałom</option>
-                    <option value="3">Wysłaliśmy</option>
-                </select>
-            </div>
-
-            <div>
-                <label htmlFor="policy_readable">
-                    Czy polityka prywatności jest dostępna i czytelna?
-                </label>
-                <select
-                    id="policy_readable"
-                    value={config.policy_readable}
-                    onChange={(e) =>
-                        setConfig((v) => ({
-                            ...v,
-                            policy_readable: e.target
-                                .value as EmailTemplate3Config['policy_readable'],
-                        }))
-                    }
-                >
-                    <option value="null" disabled>
-                        wybierz opcję
-                    </option>
-                    <option value="yes">dostępna i czytelna</option>
-                    <option value="entirely_obscured_by_popup">
-                        dostępna, ale nieczytelna. Zasłania ją popup o RODO
-                    </option>
-                    <option value="cant_find">
-                        Niedostępna. {['Szukałem', 'Szukałam', 'Szukałom', 'Szukaliśmy'][p]}, ale
-                        nie {['znalazłem', 'znalazłam', 'znalazłom', 'znaleźliśmy'][p]} jej na
-                        stronie
-                    </option>
-                </select>
-            </div>
             {emailHostSettings(config, setConfig)}
             <div>
                 <label htmlFor="poup_type">Typ okienka o RODO: </label>
