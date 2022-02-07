@@ -1,4 +1,4 @@
-export default {
+const words = {
     zrobiłem: ['zrobiłem', 'zrobiłam', 'zrobiłom', 'zrobiliśmy'],
     szukałem: ['szukałem', 'szukałam', 'szukałom', 'szukaliśmy'],
     znalazłem: ['znalazłem', 'znalazłam', 'znalazłom', 'znaleźliśmy'],
@@ -17,3 +17,13 @@ export default {
     widzę: ['widzę', 'widzę', 'widzę', 'widzimy'],
     widziałem: ['widziałem', 'widziałam', 'widziałom', 'widzieliśmy'],
 } as { [key: string]: string[] };
+
+export default words;
+
+export function v(key: string, index: number) {
+    let result = words[key.toLowerCase()][index] || key;
+    if (key[0] == key[0].toUpperCase()) {
+        result = [result[0].toUpperCase(), ...result.slice(1)].join('');
+    }
+    return result;
+}
