@@ -1,23 +1,19 @@
-import React from 'react';
+import { getMemory } from '../memory';
 import { RequestCluster } from '../request-cluster';
 
 import StolenDataCluster from './stolen-data-cluster';
-import { getshorthost } from '../util';
-import { getMemory } from '../memory';
 
 import './stolen-data.scss';
 
 export function StolenData({
     origin,
     minValueLength,
-    refreshToken,
-    refresh,
+    eventCounts,
     cookiesOnly,
     cookiesOrOriginOnly,
 }: {
     origin: string;
-    refreshToken: number;
-    refresh: () => void;
+    eventCounts: Record<string, number>;
     minValueLength: number;
     cookiesOnly: boolean;
     cookiesOrOriginOnly: boolean;
@@ -33,10 +29,7 @@ export function StolenData({
         .sort(RequestCluster.sortCompare)
         .filter((cluster) => !cookiesOnly || cluster.hasCookies())
         .filter(
-            (cluster) =>
-                !cookiesOrOriginOnly ||
-                cluster.hasCookies() ||
-                cluster.exposesOrigin()
+            (cluster) => !cookiesOrOriginOnly || cluster.hasCookies() || cluster.exposesOrigin()
         );
     return (
         <div className="stolen-data-container">
@@ -48,8 +41,7 @@ export function StolenData({
                         origin={origin}
                         shorthost={cluster.id}
                         key={cluster.id + origin}
-                        refresh={refresh}
-                        refreshToken={refreshToken}
+                        refreshToken={eventCounts[cluster.id]}
                         minValueLength={minValueLength}
                         cookiesOnly={cookiesOnly}
                         cookiesOrOriginOnly={cookiesOrOriginOnly}

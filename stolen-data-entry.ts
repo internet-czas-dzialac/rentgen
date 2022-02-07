@@ -12,12 +12,7 @@ import {
     safeDecodeURIComponent,
 } from './util';
 
-export type Sources =
-    | 'cookie'
-    | 'pathname'
-    | 'queryparams'
-    | 'header'
-    | 'request_body';
+export type Sources = 'cookie' | 'pathname' | 'queryparams' | 'header' | 'request_body';
 
 export const Classifications = <const>{
     id: 'Identyfikator internetowy',
@@ -123,10 +118,7 @@ export class StolenDataEntry extends EventEmitter {
                     }
                 ).entries()
             );
-            if (
-                typeof hash !== 'object' &&
-                Object.keys(searchParams).length === 0
-            ) {
+            if (typeof hash !== 'object' && Object.keys(searchParams).length === 0) {
                 return value; // just a string;
             }
             const object = {
@@ -134,11 +126,7 @@ export class StolenDataEntry extends EventEmitter {
                 host: url.host,
                 path: url.pathname,
                 searchParams,
-                ...(hash === ''
-                    ? {}
-                    : typeof hash === 'string'
-                    ? { hash }
-                    : hash),
+                ...(hash === '' ? {} : typeof hash === 'string' ? { hash } : hash),
             };
             return object;
         } else if (value === null) {
@@ -148,16 +136,12 @@ export class StolenDataEntry extends EventEmitter {
         }
     }
 
-    getParsedValue(
-        key_path: string
-    ): string | Record<string | symbol, unknown> {
+    getParsedValue(key_path: string): string | Record<string | symbol, unknown> {
         let object = StolenDataEntry.parseValue(this.value);
         for (const key of key_path.split('.')) {
             if (key === '') continue;
             if (typeof key === 'string') {
-                throw new Error(
-                    'something went wrong when parsing ' + key_path
-                );
+                throw new Error('something went wrong when parsing ' + key_path);
             }
             object = StolenDataEntry.parseValue(object[key]);
         }
@@ -176,7 +160,7 @@ export class StolenDataEntry extends EventEmitter {
         const had_been_marked_before = this.marked;
         this.marked = false;
         if (had_been_marked_before) {
-            this.emit('change');
+            this.emit('change', this.request.origin);
         }
     }
 
@@ -199,9 +183,7 @@ export class StolenDataEntry extends EventEmitter {
     }
 
     isRelatedToID() {
-        return this.request.stolenData.some(
-            (entry) => entry.classification == 'id'
-        );
+        return this.request.stolenData.some((entry) => entry.classification == 'id');
     }
 
     matchesHAREntry(har: HAREntry): boolean {
@@ -216,10 +198,7 @@ export class StolenDataEntry extends EventEmitter {
                 : value.toString();
         if (typeof value !== 'object' && this.classification == 'id') {
             return maskString(value, 1 / 3, ID_PREVIEW_MAX_LENGTH);
-        } else if (
-            typeof value === 'object' &&
-            value[Symbol.for('originalString')]
-        ) {
+        } else if (typeof value === 'object' && value[Symbol.for('originalString')]) {
             return value[Symbol.for('originalString')] as string;
         } else {
             return str;
@@ -267,8 +246,8 @@ export class StolenDataEntry extends EventEmitter {
     }
 
     exposesHost() {
-        return [this.value, safeDecodeURIComponent(this.value)].some(
-            (haystack) => haystack.includes(getshorthost(this.request.origin))
+        return [this.value, safeDecodeURIComponent(this.value)].some((haystack) =>
+            haystack.includes(getshorthost(this.request.origin))
         );
     }
 }

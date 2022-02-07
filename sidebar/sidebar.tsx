@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Options from '../options';
 import { StolenData } from './stolen-data';
-import { useEmitter } from '../util';
+import { getshorthost, useEmitter } from '../util';
 import { getMemory } from '../memory';
 
 async function getCurrentTab() {
@@ -26,7 +26,7 @@ const Sidebar = () => {
     const [cookiesOnly, setCookiesOnly] = React.useState<boolean>(false);
     const [stolenDataView, setStolenDataView] = React.useState<boolean>(true);
     const [cookiesOrOriginOnly, setCookiesOrOriginOnly] = React.useState<boolean>(false);
-    const [counter, setCounter] = useEmitter(getMemory());
+    const [eventCounts, setEventCounts] = useEmitter(getMemory());
     const [marksOccurrence, setMarksOccurrence] = React.useState<boolean>(false);
     const [warningDataDialogAck, setWarningDataDialogAck] = React.useState<boolean>(
         localStorage.getItem('warningDataDialogAck') === null
@@ -44,7 +44,7 @@ const Sidebar = () => {
     );
 
     React.useEffect(() => {
-        const listener = async (data: any) => {
+        const listener = async () => {
             console.log('tab change!');
             const tab = await getCurrentTab();
             const url = new URL(tab.url);
@@ -66,7 +66,7 @@ const Sidebar = () => {
             }
         }
         return setMarksOccurrence(false);
-    }, [counter, origin]);
+    }, [eventCounts['*'], origin]);
 
     return (
         <div className="sidebar">
@@ -112,7 +112,7 @@ const Sidebar = () => {
                     <button
                         onClick={() => {
                             getMemory().removeRequestsFor(origin);
-                            setCounter((c) => c + 1);
+                            getMemory().emit('change', false, origin, 'clicked trash');
                             setMarksOccurrence(false);
                         }}
                     >
@@ -122,7 +122,7 @@ const Sidebar = () => {
                     <button
                         onClick={() => {
                             getMemory().removeCookiesFor(origin);
-                            setCounter((c) => c + 1);
+                            getMemory().emit('change', false, origin, 'clicked clear cookies');
                             setMarksOccurrence(false);
                         }}
                     >
@@ -193,8 +193,7 @@ const Sidebar = () => {
                         ) : null}
                         <StolenData
                             origin={origin}
-                            refreshToken={counter}
-                            refresh={() => setCounter((c) => c + 1)}
+                            eventCounts={eventCounts}
                             minValueLength={minValueLength}
                             cookiesOnly={cookiesOnly}
                             cookiesOrOriginOnly={cookiesOrOriginOnly}

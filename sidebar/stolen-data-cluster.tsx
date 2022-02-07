@@ -8,23 +8,14 @@ import './stolen-data-cluster.scss';
 
 const MAX_STRING_VALUE_LENGTH = 100;
 
-function StolenDataValue({
-    entry,
-    refresh,
-}: {
-    entry: StolenDataEntry;
-    refresh: Function;
-    prefixKey?: string;
-}) {
+function StolenDataValue({ entry }: { entry: StolenDataEntry; prefixKey?: string }) {
     const [version] = useEmitter(entry);
     let body = null;
     if (!entry.value) {
         body = <></>;
     } else {
         body = (
-            <div data-version={version}>
-                {maskString(entry.value, 1, MAX_STRING_VALUE_LENGTH)}
-            </div>
+            <div data-version={version}>{maskString(entry.value, 1, MAX_STRING_VALUE_LENGTH)}</div>
         );
     }
     return (
@@ -32,7 +23,7 @@ function StolenDataValue({
             className="value"
             onClick={(e) => {
                 entry.toggleMark();
-                refresh();
+                getMemory().emit('change', false, entry.request.shorthost, 'clicked value');
                 e.stopPropagation();
             }}
             title={maskString(entry.value, 1, MAX_STRING_VALUE_LENGTH)}
@@ -42,13 +33,7 @@ function StolenDataValue({
     );
 }
 
-function StolenDataRow({
-    entry,
-    refresh,
-}: {
-    entry: StolenDataEntry;
-    refresh: Function;
-}) {
+function StolenDataRow({ entry }: { entry: StolenDataEntry }) {
     const [version] = useEmitter(entry);
     return (
         <tr
@@ -62,7 +47,12 @@ function StolenDataRow({
                     checked={entry.isMarked}
                     onChange={() => {
                         entry.toggleMark();
-                        refresh();
+                        getMemory().emit(
+                            'change',
+                            false,
+                            entry.request.shorthost,
+                            'clicked checkbox'
+                        );
                     }}
                 />
             </td>
@@ -70,7 +60,12 @@ function StolenDataRow({
                 title={`Nazwa: ${entry.name}\nŹródło: ${entry.source}`}
                 onClick={() => {
                     entry.toggleMark();
-                    refresh();
+                    getMemory().emit(
+                        'change',
+                        false,
+                        entry.request.shorthost,
+                        'Clicked entry name'
+                    );
                 }}
             >
                 {entry.name}
@@ -86,10 +81,7 @@ function StolenDataRow({
                         />
                     </span>
                 ) : entry.request.hasCookie() ? (
-                    <span
-                        title="Wysłane w zapytaniu opatrzonym Cookies"
-                        style={{ opacity: 0.25 }}
-                    >
+                    <span title="Wysłane w zapytaniu opatrzonym Cookies" style={{ opacity: 0.25 }}>
                         <img
                             src="/assets/icons/cookie.svg"
                             height={16}
@@ -121,7 +113,7 @@ function StolenDataRow({
                     </span>
                 ) : null}
             </td>
-            <StolenDataValue refresh={refresh} entry={entry} />
+            <StolenDataValue entry={entry} />
         </tr>
     );
 }
@@ -130,20 +122,21 @@ export default function StolenDataCluster({
     origin,
     shorthost,
     minValueLength,
-    refresh,
     cookiesOnly,
+    refreshToken,
     cookiesOrOriginOnly,
 }: {
     origin: string;
     shorthost: string;
     refreshToken: number;
     minValueLength: number;
-    refresh: Function;
     cookiesOnly: boolean;
     cookiesOrOriginOnly: boolean;
 }) {
     const cluster = getMemory().getClustersForOrigin(origin)[shorthost];
     const fullHosts = cluster.getFullHosts();
+
+    /* console.log('Stolen data cluster!', shorthost, refreshToken); */
 
     return (
         <div className="stolen-data-cluster-container">
@@ -153,13 +146,8 @@ export default function StolenDataCluster({
                 </a>
                 <div className="subdomains-container">
                     {fullHosts.map((host, index) => (
-                        <a
-                            className="subdomain"
-                            key={host}
-                            href={`https://${host}`}
-                        >
-                            {host}{' '}
-                            {`${fullHosts.length - 1 !== index ? '· ' : ''}`}
+                        <a className="subdomain" key={host} href={`https://${host}`}>
+                            {host} {`${fullHosts.length - 1 !== index ? '· ' : ''}`}
                         </a>
                     ))}
                 </div>
@@ -182,7 +170,6 @@ export default function StolenDataCluster({
                             })
                             .map((entry) => (
                                 <StolenDataRow
-                                    refresh={refresh}
                                     {...{
                                         entry,
                                         key: entry.id,

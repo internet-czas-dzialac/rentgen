@@ -5,7 +5,7 @@ import { RequestCluster } from './request-cluster';
 
 export default class Memory extends EventEmitter {
     origin_to_history = {} as Record<string, Record<string, RequestCluster>>;
-    private throttle = makeThrottle(200);
+    private throttle = makeThrottle(100);
     async register(request: ExtendedRequest) {
         await request.init();
         if (!request.isThirdParty()) {
@@ -20,7 +20,7 @@ export default class Memory extends EventEmitter {
             this.origin_to_history[request.origin][shorthost] = cluster;
         }
         this.origin_to_history[request.origin][shorthost].add(request);
-        this.emit('change');
+        this.emit('change', false, shorthost, 'registered request(shorthost emit)');
     }
 
     constructor() {
@@ -35,9 +35,9 @@ export default class Memory extends EventEmitter {
         );
         browser.webRequest.onBeforeSendHeaders.addListener(
             async (request) => {
-                const extendedRequest = ExtendedRequest.by_id[
-                    request.requestId
-                ].addHeaders(request.requestHeaders || []);
+                const extendedRequest = ExtendedRequest.by_id[request.requestId].addHeaders(
+                    request.requestHeaders || []
+                );
                 this.register(extendedRequest);
             },
             { urls: ['<all_urls>'] },
@@ -45,13 +45,16 @@ export default class Memory extends EventEmitter {
         );
     }
 
-    emit(eventName: string, immediate = false) {
+    emit(eventName: string, immediate = false, data = 'any', reason: string) {
+        console.log('emitting!', eventName, data, reason);
+        setTimeout(() => super.emit(eventName, data), 0);
+        return;
         try {
             if (immediate) {
-                super.emit(eventName);
+                super.emit(eventName, data);
                 return;
             } else {
-                this.throttle(() => super.emit(eventName));
+                this.throttle(() => super.emit(eventName, data));
             }
             return true;
         } catch (e) {
@@ -68,12 +71,7 @@ export default class Memory extends EventEmitter {
         if (shorthost) {
             const cookies = await browser.cookies.getAll({ domain: shorthost });
             for (const cookie of cookies) {
-                console.log(
-                    'removing cookie',
-                    cookie.name,
-                    'from',
-                    cookie.domain
-                );
+                console.log('removing cookie', cookie.name, 'from', cookie.domain);
                 await browser.cookies.remove({
                     name: cookie.name,
                     url: `https://${cookie.domain}`,
@@ -102,6 +100,5 @@ export function init() {
 }
 
 export function getMemory(): Memory {
-    return (browser.extension.getBackgroundPage().window as any)
-        .memory as Memory;
+    return (browser.extension.getBackgroundPage().window as any).memory as Memory;
 }

@@ -47,18 +47,34 @@ export function getshorthost(host: string) {
 
 export function useEmitter(
     e: EventEmitter
-): [number, React.Dispatch<React.SetStateAction<number>>] {
-    const [counter, setCounter] = React.useState<number>(0);
+): [
+    Record<string, number | undefined>,
+    React.Dispatch<React.SetStateAction<Record<string, number | undefined>>>
+] {
+    const [eventCounts, setEventCounts] = React.useState<Record<string, number | undefined>>({
+        '*': 0,
+    });
     React.useEffect(() => {
-        const callback = () => {
-            setCounter((counter) => counter + 1);
+        const callback = (eventSubtype: string) => {
+            setEventCounts((eventCounts) => {
+                console.log({
+                    ...eventCounts,
+                    ...{ [eventSubtype]: (eventCounts[eventSubtype] || 0) + 1 },
+                    ...{ '*': (eventCounts['*'] === undefined ? 0 : eventCounts['*']) + 1 },
+                });
+                return {
+                    ...eventCounts,
+                    ...{ [eventSubtype]: (eventCounts[eventSubtype] || 0) + 1 },
+                    ...{ '*': (eventCounts['*'] === undefined ? 0 : eventCounts['*']) + 1 },
+                };
+            });
         };
         e.on('change', callback);
         return () => {
             e.removeListener('change', callback);
         };
     }, []);
-    return [counter, setCounter];
+    return [eventCounts, setEventCounts];
 }
 
 export function parseCookie(cookie: string): Record<string, string> {
