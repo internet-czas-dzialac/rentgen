@@ -77,7 +77,7 @@ export default function EmailTemplate3({
     return (
         <div className="mail-wrapper">
             <div className="mail-controls">
-                <EmailTemplate3Controls {...{ config, setConfig }} />
+                <EmailTemplate3Controls {...{ config, setConfig, hosts: all_host_ids }} />
             </div>
             <div className="mail-content-wrapper">
                 <article className="mail-content">

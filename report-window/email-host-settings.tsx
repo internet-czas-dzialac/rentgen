@@ -48,45 +48,6 @@ export default function emailHostSettings(
         <aside>
             {Object.entries(config.hosts_settings).map(([host_id, settings]) => (
                 <div key={host_id}>
-                    <h5>{/* {host_id}, {hostNeedsQuestions(settings).toString()} */}</h5>
-                    <p>
-                        Cele przetwarzania danych przez właściciela domeny {host_id}{' '}
-                        {/* {hostSettingsDropdown({
-                            host_id,
-                            setConfig,
-                            settings,
-                            field: 'presence',
-                            value: settings.presence,
-                            options: {
-                                not_mentioned: ['nie są nigdzie na stronie opisane'],
-                                mentioned_in_policy: [
-                                    'są opisane w polityce prywatności',
-                                    config.policy_readable !== 'yes',
-                                ],
-                                mentioned_in_popup: ['są opisane w okienku RODO'],
-                            },
-                        })} */}
-                    </p>
-                    {!['not_mentioned', 'null'].includes(settings.presence) ? (
-                        <p>
-                            Wskazana przez administratora podstawa prawna dla{' '}
-                            <strong> tego konkretnego celu</strong>{' '}
-                            {/* {hostSettingsDropdown({
-                                host_id,
-                                setConfig,
-                                settings,
-                                field: 'legal_basis_type' as const,
-                                value: settings.legal_basis_type,
-                                options: {
-                                    consent: ['to zgoda.'],
-                                    legitimate_interest: ['to uzasadniony interes.'],
-                                    not_mentioned: ['nie jest wskazana nigdzie na stronie.'],
-                                },
-                            })} */}
-                        </p>
-                    ) : (
-                        ''
-                    )}
                     {!['not_mentioned', 'null'].includes(settings.legal_basis_type) ? (
                         <div>
                             {ConsentProblems({ settings, host_id, pronoun: p, setConfig })}
