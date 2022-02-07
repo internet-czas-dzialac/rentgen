@@ -157,7 +157,7 @@ export default function StolenDataCluster({
                     <thead>
                         <tr>
                             <th className="table-header" colSpan={4}>
-                                Znalezione ustawienia:
+                                Wysłane dane:
                             </th>
                         </tr>
                     </thead>
