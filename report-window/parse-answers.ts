@@ -2,42 +2,27 @@ import RawAnswers, { BasicRawAnswers, HostRawAnswers } from './raw-answers';
 
 export type RecordValue<T> = T extends Record<any, infer R> ? R : any;
 
-export type ParsedHostAnswers =
+export type ParsedHostAnswers = ({
+    present:
+        | 'not_mentioned'
+        | 'not_before_making_a_choice'
+        | 'mentioned_in_policy'
+        | 'mentioned_in_popup';
+    legal_basis_type: 'consent' | 'legitimate_interes' | 'not_mentioned';
+    popup_action: 'none' | 'closed_popup' | 'accept_all' | 'deny_all' | 'other';
+    was_processing_necessary: 'yes' | 'no' | 'not_sure';
+} & (
     | {
-          present: 'not_mentioned' | 'not_before_making_a_choice';
+          consent_problems:
+              | 'claims_consent_but_sends_before_consent'
+              | 'claims_consent_but_there_was_no_easy_refuse';
       }
-    | ({
-          present: 'mentioned_in_policy' | 'mentioned_in_popup';
-      } & (
-          | ({
-                legal_basis_type: 'consent';
-            } & (
-                | {
-                      consent_problems:
-                          | 'claims_consent_but_sends_before_consent'
-                          | 'claims_consent_but_there_was_no_easy_refuse';
-                  }
-                | { consent_problems: 'none'; outside_eu: 'yes' | 'no' | 'not_sure' }
-            ))
-          | ({
-                legal_basis_type: 'legitimate_interest';
-            } & (
-                | {
-                      legitimate_interest_activity_specified: 'no';
-                  }
-                | {
-                      legitimate_interest_activity_specified: 'precise';
-                      outside_eu: 'yes' | 'no' | 'not_sure';
-                  }
-                | {
-                      legitimate_interest_activity_specified: 'vague';
-                      legitimate_interest_description: string;
-                  }
-            ))
-          | {
-                legal_basis_type: 'not_mentioned';
-            }
-      ));
+    | { consent_problems: 'none'; outside_eu: 'yes' | 'no' | 'not_sure' }
+)) & {
+    legitimate_interest_activity_specified: 'no' | 'precise' | 'vague';
+    outside_eu: 'yes' | 'no' | 'not_sure';
+    legitimate_interest_description?: string;
+};
 
 export type ParsedAnswers = BasicRawAnswers & { hosts: Record<string, ParsedHostAnswers> };
 
@@ -79,5 +64,5 @@ export function parseAnswers({
         rejection_is_hard,
         administrator_identity_available_before_choice,
         hosts: parseHostAnswers(rest),
-    } as RawAnswers;
+    } as ParsedAnswers;
 }

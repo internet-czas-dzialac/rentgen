@@ -4,12 +4,7 @@ import { Sources, StolenDataEntry } from './stolen-data-entry';
 
 import { allSubhosts, isSameURL, reduceConcat, unique } from './util';
 
-const source_priority: Array<Sources> = [
-    'cookie',
-    'pathname',
-    'queryparams',
-    'header',
-];
+const source_priority: Array<Sources> = ['cookie', 'pathname', 'queryparams', 'header'];
 
 export class RequestCluster extends EventEmitter {
     public requests: ExtendedRequest[] = [];
@@ -35,6 +30,10 @@ export class RequestCluster extends EventEmitter {
             }
         }
         return false;
+    }
+
+    hasMarkedCookies() {
+        return this.getMarkedEntries().some((entry) => entry.source === 'cookie');
     }
 
     calculateRepresentativeStolenData(
@@ -93,8 +92,7 @@ export class RequestCluster extends EventEmitter {
                     return true;
                 }
                 if (
-                    array[index].getValuePreview() ===
-                        array[index - 1].getValuePreview() ||
+                    array[index].getValuePreview() === array[index - 1].getValuePreview() ||
                     isSameURL(array[index].value, array[index - 1].value)
                 ) {
                     return false;
@@ -126,9 +124,7 @@ export class RequestCluster extends EventEmitter {
                     return true;
                 }
             })
-            .sort((entry1, entry2) =>
-                entry1.getPriority() > entry2.getPriority() ? -1 : 1
-            );
+            .sort((entry1, entry2) => (entry1.getPriority() > entry2.getPriority() ? -1 : 1));
         return this.representativeStolenData;
     }
 
@@ -165,9 +161,7 @@ export class RequestCluster extends EventEmitter {
     }
 
     getMarkedEntries(): StolenDataEntry[] {
-        return this.requests
-            .map((request) => request.getMarkedEntries())
-            .reduce(reduceConcat, []);
+        return this.requests.map((request) => request.getMarkedEntries()).reduce(reduceConcat, []);
     }
 
     exposesOrigin() {

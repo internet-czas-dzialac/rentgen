@@ -30,6 +30,10 @@ function Report() {
         /* if (entries.length == 0) {
          *     return <>Wczytywanie...</>;
          * } */
+        const visited_url = Object.values(clusters)
+            .find((cluster) => cluster.getMarkedRequests().length > 0)
+            ?.getMarkedRequests()[0].originalURL;
+
         const result = (
             <div {...{ 'data-version': counter }}>
                 <nav>
@@ -38,7 +42,9 @@ function Report() {
                 </nav>
                 {mode === 'survey' ? (
                     <Questions
-                        hosts={Object.keys(clusters)}
+                        hosts={Object.values(clusters)
+                            .filter((cluster) => cluster.getMarkedRequests().length > 0)
+                            .map((cluster) => cluster.id)}
                         onComplete={(answers) => {
                             setAnswers(parseAnswers(answers));
                             setMode('preview');
@@ -47,7 +53,7 @@ function Report() {
                 ) : (
                     ''
                 )}
-                {mode === 'preview' ? <EmailContent {...{ answers }} /> : ''}
+                {mode === 'preview' ? <EmailContent {...{ answers, visited_url, clusters }} /> : ''}
                 {/* <HARConverter {...{ entries }} /> */}
             </div>
         );

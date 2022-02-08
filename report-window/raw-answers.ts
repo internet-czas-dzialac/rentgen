@@ -18,6 +18,7 @@ export type BasicRawAnswers = {
     zaimek: 0 | 1 | 2 | 3;
     is_incognito_different: [] | ['incognito_is_the_same'];
     policy_readable: 'yes' | 'vague' | 'cant_find';
+    popup_action: 'none' | 'closed_popup' | 'accept_all' | 'deny_all' | 'other';
 } & (
     | ({
           popup_type: 'passive_popup';
@@ -37,13 +38,13 @@ export type BasicRawAnswers = {
     | {
           popup_type: 'some_choice';
           rejection_is_hard: 'yes' | 'no';
+          administrator_identity_available_before_choice: 'yes' | 'no';
           cookie_wall: undefined;
           passive_consent_description: undefined;
           mentions_passive_consent: undefined;
-          administrator_identity_available_before_choice: 'yes' | 'no';
       }
     | {
-          popup_type: 'none';
+          popup_type: 'none' | 'page';
           cookie_wall: undefined;
           passive_consent_description: undefined;
           mentions_passive_consent: undefined;

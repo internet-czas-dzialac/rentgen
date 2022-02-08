@@ -2,7 +2,7 @@ function generateHostPage(
     host: string,
     index: number,
     all_hosts: string[]
-): { title: string; elements: any[] } {
+): { title: string; elements: any[]; visibleIf: string } {
     function f(name: string, h = host) {
         return `${h.replace(/\./g, '_')}|${name}`;
     }
@@ -15,6 +15,7 @@ function generateHostPage(
     }
     return {
         title: host,
+        visibleIf: "{popup_type} != 'none'",
         elements: [
             {
                 type: 'radiogroup',
@@ -70,6 +71,8 @@ function generateHostPage(
                 isRequired: true,
                 title: `Jak ma się ta podstawa prawna do stanu faktycznego?`,
                 visibleIf: `{${f('legal_basis_type')}} = "consent"`,
+                defaultValueExpression:
+                    'iif({popup_action} = "none" or {popup_action} = "closed_popup", "claims_consent_but_sends_before_consent", iif({popup_action} = "accept_all" and {rejection_is_hard} = "yes", "claims_consent_but_there_was_no_easy_refuse", ""))',
                 choices: [
                     {
                         value: 'claims_consent_but_sends_before_consent',
@@ -83,7 +86,7 @@ function generateHostPage(
                 ],
             },
             {
-                type: 'dropdown',
+                type: 'radiogroup',
                 name: f('legitimate_interest_activity_specified'),
                 ...defaultValue('legitimate_interest_activity_specified'),
                 isRequired: true,
@@ -118,7 +121,7 @@ function generateHostPage(
                         : `{${f('legitimate_interest_description', previous_host)}}`,
             },
             {
-                type: 'dropdown',
+                type: 'radiogroup',
                 title: `Czy domena ${host} należy do podmiotu spoza Europy (np. Google, Facebook)?`,
                 name: f('outside_eu'),
                 ...defaultValue('outside_eu'),
@@ -129,6 +132,20 @@ function generateHostPage(
                     { value: 'yes', text: 'Tak' },
                     { value: 'no', text: 'Nie' },
                     { value: 'not_sure', text: 'Nie wiem' },
+                ],
+            },
+            {
+                type: 'radiogroup',
+                title: `Czy w {Twojej} ocenie wysłanie {Twoich} danych do właściciela domeny  ${host} było konieczne do świadczenia zażądanej przez {Ciebie} usługi drogą elektroniczną?`,
+                name: f('was_processing_necessary'),
+                ...defaultValue('was_processing_necessary'),
+                visibleIf: `{${f('legal_basis_type')}} = "legitimate_interest" or {${f(
+                    'present'
+                )}} = "not_mentioned"`,
+                choices: [
+                    { value: 'yes', text: 'Tak, było konieczne' },
+                    { value: 'no', text: 'Nie, nie było konieczne' },
+                    { value: 'not_sure', text: 'Nie mam zdania' },
                 ],
             },
         ],
@@ -169,6 +186,10 @@ export default function generateSurveyQuestions(hosts: string[]) {
                         choices: [
                             { value: 'none', text: 'Brak informacji' },
                             {
+                                value: 'page',
+                                text: 'Tylko w postaci tekstu na podstronie np. "prywatność" lub "polityka cookies"',
+                            },
+                            {
                                 value: 'passive_popup',
                                 text: /* HTML */ `Okienko o cookiesach, bez możliwości podjęcia
                                 żadnego wyboru (np. tylko opcja „zamknij”)`,
@@ -185,7 +206,7 @@ export default function generateSurveyQuestions(hosts: string[]) {
                         dotyczącymi przetwarzania {Twoich} danych osobowych ukazało się dawno temu w
                         trakcie {twojej} wcześniejszej wizyty i wtedy je {odkliknąłeś}. {Otwórz} tę
                         samą stronę w Trybie Prywatnym (Incognito). Co {widzisz}?`,
-                        visibleIf: "{popup_type} = 'none'",
+                        visibleIf: "{popup_type} = 'none' or {popup_type} = 'page'",
                         name: 'is_incognito_different',
                         isRequired: true,
                         choices: [
@@ -197,7 +218,8 @@ export default function generateSurveyQuestions(hosts: string[]) {
                     },
                     {
                         type: 'html',
-                        visibleIf: '{is_incognito_different} != "no" and {popup_type} = "none"',
+                        visibleIf:
+                            '{is_incognito_different} != "no" and ({popup_type} = "none" or {popup_type} = "page") ',
                         html: /* HTML */ `Jeżeli w trybie incognito widzisz więcej okienek z
                             informacjami o przetwarzaniu danych osobowych, wykonaj analizę w
                             normalnym trybie ponownie - ale najpierw usuń pliki cookies tej strony.
@@ -213,7 +235,7 @@ export default function generateSurveyQuestions(hosts: string[]) {
                         name: 'mentions_passive_consent',
                         isRequired: true,
                         visibleIf: '{popup_type} = "passive_popup"',
-                        title: 'Czy treść okienka wskazuje na zgodę wyrażoną pasywnie, np. „Korzystając z naszej strony wyrażasz zgodę” lub „Brak zmiany ustawień przeglądarki oznacza zgodę”?',
+                        title: 'Czy treść okienka wskazuje na zgodę wyrażoną pasywnie, np. „Korzystając z naszej strony wyrażasz zgodę”,  „Brak zmiany ustawień przeglądarki oznacza zgodę”, „Klikając przycisk "X" (zamknij) wyrażasz zgodę”?',
                         choices: [
                             {
                                 value: 'yes',
@@ -269,6 +291,35 @@ export default function generateSurveyQuestions(hosts: string[]) {
                     },
                     {
                         type: 'radiogroup',
+                        name: 'popup_action',
+                        isRequired: true,
+                        visibleIf: '{popup_type} = "some_choice" or {popup_type} = "passive_popup"',
+                        title: 'Jaką akcję {podjąłeś} w ramach wyskakującego okienka?',
+                        choices: [
+                            {
+                                value: 'none',
+                                text: 'Nic nie {kliknąłem}',
+                            },
+                            {
+                                value: 'closed_popup',
+                                text: '{Zamknąłem} okienko za pomocą przycisku „X” lub „Zamknij”, lub podobnego',
+                            },
+                            {
+                                value: 'accept_all',
+                                text: '{Kliknąłem} przycisk od akceptacji wszystkich zgód',
+                            },
+                            {
+                                value: 'deny_all',
+                                text: '{Kliknąłem} przycisk do odmówienia zgody na wszystkie cele',
+                            },
+                            {
+                                value: 'other',
+                                text: 'Coś innego',
+                            },
+                        ],
+                    },
+                    {
+                        type: 'radiogroup',
                         name: 'administrator_identity_available_before_choice',
                         isRequired: true,
                         visibleIf: '{popup_type} = "some_choice"',
@@ -288,6 +339,7 @@ export default function generateSurveyQuestions(hosts: string[]) {
             },
             {
                 title: 'Obowiązek informacyjny, polityka prywatności',
+                visibleIf: "{popup_type} != 'none'",
                 elements: [
                     {
                         type: 'radiogroup',
