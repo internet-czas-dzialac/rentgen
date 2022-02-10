@@ -47,7 +47,7 @@ export default function EmailContent({
             </a>{' '}
             poprzez wysyłanie moich danych w wyżej opisanym zakresie stają się Państwo
             współadministratorem moich danych osobowych, dlatego ciąży na Państwu obowiązek
-            odpowiedzi na moje pytanie na mocy Art. 12 i 13 Rozporządzenia 2016/679 Parlamentu
+            odpowiedzi na moje pytania na mocy Art. 12 i 13 Rozporządzenia 2016/679 Parlamentu
             Europejskiego i Rady (UE) z dnia 27 kwietnia 2016 r. w sprawie ochrony osób fizycznych w
             związku z przetwarzaniem danych osobowych i w sprawie swobodnego przepływu takich danych
             oraz uchylenia dyrektywy 95/46/WE (ogólne rozporządzenie o ochronie danych, dalej:
