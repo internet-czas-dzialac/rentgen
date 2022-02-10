@@ -19,6 +19,8 @@ export type BasicRawAnswers = {
     is_incognito_different: [] | ['incognito_is_the_same'];
     policy_readable: 'yes' | 'vague' | 'cant_find';
     popup_action: 'none' | 'closed_popup' | 'accept_all' | 'deny_all' | 'other';
+    popup_closed_how: string;
+    popup_deny_all_how: string;
 } & (
     | ({
           popup_type: 'passive_popup';
