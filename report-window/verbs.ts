@@ -31,6 +31,7 @@ const words = {
    odmówiłeś: ['odmówiłeś', 'odmówiłaś', 'odmówiłoś', 'odmówiliście'],
    odznaczyłem: ['odznaczyłem', 'odznaczyłam', 'odznaczyłom', 'odznaczyliśmy'],
    proszę: ['proszę', 'proszę', 'proszę', 'prosimy'],
+   odmówiłem: ['odmówiłem', 'odmówiłam', 'odmówiłom', 'odmówiliśmy'],
 } as { [key: string]: string[] };
 
 export default words;

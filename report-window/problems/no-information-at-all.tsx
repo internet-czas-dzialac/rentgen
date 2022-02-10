@@ -1,19 +1,6 @@
-import { RequestCluster } from '../../request-cluster';
 import { ExplainerKey } from '../explainers';
 import { v } from '../verbs';
 import { Problem } from './problem';
-
-function formatRange(cluster: RequestCluster) {
-   const parts = [] as string[];
-   console.log(cluster);
-   if (cluster.hasMarkedCookies()) {
-      parts.push('mojego identyfikatora internetowego pozyskanego z Cookie');
-   }
-   if (cluster.exposesOrigin()) {
-      parts.push('części mojej historii przeglądania');
-   }
-   return parts.join(' oraz ');
-}
 
 export default class NoInformationAtAllProblem extends Problem {
    getEmailContent() {
@@ -24,13 +11,7 @@ export default class NoInformationAtAllProblem extends Problem {
             <p>
                {_('Moje')} dane osobowe zostały ujawnione podmiotom, które są właścicielami domen:
             </p>
-            <ul>
-               {this.getMarkedClusters().map((cluster) => (
-                  <li key={cluster.id}>
-                     {cluster.id} (w zakresie: {formatRange(cluster)})
-                  </li>
-               ))}
-            </ul>
+            {this.getRangeDescription()}
             <p>
                Na stronie brakuje jednak jakichkolwiek informacji o tym, jakie są cele przetwarzania
                takich danych oraz jakie są podstawy prawne takiego przetwarzania.
