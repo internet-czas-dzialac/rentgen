@@ -22,6 +22,7 @@ function generateHostPage(
             isRequired: true,
             title: `Cel ujawnienia danych właścicielowi domeny ${host}`,
             ...defaultValue('present'),
+            visibleIf: '{popup_type} != "none"',
             choices: [
                {
                   value: 'not_mentioned',
@@ -140,7 +141,7 @@ function generateHostPage(
             ...defaultValue('was_processing_necessary'),
             visibleIf: `{${f('legal_basis_type')}} = "legitimate_interest" or {${f(
                'present'
-            )}} = "not_mentioned"`,
+            )}} = "not_mentioned" or {popup_type} = "none"`,
             choices: [
                { value: 'yes', text: 'Tak, było konieczne' },
                { value: 'no', text: 'Nie, nie było konieczne' },

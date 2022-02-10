@@ -8,6 +8,22 @@ export class UnlawfulCookieAccess extends Problem {
    getNecessaryExplainers(): ExplainerKey[] {
       return [];
    }
+
+   static qualifies(answers: ParsedAnswers, clusters: RequestCluster[]): boolean {
+      // są cookiesy, nie było zgody, nie są konieczne do działania strony
+      const cookie_clusters = Object.values(clusters).filter((c) => c.hasMarkedCookies());
+      return cookie_clusters.some((cluster) => {
+         const hostAnswers = answers.hosts[cluster.id];
+         return (
+            (hostAnswers.present == 'not_mentioned' ||
+               hostAnswers.present == 'not_before_making_a_choice' ||
+               ['none', 'closed_popup', 'deny_all'].includes(answers.popup_action) ||
+               answers.popup_type === 'none') &&
+            hostAnswers.was_processing_necessary != 'yes'
+         );
+      });
+   }
+
    getEmailContent() {
       const cookie_clusters = Object.values(this.clusters).filter((c) => c.hasMarkedCookies());
       const unnecessary_hosts = Object.entries(this.answers.hosts)
@@ -151,18 +167,5 @@ export class UnlawfulCookieAccess extends Problem {
             </p>
          </>
       );
-   }
-   static qualifies(answers: ParsedAnswers, clusters: RequestCluster[]): boolean {
-      // są cookiesy, nie było zgody, nie są konieczne do działania strony
-      const cookie_clusters = Object.values(clusters).filter((c) => c.hasMarkedCookies());
-      return cookie_clusters.some((cluster) => {
-         const hostAnswers = answers.hosts[cluster.id];
-         return (
-            (hostAnswers.present == 'not_mentioned' ||
-               hostAnswers.present == 'not_before_making_a_choice' ||
-               ['none', 'closed_popup', 'deny_all'].includes(hostAnswers.popup_action)) &&
-            hostAnswers.was_processing_necessary != 'yes'
-         );
-      });
    }
 }
