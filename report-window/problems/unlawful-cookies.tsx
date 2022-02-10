@@ -1,4 +1,5 @@
 import { RequestCluster } from '../../request-cluster';
+import { wordlist } from '../../util';
 import { ExplainerKey } from '../explainers';
 import { ParsedAnswers } from '../parse-answers';
 import { v } from '../verbs';
@@ -145,7 +146,7 @@ export class UnlawfulCookieAccess extends Problem {
             {unnecessary_hosts.length > 0 ? (
                <p>
                   W {_('mojej')} ocenie odczytywanie przez Państwa stronę treści plików cookies z{' '}
-                  {unnecessary_hosts.join(', ')} nie jest konieczne do wyświetlenia treści Państwa
+                  {wordlist(unnecessary_hosts)} nie jest konieczne do wyświetlenia treści Państwa
                   strony, dlatego nie jest dla nich spełniony warunek 2. Jeżeli Państwa zdaniem jest
                   inaczej, {_('proszę')} o wskazanie, co jest źródłem tej konieczności i co odróżnia
                   Państwa stronę od wielu innych stron, które realizują te same funkcjonalności{' '}
@@ -159,12 +160,16 @@ export class UnlawfulCookieAccess extends Problem {
                takiego przetwarzania {_('moich')} danych osobowych, czy przetwarzali je państwo bez
                ważnej podstawy prawnej?
             </p>
-            <p>
-               {_('Proszę')} też o wskazanie, czy dostęp do treści plików cookie z
-               {maybe_unnecessary_hosts.join(', ')} jest konieczny do poprawnego działania strony?
-               Jeżeli tak, to {_('proszę')} wskazać, w jaki sposób. Co sprawia, że strona nie może
-               działać bez nich?
-            </p>
+            {maybe_unnecessary_hosts.length > 1 ? (
+               <p>
+                  {_('Proszę')} też o wskazanie, czy dostęp do treści plików cookie z
+                  {wordlist(maybe_unnecessary_hosts)} jest konieczny do poprawnego działania strony?
+                  Jeżeli tak, to {_('proszę')} wskazać, w jaki sposób. Co sprawia, że strona nie
+                  może działać bez nich?
+               </p>
+            ) : (
+               ''
+            )}
          </>
       );
    }
