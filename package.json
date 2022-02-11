@@ -46,7 +46,7 @@
         "addons-linter": "^4.7.0",
         "esbuild": "^0.14.14",
         "esbuild-plugin-sass": "^1.0.1",
-        "web-ext": "^6.6.0",
+        "web-ext": "^6.7.0",
         "web-ext-types": "^3.2.1"
     }
 }
