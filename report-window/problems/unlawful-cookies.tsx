@@ -93,7 +93,7 @@ export class UnlawfulCookieAccess extends Problem {
                } else if (this.answers.popup_type === 'passive_popup') {
                   return (
                      <p>
-                        Państwa strona nie dała mi nigdy faktycznego wyboru dotyczacego wyrażenia
+                        Państwa strona nie dała mi nigdy faktycznego wyboru dotyczącego wyrażenia
                         lub odmówienia zgody na takie przetwarzanie danych osobowych, dlatego nie
                         jest spełniony warunek 1.{' '}
                         {this.answers.mentions_passive_consent ? (
