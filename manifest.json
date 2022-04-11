@@ -16,16 +16,10 @@
             }
         }
     },
-    "sidebar_action": {
+    "browser_action": {
+        "default_icon": "assets/icon-addon.svg",
         "default_title": "Rentgen",
-        "default_panel": "sidebar/sidebar.html",
-        "default_icon": {
-            "16": "assets/icon-addon.svg",
-            "32": "assets/icon-addon.svg",
-            "64": "assets/icon-addon.svg"
-        },
-        "browser_style": true,
-        "open_at_install": true
+        "default_popup": "sidebar/sidebar.html"
     },
     "icons": {
         "16": "assets/icon-addon.svg",
