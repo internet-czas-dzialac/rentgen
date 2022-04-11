@@ -4,6 +4,7 @@ import Options from '../options';
 import { StolenData } from './stolen-data';
 import { getshorthost, useEmitter } from '../util';
 import { getMemory } from '../memory';
+browser.browserAction.setBadgeBackgroundColor({ color: '#ffb900' });
 
 async function getCurrentTab() {
     const [tab] = await browser.tabs.query({
@@ -11,6 +12,13 @@ async function getCurrentTab() {
         windowId: browser.windows.WINDOW_ID_CURRENT,
     });
     return tab;
+}
+
+function setDomainsNumber(counter: number) {
+    browser.browserAction.setBadgeText({ text: counter.toString() });
+    browser.browserAction.setTitle({
+        title: `Rentgen - ${counter !== 1 ? counter + ' podmiotów' : counter + ' podmiot'} `,
+    });
 }
 
 import './global.scss';
@@ -65,6 +73,8 @@ const Sidebar = () => {
                 return setMarksOccurrence(true);
             }
         }
+        setDomainsNumber(Object.values(getMemory().getClustersForOrigin(origin)).length);
+
         return setMarksOccurrence(false);
     }, [eventCounts['*'], origin]);
 
