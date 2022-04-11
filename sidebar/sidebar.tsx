@@ -62,6 +62,7 @@ const Sidebar = () => {
             setOrigin(url.origin);
         };
         browser.tabs.onUpdated.addListener(listener);
+        listener();
         return () => {
             browser.tabs.onUpdated.removeListener(listener);
         };
