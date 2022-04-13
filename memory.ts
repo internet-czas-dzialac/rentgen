@@ -3,6 +3,14 @@ import { getshorthost, makeThrottle } from './util';
 import { EventEmitter } from 'events';
 import { RequestCluster } from './request-cluster';
 
+function setDomainsNumber(counter: number, tabId: number) {
+    browser.browserAction.setBadgeText({ text: counter.toString(), tabId });
+    browser.browserAction.setTitle({
+        title: `Rentgen - liczba wykrytych podmiotów: ${counter}`,
+        tabId,
+    });
+}
+
 export default class Memory extends EventEmitter {
     origin_to_history = {} as Record<string, Record<string, RequestCluster>>;
     private throttle = makeThrottle(100);
@@ -21,6 +29,12 @@ export default class Memory extends EventEmitter {
         }
         this.origin_to_history[request.origin][shorthost].add(request);
         this.emit('change', false, shorthost, 'registered request(shorthost emit)');
+
+        console.log(this.getClustersForOrigin(request.origin));
+        setDomainsNumber(
+            Object.values(this.getClustersForOrigin(request.origin)).length,
+            request.tabId
+        );
     }
 
     constructor() {

@@ -1,5 +1,5 @@
-import { getMemory } from '../memory';
-import { RequestCluster } from '../request-cluster';
+import { getMemory } from '../../memory';
+import { RequestCluster } from '../../request-cluster';
 
 import StolenDataCluster from './stolen-data-cluster';
 

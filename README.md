@@ -15,6 +15,3 @@ Note: At the moment, we support Polish language because this extension generates
 3. `npm run build`
 4. The build code is located in the `lib/` directory
 
-![screenshot](./screenshot.png)
-![screenshot](./screenshot2.png)
-![screenshot](./screenshot3.png)

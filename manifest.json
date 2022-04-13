@@ -19,7 +19,7 @@
     "browser_action": {
         "default_icon": "assets/icon-addon.svg",
         "default_title": "Rentgen",
-        "default_popup": "sidebar/sidebar.html"
+        "default_popup": "components/toolbar/toolbar.html"
     },
     "icons": {
         "16": "assets/icon-addon.svg",

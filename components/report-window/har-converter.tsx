@@ -1,7 +1,7 @@
 import React from 'react';
-import { HAREntry } from '../extended-request';
-import { StolenDataEntry } from '../stolen-data-entry';
-import { getshorthost, unique } from '../util';
+import { HAREntry } from '../../extended-request';
+import { StolenDataEntry } from '../../stolen-data-entry';
+import { getshorthost, unique } from '../../util';
 
 function handleNewFile(
     element: HTMLInputElement,

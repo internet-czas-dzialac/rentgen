@@ -1,5 +1,5 @@
-import { RequestCluster } from '../request-cluster';
-import { getDate } from '../util';
+import { RequestCluster } from '../../request-cluster';
+import { getDate } from '../../util';
 import deduceProblems from './deduce-problems';
 import { Explainers } from './explainers';
 import { ParsedAnswers } from './parse-answers';

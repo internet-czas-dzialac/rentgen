@@ -1,5 +1,5 @@
-import { RequestCluster } from '../../request-cluster';
-import { wordlist } from '../../util';
+import { RequestCluster } from '../../../request-cluster';
+import { wordlist } from '../../../util';
 import { ExplainerKey } from '../explainers';
 import { ParsedAnswers } from '../parse-answers';
 import { v } from '../verbs';

@@ -1,9 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Options from '../options';
-import { StolenData } from './stolen-data';
-import { getshorthost, useEmitter } from '../util';
-import { getMemory } from '../memory';
+import { useEmitter } from '../../util';
+import { getMemory } from '../../memory';
 browser.browserAction.setBadgeBackgroundColor({ color: '#ffb900' });
 
 async function getCurrentTab() {
@@ -14,17 +12,10 @@ async function getCurrentTab() {
     return tab;
 }
 
-function setDomainsNumber(counter: number) {
-    browser.browserAction.setBadgeText({ text: counter.toString() });
-    browser.browserAction.setTitle({
-        title: `Rentgen - ${counter !== 1 ? counter + ' podmiotów' : counter + ' podmiot'} `,
-    });
-}
+import './../../styles/global.scss';
+import './toolbar.scss';
 
-import './global.scss';
-import './sidebar.scss';
-
-const Sidebar = () => {
+const Toolbar = () => {
     const [origin, setOrigin] = React.useState<string | null>(null);
     const [minValueLength, setMinValueLength] = React.useState<number | null>(
         localStorage.getItem('minValueLength') === null
@@ -61,6 +52,7 @@ const Sidebar = () => {
             }
             setOrigin(url.origin);
         };
+
         browser.tabs.onUpdated.addListener(listener);
         listener();
         return () => {
@@ -74,13 +66,12 @@ const Sidebar = () => {
                 return setMarksOccurrence(true);
             }
         }
-        setDomainsNumber(Object.values(getMemory().getClustersForOrigin(origin)).length);
 
         return setMarksOccurrence(false);
     }, [eventCounts['*'], origin]);
 
     return (
-        <div className="sidebar">
+        <div className="toolbar">
             <header className={logoVisibility ? 'header' : 'header header--without-logo'}>
                 <img
                     src="../assets/logo-internet-czas-dzialac.svg"
@@ -202,31 +193,12 @@ const Sidebar = () => {
                                 </button>
                             </section>
                         ) : null}
-                        <StolenData
-                            origin={origin}
-                            eventCounts={eventCounts}
-                            minValueLength={minValueLength}
-                            cookiesOnly={cookiesOnly}
-                            cookiesOrOriginOnly={cookiesOrOriginOnly}
-                        />
+                        <div>stolen data</div>
                     </>
-                ) : (
-                    <Options
-                        minValueLength={minValueLength}
-                        setMinValueLength={setMinValueLength}
-                        cookiesOnly={cookiesOnly}
-                        setCookiesOnly={setCookiesOnly}
-                        cookiesOrOriginOnly={cookiesOrOriginOnly}
-                        setCookiesOrOriginOnly={setCookiesOrOriginOnly}
-                        warningDataDialogAck={warningDataDialogAck}
-                        setWarningDataDialogAck={setWarningDataDialogAck}
-                        logoVisibility={logoVisibility}
-                        setLogoVisibility={setLogoVisibility}
-                    />
-                )}
+                ) : null}
             </section>
         </div>
     );
 };
 
-ReactDOM.render(<Sidebar />, document.getElementById('app'));
+ReactDOM.render(<Toolbar />, document.getElementById('toolbar'));

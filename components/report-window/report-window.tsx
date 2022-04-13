@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { getMemory } from '../memory';
-import { useEmitter } from '../util';
+import { getMemory } from '../../memory';
+import { useEmitter } from '../../util';
 
 import './report-window.scss';
 import Questions from './questions';

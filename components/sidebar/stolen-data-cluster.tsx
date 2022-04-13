@@ -1,8 +1,8 @@
 import React from 'react';
-import { getMemory } from '../memory';
-import { StolenDataEntry } from '../stolen-data-entry';
+import { getMemory } from '../../memory';
+import { StolenDataEntry } from '../../stolen-data-entry';
 
-import { maskString, useEmitter } from '../util';
+import { maskString, useEmitter } from '../../util';
 
 import './stolen-data-cluster.scss';
 

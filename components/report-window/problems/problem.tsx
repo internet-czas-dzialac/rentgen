@@ -1,4 +1,4 @@
-import { RequestCluster } from '../../request-cluster';
+import { RequestCluster } from '../../../request-cluster';
 import { ExplainerKey } from '../explainers';
 import { ParsedAnswers } from '../parse-answers';
 

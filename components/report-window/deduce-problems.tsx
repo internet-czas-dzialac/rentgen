@@ -1,4 +1,4 @@
-import { RequestCluster } from '../request-cluster';
+import { RequestCluster } from '../../request-cluster';
 import { ParsedAnswers } from './parse-answers';
 import NoInformationAtAllProblem from './problems/no-information-at-all';
 import { Problem } from './problems/problem';

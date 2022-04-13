@@ -44,9 +44,10 @@ let skipReactImports = {
 esbuild
     .build({
         entryPoints: [
-            'sidebar/sidebar.tsx',
+            'components/toolbar/toolbar.tsx',
+            'components/sidebar/sidebar.tsx',
             'test.ts',
-            'report-window/report-window.tsx',
+            'components/report-window/report-window.tsx',
             'background.ts',
         ],
         bundle: true,
