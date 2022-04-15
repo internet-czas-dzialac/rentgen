@@ -4,7 +4,6 @@ import Options from '../../options';
 import { StolenData } from './stolen-data';
 import { getshorthost, useEmitter } from '../../util';
 import { getMemory } from '../../memory';
-browser.browserAction.setBadgeBackgroundColor({ color: '#ffb900' });
 
 async function getCurrentTab() {
     const [tab] = await browser.tabs.query({
@@ -19,7 +18,10 @@ import './../../styles/global.scss';
 import './sidebar.scss';
 
 const Sidebar = () => {
-    const [origin, setOrigin] = React.useState<string | null>(null);
+    // const [origin, setOrigin] = React.useState<string | null>(null);
+    const url = new URL(document.location.toString());
+    const origin = url.searchParams.get('origin');
+
     const [minValueLength, setMinValueLength] = React.useState<number | null>(
         localStorage.getItem('minValueLength') === null
             ? 7
@@ -45,23 +47,7 @@ const Sidebar = () => {
             : false
     );
 
-    React.useEffect(() => {
-        const listener = async () => {
-            console.log('tab change!');
-            const tab = await getCurrentTab();
-            const url = new URL(tab.url);
-            if (url.origin.startsWith('moz-extension')) {
-                return;
-            }
-            setOrigin(url.origin);
-        };
-        
-        browser.tabs.onUpdated.addListener(listener);
-        listener();
-        return () => {
-            browser.tabs.onUpdated.removeListener(listener);
-        };
-    });
+
 
     React.useEffect(() => {
         for (const cluster of Object.values(getMemory().getClustersForOrigin(origin))) {
@@ -71,7 +57,7 @@ const Sidebar = () => {
         }
 
         return setMarksOccurrence(false);
-    }, [eventCounts['*'], origin]);
+    }, [eventCounts['*']]);
 
     return (
         <div className="sidebar">

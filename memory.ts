@@ -6,7 +6,7 @@ import { RequestCluster } from './request-cluster';
 function setDomainsNumber(counter: number, tabId: number) {
     browser.browserAction.setBadgeText({ text: counter.toString(), tabId });
     browser.browserAction.setTitle({
-        title: `Rentgen - liczba wykrytych podmiotów: ${counter}`,
+        title: 'Rentgen',
         tabId,
     });
 }
@@ -30,7 +30,12 @@ export default class Memory extends EventEmitter {
         this.origin_to_history[request.origin][shorthost].add(request);
         this.emit('change', false, shorthost, 'registered request(shorthost emit)');
 
-        console.log(this.getClustersForOrigin(request.origin));
+        Object.values(this.getClustersForOrigin(request.origin)).some((cluster) =>
+            cluster.hasCookies()
+        )
+            ? browser.browserAction.setBadgeBackgroundColor({ color: '#ff726b' })
+            : browser.browserAction.setBadgeBackgroundColor({ color: '#ffb900' });
+
         setDomainsNumber(
             Object.values(this.getClustersForOrigin(request.origin)).length,
             request.tabId

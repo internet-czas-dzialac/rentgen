@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { Fragment, ReactElement } from 'react';
 import ReactDOM from 'react-dom';
 import { useEmitter } from '../../util';
 import { getMemory } from '../../memory';
-browser.browserAction.setBadgeBackgroundColor({ color: '#ffb900' });
 
 async function getCurrentTab() {
     const [tab] = await browser.tabs.query({
@@ -17,34 +16,15 @@ import './toolbar.scss';
 
 const Toolbar = () => {
     const [origin, setOrigin] = React.useState<string | null>(null);
-    const [minValueLength, setMinValueLength] = React.useState<number | null>(
-        localStorage.getItem('minValueLength') === null
-            ? 7
-            : (localStorage.getItem('minValueLength') as unknown as number)
-    );
-    const [cookiesOnly, setCookiesOnly] = React.useState<boolean>(false);
     const [stolenDataView, setStolenDataView] = React.useState<boolean>(true);
-    const [cookiesOrOriginOnly, setCookiesOrOriginOnly] = React.useState<boolean>(false);
     const [eventCounts, setEventCounts] = useEmitter(getMemory());
-    const [marksOccurrence, setMarksOccurrence] = React.useState<boolean>(false);
-    const [warningDataDialogAck, setWarningDataDialogAck] = React.useState<boolean>(
-        localStorage.getItem('warningDataDialogAck') === null
-            ? true
-            : localStorage.getItem('warningDataDialogAck') == 'true'
-            ? true
-            : false
-    );
-    const [logoVisibility, setLogoVisibility] = React.useState<boolean>(
-        localStorage.getItem('logoVisibility') === null
-            ? false
-            : localStorage.getItem('logoVisibility') == 'true'
-            ? true
-            : false
+    const [cookieDomainCopy, setCookieDomainCopy] = React.useState<string | null>(null);
+    const [exposedOriginDomainCopy, setExposedOriginDomainCopy] = React.useState<string | null>(
+        null
     );
 
     React.useEffect(() => {
         const listener = async () => {
-            console.log('tab change!');
             const tab = await getCurrentTab();
             const url = new URL(tab.url);
             if (url.origin.startsWith('moz-extension')) {
@@ -61,26 +41,74 @@ const Toolbar = () => {
     });
 
     React.useEffect(() => {
-        for (const cluster of Object.values(getMemory().getClustersForOrigin(origin))) {
-            if (cluster.hasMarks()) {
-                return setMarksOccurrence(true);
-            }
-        }
+        const exposedOriginDomains = Object.values(getMemory().getClustersForOrigin(origin))
+            .filter((cluster) => cluster.exposesOrigin())
+            .map((cluster) => cluster.id);
 
-        return setMarksOccurrence(false);
+        setExposedOriginDomainCopy('');
+        const first_sentence = `Strona ${origin} wysłała informacje o części Twojej historii przeglądania do `;
+
+        switch (exposedOriginDomains.length) {
+            case 0:
+                return null;
+            case 1:
+                return setExposedOriginDomainCopy(first_sentence + `${exposedOriginDomains[0]}.`);
+            case 2:
+                return setExposedOriginDomainCopy(
+                    first_sentence + `${exposedOriginDomains[0]} oraz ${exposedOriginDomains[1]}.`
+                );
+            case 3:
+                return setExposedOriginDomainCopy(
+                    first_sentence +
+                        `${exposedOriginDomains[0]}, ${exposedOriginDomains[1]} oraz ${exposedOriginDomains[2]}.`
+                );
+            default:
+                return setExposedOriginDomainCopy(
+                    first_sentence +
+                        `${exposedOriginDomains[0]}, ${exposedOriginDomains[1]} (i ${
+                            exposedOriginDomains.length - 2 < 2
+                                ? 2
+                                : exposedOriginDomains.length - 2
+                        } innych).`
+                );
+        }
+    }, [eventCounts['*'], origin]);
+
+    React.useEffect(() => {
+        const cookieDomains = Object.values(getMemory().getClustersForOrigin(origin))
+            .filter((cluster) => cluster.hasCookies())
+            .map((cluster) => cluster.id);
+        const first_sentence = `Strona ${origin} dokonała zapisu i odczytu plików Cookie dla domen `;
+
+        switch (cookieDomains.length) {
+            case 0:
+                return null;
+            case 1:
+                return setCookieDomainCopy(first_sentence + `${cookieDomains[0]}.`);
+            case 2:
+                return setCookieDomainCopy(
+                    first_sentence + `${cookieDomains[0]} oraz ${cookieDomains[1]}.`
+                );
+            case 3:
+                return setCookieDomainCopy(
+                    first_sentence +
+                        `${cookieDomains[0]}, ${cookieDomains[1]} oraz ${cookieDomains[2]}.`
+                );
+            default:
+                return setCookieDomainCopy(
+                    first_sentence +
+                        `${cookieDomains[0]}, ${cookieDomains[1]} (i ${
+                            cookieDomains.length - 2 < 2 ? 2 : cookieDomains.length - 2
+                        } innych).`
+                );
+        }
     }, [eventCounts['*'], origin]);
 
     return (
         <div className="toolbar">
             <header className="header">
                 <img src="../../assets/icon-addon.svg" height={32}></img>
-                <div
-                    className={
-                        logoVisibility
-                            ? 'webpage-metadata'
-                            : 'webpage-metadata webpage-metadata--without-logo'
-                    }
-                >
+                <div className="webpage-metadata">
                     {origin ? (
                         <>
                             <span>Analiza strony</span>
@@ -102,39 +130,72 @@ const Toolbar = () => {
             </header>
 
             <section className="summary">
-                <div>
+                <div className="counters-wrapper">
                     <div className="counters">
-                        <div className="counter counter--browser-history">12</div>
-                        <div className="counter counter--cookies">21</div>
+                        <div className="counter counter--browser-history">
+                            <img src="/assets/icons/warning.svg" width="24" height="24" />
+                            <span data-event={`${eventCounts['*']}`}>
+                                {
+                                    Object.values(getMemory().getClustersForOrigin(origin)).filter(
+                                        (cluster) => cluster.exposesOrigin()
+                                    ).length
+                                }
+                            </span>
+                        </div>
+                        <div className="counter counter--cookies">
+                            <img src="/assets/icons/cookie.svg" width="24" height="24" />
+                            <span data-event={`${eventCounts['*']}`}>
+                                {
+                                    Object.values(getMemory().getClustersForOrigin(origin)).filter(
+                                        (cluster) => cluster.hasCookies()
+                                    ).length
+                                }
+                            </span>
+                        </div>
                     </div>
-                    <div className="big-counter">33</div>
+                    <div className="big-counter" data-event={`${eventCounts['*']}`}>
+                        {Object.values(getMemory().getClustersForOrigin(origin)).length}
+                    </div>
                 </div>
-                <p>Liczba wykrytych domen podmiotów trzecich</p>
+                <span className="notice">Liczba wykrytych domen podmiotów trzecich</span>
             </section>
 
             <section className="details">
-                <p>
-                    Strona wp.pl wysłała informacje o części Twojej historii przeglądania do
-                    facebook.com, adnsx.com (i 43 innych).
-                </p>
-                <p>
-                    Dokonała też zapisu i odczytu plików Cookie dla domen doubleclick.google.net,
-                    3dsio.com (i 59 innych).
-                </p>
+                <p>{exposedOriginDomainCopy}</p>
+                <p>{cookieDomainCopy}</p>
             </section>
 
-            <section className="warning-container">
-                <span>
-                    <strong>Takie przetwarzanie danych może być niezgodne z prawem.</strong> Kliknij
-                    w przycisk <i>Generuj raport</i>, aby pomóc ustalić, czy ta strona nie narusza
-                    RODO.
-                </span>
-            </section>
-
-            <section className="actions">
-                <a href="">Pokaż szczegóły</a>
-                <button>Generuj raport</button>
-            </section>
+            {exposedOriginDomainCopy !== null || cookieDomainCopy !== null ? (
+                <Fragment>
+                    <section className="about">
+                        <p>
+                            Takie przetwarzanie danych może być niezgodne z prawem. Kliknij w
+                            przycisk „Generuj raport”, aby pomóc ustalić, czy ta strona nie narusza
+                            RODO.
+                        </p>
+                    </section>
+                    <section className="actions">
+                        <button
+                            className="button button--details"
+                            onClick={() => {
+                                const params = [
+                                    'height=' + screen.height,
+                                    'width=' + screen.width,
+                                    'fullscreen=yes',
+                                ].join(',');
+                                window.open(
+                                    `/components/sidebar/sidebar.html?origin=${origin}`,
+                                    'new_window',
+                                    params
+                                );
+                            }}
+                        >
+                            Pokaż szczegóły
+                        </button>
+                        <button className="button button--report">Generuj raport</button>
+                    </section>
+                </Fragment>
+            ) : null}
         </div>
     );
 };
