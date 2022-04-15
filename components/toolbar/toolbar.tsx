@@ -1,4 +1,4 @@
-import React, { Fragment, ReactElement } from 'react';
+import React, { Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import { useEmitter } from '../../util';
 import { getMemory } from '../../memory';
@@ -44,9 +44,8 @@ const Toolbar = () => {
         const exposedOriginDomains = Object.values(getMemory().getClustersForOrigin(origin))
             .filter((cluster) => cluster.exposesOrigin())
             .map((cluster) => cluster.id);
-
         setExposedOriginDomainCopy('');
-        const first_sentence = `Strona ${origin} wysłała informacje o części Twojej historii przeglądania do `;
+        const first_sentence = `Strona ${origin} wysłała informacje o części Twojej historii przeglądania do `;
 
         switch (exposedOriginDomains.length) {
             case 0:
@@ -78,7 +77,8 @@ const Toolbar = () => {
         const cookieDomains = Object.values(getMemory().getClustersForOrigin(origin))
             .filter((cluster) => cluster.hasCookies())
             .map((cluster) => cluster.id);
-        const first_sentence = `Strona ${origin} dokonała zapisu i odczytu plików Cookie dla domen `;
+        setCookieDomainCopy('');
+        const first_sentence = `Strona ${origin} dokonała zapisu i odczytu plików Cookie dla domen `;
 
         switch (cookieDomains.length) {
             case 0:
@@ -97,7 +97,7 @@ const Toolbar = () => {
             default:
                 return setCookieDomainCopy(
                     first_sentence +
-                        `${cookieDomains[0]}, ${cookieDomains[1]} (i ${
+                        `${cookieDomains[0]}, ${cookieDomains[1]} (i ${
                             cookieDomains.length - 2 < 2 ? 2 : cookieDomains.length - 2
                         } innych).`
                 );
@@ -161,17 +161,33 @@ const Toolbar = () => {
             </section>
 
             <section className="details">
-                <p>{exposedOriginDomainCopy}</p>
-                <p>{cookieDomainCopy}</p>
+                <p
+                    data-event={`${eventCounts['*']}`}
+                    title={Object.values(getMemory().getClustersForOrigin(origin))
+                        .filter((cluster) => cluster.exposesOrigin())
+                        .map((domain) => domain.id)
+                        .join(', ')}
+                >
+                    {exposedOriginDomainCopy}
+                </p>
+                <p
+                    data-event={`${eventCounts['*']}`}
+                    title={Object.values(getMemory().getClustersForOrigin(origin))
+                        .filter((cluster) => cluster.hasCookies())
+                        .map((domain) => domain.id)
+                        .join(', ')}
+                >
+                    {cookieDomainCopy}
+                </p>
             </section>
 
             {exposedOriginDomainCopy !== null || cookieDomainCopy !== null ? (
                 <Fragment>
                     <section className="about">
                         <p>
-                            Takie przetwarzanie danych może być niezgodne z prawem. Kliknij w
-                            przycisk „Generuj raport”, aby pomóc ustalić, czy ta strona nie narusza
-                            RODO.
+                            Takie przetwarzanie danych może być niezgodne z prawem. Kliknij
+                            w przycisk „Generuj raport”, aby pomóc ustalić, czy ta strona nie
+                            narusza RODO.
                         </p>
                     </section>
                     <section className="actions">
@@ -192,7 +208,23 @@ const Toolbar = () => {
                         >
                             Pokaż szczegóły
                         </button>
-                        <button className="button button--report">Generuj raport</button>
+                        <button
+                            className="button button--report"
+                            onClick={() => {
+                                const params = [
+                                    'height=' + screen.height,
+                                    'width=' + screen.width,
+                                    'fullscreen=yes',
+                                ].join(',');
+                                window.open(
+                                    `/report-window/report-window.html?origin=${origin}`,
+                                    'new_window',
+                                    params
+                                );
+                            }}
+                        >
+                            Generuj raport
+                        </button>
                     </section>
                 </Fragment>
             ) : null}

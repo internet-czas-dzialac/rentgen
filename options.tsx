@@ -10,8 +10,8 @@ export default function Options({
     setCookiesOrOriginOnly,
     warningDataDialogAck,
     setWarningDataDialogAck,
-    logoVisibility,
-    setLogoVisibility,
+    detailsVisibility,
+    setDetailsVisibility,
 }: {
     minValueLength: number;
     setMinValueLength: (n: number) => void;
@@ -21,8 +21,8 @@ export default function Options({
     setCookiesOrOriginOnly: (b: boolean) => void;
     warningDataDialogAck: boolean;
     setWarningDataDialogAck: (b: boolean) => void;
-    logoVisibility: boolean;
-    setLogoVisibility: (b: boolean) => void;
+    detailsVisibility: boolean;
+    setDetailsVisibility: (b: boolean) => void;
 }) {
     return (
         <div className="options-container">
@@ -31,18 +31,18 @@ export default function Options({
                 <div className="input-container">
                     <input
                         type="checkbox"
-                        id="logoVisibility"
-                        checked={logoVisibility}
+                        id="detailsVisibility"
+                        checked={detailsVisibility}
                         onChange={(e) => {
-                            setLogoVisibility(e.target.checked);
+                            setDetailsVisibility(e.target.checked);
                             localStorage.setItem(
-                                'logoVisibility',
+                                'detailsVisibility',
                                 e.target.checked as unknown as string
                             );
                         }}
                     />
-                    <label className="label-checkbox" htmlFor="logoVisibility">
-                        Wyświetlaj logo <i>Internet. Czas działać!</i>
+                    <label className="label-checkbox" htmlFor="detailsVisibility">
+                        Wyświetlaj szczegóły pozyskanych danych
                     </label>
                 </div>
                 <div className="input-container">
@@ -58,10 +58,7 @@ export default function Options({
                             );
                         }}
                     />
-                    <label
-                        className="label-checkbox"
-                        htmlFor="warningDataDialogAck"
-                    >
+                    <label className="label-checkbox" htmlFor="warningDataDialogAck">
                         Wyświetlaj komunikat o pozyskiwanych danych
                     </label>
                 </div>
@@ -78,10 +75,7 @@ export default function Options({
                         value={minValueLength}
                         onChange={(e) => {
                             setMinValueLength(parseInt(e.target.value));
-                            localStorage.setItem(
-                                'minValueLength',
-                                e.target.value
-                            );
+                            localStorage.setItem('minValueLength', e.target.value);
                         }}
                     />
                 </div>
@@ -101,16 +95,10 @@ export default function Options({
                         type="checkbox"
                         id="cookiesOrOriginOnly"
                         checked={cookiesOrOriginOnly}
-                        onChange={(e) =>
-                            setCookiesOrOriginOnly(e.target.checked)
-                        }
+                        onChange={(e) => setCookiesOrOriginOnly(e.target.checked)}
                     />
-                    <label
-                        className="label-checkbox"
-                        htmlFor="cookiesOrOriginOnly"
-                    >
-                        Pokazuj tylko dane z cookiesów lub z częścią historii
-                        przeglądania
+                    <label className="label-checkbox" htmlFor="cookiesOrOriginOnly">
+                        Pokazuj tylko dane z cookiesów lub z częścią historii przeglądania
                     </label>
                 </div>
             </fieldset>

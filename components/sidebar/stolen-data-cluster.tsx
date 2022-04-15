@@ -125,6 +125,7 @@ export default function StolenDataCluster({
     cookiesOnly,
     refreshToken,
     cookiesOrOriginOnly,
+    detailsVisibility,
 }: {
     origin: string;
     shorthost: string;
@@ -132,6 +133,7 @@ export default function StolenDataCluster({
     minValueLength: number;
     cookiesOnly: boolean;
     cookiesOrOriginOnly: boolean;
+    detailsVisibility: boolean;
 }) {
     const cluster = getMemory().getClustersForOrigin(origin)[shorthost];
     const fullHosts = cluster.getFullHosts();
@@ -152,33 +154,36 @@ export default function StolenDataCluster({
                     ))}
                 </div>
             </header>
-            <section>
-                <table>
-                    <thead>
-                        <tr>
-                            <th className="table-header" colSpan={4}>
-                                Wysłane dane:
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {cluster
-                            .calculateRepresentativeStolenData({
-                                minValueLength,
-                                cookiesOnly,
-                                cookiesOrOriginOnly,
-                            })
-                            .map((entry) => (
-                                <StolenDataRow
-                                    {...{
-                                        entry,
-                                        key: entry.id,
-                                    }}
-                                />
-                            ))}
-                    </tbody>
-                </table>
-            </section>
+
+            {detailsVisibility ? (
+                <section>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th className="table-header" colSpan={4}>
+                                    Wysłane dane:
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {cluster
+                                .calculateRepresentativeStolenData({
+                                    minValueLength,
+                                    cookiesOnly,
+                                    cookiesOrOriginOnly,
+                                })
+                                .map((entry) => (
+                                    <StolenDataRow
+                                        {...{
+                                            entry,
+                                            key: entry.id,
+                                        }}
+                                    />
+                                ))}
+                        </tbody>
+                    </table>
+                </section>
+            ) : null}
         </div>
     );
 }

@@ -13,7 +13,6 @@ async function getCurrentTab() {
     return tab;
 }
 
-
 import './../../styles/global.scss';
 import './sidebar.scss';
 
@@ -39,15 +38,13 @@ const Sidebar = () => {
             ? true
             : false
     );
-    const [logoVisibility, setLogoVisibility] = React.useState<boolean>(
-        localStorage.getItem('logoVisibility') === null
+    const [detailsVisibility, setDetailsVisibility] = React.useState<boolean>(
+        localStorage.getItem('detailsVisibility') === null
             ? false
-            : localStorage.getItem('logoVisibility') == 'true'
+            : localStorage.getItem('detailsVisibility') == 'true'
             ? true
             : false
     );
-
-
 
     React.useEffect(() => {
         for (const cluster of Object.values(getMemory().getClustersForOrigin(origin))) {
@@ -61,19 +58,9 @@ const Sidebar = () => {
 
     return (
         <div className="sidebar">
-            <header className={logoVisibility ? 'header' : 'header header--without-logo'}>
-                <img
-                    src="../assets/logo-internet-czas-dzialac.svg"
-                    height={40}
-                    style={!logoVisibility ? { display: 'none' } : null}
-                ></img>
-                <div
-                    className={
-                        logoVisibility
-                            ? 'webpage-metadata'
-                            : 'webpage-metadata webpage-metadata--without-logo'
-                    }
-                >
+            <header className="header">
+                <img src="../../assets/icon-addon.svg" height={32}></img>
+                <div className="webpage-metadata">
                     {origin ? (
                         <>
                             <span>Analiza strony</span>
@@ -121,39 +108,51 @@ const Sidebar = () => {
                         <span>Wyczyść ciasteczka</span>
                     </button>
                     <button
-                        disabled={!marksOccurrence}
-                        title={
-                            marksOccurrence
-                                ? 'Kliknij, aby wygenerować wiadomość'
-                                : 'Zaznacz poniżej elementy, aby móc wygenerować wiadomość'
-                        }
                         onClick={() => {
-                            const params = [
-                                'height=' + screen.height,
-                                'width=' + screen.width,
-                                'fullscreen=yes',
-                            ].join(',');
-                            window.open(
-                                `/report-window/report-window.html?origin=${origin}`,
-                                'new_window',
-                                params
-                            );
+                            setDetailsVisibility(!detailsVisibility);
                         }}
                     >
-                        <svg
+                        <img
+                            src={
+                                detailsVisibility
+                                    ? '/assets/icons/file_minus.svg'
+                                    : '/assets/icons/file_find.svg'
+                            }
                             width="20"
                             height="20"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path
-                                d="M20 20H4C2.89543 20 2 19.1046 2 18V5.913C2.04661 4.84255 2.92853 3.99899 4 4H20C21.1046 4 22 4.89543 22 6V18C22 19.1046 21.1046 20 20 20ZM4 7.868V18H20V7.868L12 13.2L4 7.868ZM4.8 6L12 10.8L19.2 6H4.8Z"
-                                fill="#2E3A59"
-                            />
-                        </svg>
+                        />
 
-                        <span>Utwórz wiadomość dla administratora witryny</span>
+                        <span>
+                            {detailsVisibility ? 'Ukryj szczegóły' : 'Wyświetlaj szczegóły'}
+                        </span>
+                    </button>
+                    <button
+                        onClick={async () => {
+                            if (
+                                window.confirm(
+                                    'Czy chcesz wczytać wszystkie domeny w celu „splamienia” twojej przeglądarki? (Ten krok jest opcjonalny)'
+                                )
+                            ) {
+                                let deep_copy = JSON.parse(
+                                    JSON.stringify(
+                                        Object.values(getMemory().getClustersForOrigin(origin)).map(
+                                            (domain) => domain.id
+                                        )
+                                    )
+                                );
+                                console.log('deep_copy', deep_copy);
+                                for (const domain of deep_copy) {
+                                    const win = window.open(
+                                        `https://${domain}`,
+                                        '_blank',
+                                        `width=400,height=450,screenX=300,screenY=200`
+                                    );
+                                }
+                            }
+                        }}
+                    >
+                        <img src="/assets/icons/bulb.svg" width="20" height="20" />
+                        <span>Odwiedź wszystkie domeny</span>
                     </button>
                 </nav>
             ) : null}
@@ -188,6 +187,7 @@ const Sidebar = () => {
                             minValueLength={minValueLength}
                             cookiesOnly={cookiesOnly}
                             cookiesOrOriginOnly={cookiesOrOriginOnly}
+                            detailsVisibility={detailsVisibility}
                         />
                     </>
                 ) : (
@@ -200,8 +200,8 @@ const Sidebar = () => {
                         setCookiesOrOriginOnly={setCookiesOrOriginOnly}
                         warningDataDialogAck={warningDataDialogAck}
                         setWarningDataDialogAck={setWarningDataDialogAck}
-                        logoVisibility={logoVisibility}
-                        setLogoVisibility={setLogoVisibility}
+                        detailsVisibility={detailsVisibility}
+                        setDetailsVisibility={setDetailsVisibility}
                     />
                 )}
             </section>

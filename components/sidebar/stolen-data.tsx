@@ -11,12 +11,14 @@ export function StolenData({
     eventCounts,
     cookiesOnly,
     cookiesOrOriginOnly,
+    detailsVisibility,
 }: {
     origin: string;
     eventCounts: Record<string, number>;
     minValueLength: number;
     cookiesOnly: boolean;
     cookiesOrOriginOnly: boolean;
+    detailsVisibility: boolean;
 }) {
     if (!origin) {
         return (
@@ -33,7 +35,7 @@ export function StolenData({
         );
     return (
         <div className="stolen-data-container">
-            <span>Domeny oraz przesłane informacje</span>
+            <span>Domeny{detailsVisibility ? ' oraz przesłane informacje' : null}</span>
 
             {clusters.map((cluster) => {
                 return (
@@ -45,6 +47,7 @@ export function StolenData({
                         minValueLength={minValueLength}
                         cookiesOnly={cookiesOnly}
                         cookiesOrOriginOnly={cookiesOrOriginOnly}
+                        detailsVisibility={detailsVisibility}
                     />
                 );
             })}
