@@ -138,7 +138,7 @@ const Toolbar = () => {
                 <div className="counters-wrapper">
                     <div className="counters">
                         <div className="counter counter--browser-history">
-                            <img src="/assets/icons/warning.svg" width="24" height="24" />
+                            <img src="/assets/icons/warning.svg#color" width="24" height="24" />
                             <span data-event={`${eventCounts['*']}`}>
                                 {
                                     Object.values(getMemory().getClustersForOrigin(origin)).filter(
@@ -148,7 +148,7 @@ const Toolbar = () => {
                             </span>
                         </div>
                         <div className="counter counter--cookies">
-                            <img src="/assets/icons/cookie.svg" width="24" height="24" />
+                            <img src="/assets/icons/cookie.svg#color" width="24" height="24" />
                             <span data-event={`${eventCounts['*']}`}>
                                 {
                                     Object.values(getMemory().getClustersForOrigin(origin)).filter(
