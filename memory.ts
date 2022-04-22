@@ -4,7 +4,7 @@ import { EventEmitter } from 'events';
 import { RequestCluster } from './request-cluster';
 
 function setDomainsNumber(counter: number, tabId: number) {
-    browser.browserAction.setBadgeText({ text: counter.toString(), tabId });
+    browser.browserAction.setBadgeText({ text: counter < 0 ? '0' : counter.toString(), tabId });
     browser.browserAction.setTitle({
         title: 'Rentgen',
         tabId,
@@ -64,22 +64,67 @@ export default class Memory extends EventEmitter {
         );
     }
 
-    emit(eventName: string, immediate = false, data = 'any', reason: string) {
-        console.log('emitting!', eventName, data, reason);
-        setTimeout(() => super.emit(eventName, data), 0);
-        return;
-        try {
-            if (immediate) {
-                super.emit(eventName, data);
-                return;
-            } else {
-                this.throttle(() => super.emit(eventName, data));
+    private originalEmit(type: string, ...args: unknown[]) {
+        var doError = type === 'error';
+
+        var events = (this as any)._events;
+        if (events !== undefined) doError = doError && events.error === undefined;
+        else if (!doError) return false;
+
+        // If there is no 'error' event listener then throw.
+        if (doError) {
+            var er;
+            if (args.length > 0) er = args[0];
+            if (er instanceof Error) {
+                // Note: The comments on the `throw` lines are intentional, they show
+                // up in Node's output if this results in an unhandled exception.
+                throw er; // Unhandled 'error' event
             }
-            return true;
-        } catch (e) {
-            //   debugger;
-            console.error(e);
+            // At least give some kind of context to the user
+            var err = new Error('Unhandled error.' + (er ? ' (' + (er as any).message + ')' : ''));
+            (err as any).context = er;
+            throw err; // Unhandled 'error' event
         }
+
+        var handler = events[type];
+
+        if (handler === undefined) return false;
+
+        if (typeof handler === 'function') {
+            try {
+                Reflect.apply(handler, this, args);
+            } catch (error) {
+                events[type] = undefined;
+            }
+        } else {
+            // var len = handler.length;
+            var listeners = [...handler];
+
+            listeners
+                .filter((e) => {
+                    try {
+                        e.call;
+                    } catch (error) {
+                        return false;
+                    }
+                    return true;
+                })
+                .forEach((listener) => {
+                    try {
+                        Reflect.apply(listener, this, args);
+                    } catch (error) {
+                        console.error(error);
+                        debugger;
+                    }
+                });
+        }
+
+        return true;
+    }
+
+    emit(eventName: string, immediate = false, data = 'any', reason: string): boolean {
+        setTimeout(() => this.originalEmit(eventName, data), 0);
+        return;
     }
 
     getClustersForOrigin(origin: string): Record<string, RequestCluster> {

@@ -26,11 +26,16 @@ const Toolbar = () => {
     React.useEffect(() => {
         const listener = async () => {
             const tab = await getCurrentTab();
-            const url = new URL(tab.url);
-            if (url.origin.startsWith('moz-extension')) {
-                return;
+
+            if (tab !== undefined) {
+                const url = new URL(tab.url);
+                if (url.origin.startsWith('moz-extension')) {
+                    return;
+                }
+                setOrigin(url.origin);
+            } else {
+                console.warn('Out of the tab scope');
             }
-            setOrigin(url.origin);
         };
 
         browser.tabs.onUpdated.addListener(listener);
@@ -217,7 +222,7 @@ const Toolbar = () => {
                                     'fullscreen=yes',
                                 ].join(',');
                                 window.open(
-                                    `/report-window/report-window.html?origin=${origin}`,
+                                    `/components/report-window/report-window.html?origin=${origin}`,
                                     'new_window',
                                     params
                                 );
