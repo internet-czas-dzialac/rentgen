@@ -17,7 +17,6 @@ import './../../styles/global.scss';
 import './sidebar.scss';
 
 const Sidebar = () => {
-    // const [origin, setOrigin] = React.useState<string | null>(null);
     const url = new URL(document.location.toString());
     const origin = url.searchParams.get('origin');
 
@@ -70,15 +69,23 @@ const Sidebar = () => {
                         <span>Przejdź do wybranej strony internetowej</span>
                     )}
                 </div>
-                {stolenDataView ? (
-                    <a href="https://internet-czas-dzialac.pl">
-                        <img src="/assets/icons/info_circle_outline.svg" width="20" height="20" />
-                    </a>
-                ) : (
-                    <button onClick={() => setStolenDataView(true)}>
-                        <img src="/assets/icons/short_left.svg" width="20" height="20" />
-                    </button>
-                )}
+                <button
+                    className="button button--report"
+                    onClick={() => {
+                        const params = [
+                            'height=' + screen.height,
+                            'width=' + screen.width,
+                            'fullscreen=yes',
+                        ].join(',');
+                        window.open(
+                            `/components/report-window/report-window.html?origin=${origin}`,
+                            'new_window',
+                            params
+                        );
+                    }}
+                >
+                    Generuj raport
+                </button>
             </header>
 
             {stolenDataView ? (
@@ -126,34 +133,32 @@ const Sidebar = () => {
                             {detailsVisibility ? 'Ukryj szczegóły' : 'Wyświetlaj szczegóły'}
                         </span>
                     </button>
-                    <button
-                        onClick={async () => {
-                            if (
-                                window.confirm(
-                                    'Czy chcesz wczytać wszystkie domeny w celu „splamienia” twojej przeglądarki? (Ten krok jest opcjonalny)'
-                                )
-                            ) {
-                                let deep_copy = JSON.parse(
-                                    JSON.stringify(
-                                        Object.values(getMemory().getClustersForOrigin(origin)).map(
-                                            (domain) => domain.id
-                                        )
+                    {localStorage.getItem('blottingBrowser') ===
+                    'nikttakniesplamitwojejprzeglądarkijakspidersweb' ? (
+                        <button
+                            onClick={() => {
+                                if (
+                                    window.confirm(
+                                        'Czy chcesz wczytać wszystkie domeny w celu „splamienia” twojej przeglądarki? Uwaga przeglądarka może zablokować otwieranie nowych kart. (Ten krok jest opcjonalny)'
                                     )
-                                );
-                                console.log('deep_copy', deep_copy);
-                                for (const domain of deep_copy) {
-                                    const win = window.open(
-                                        `https://${domain}`,
-                                        '_blank',
-                                        `width=400,height=450,screenX=300,screenY=200`
+                                ) {
+                                    let deep_copy = JSON.parse(
+                                        JSON.stringify(
+                                            Object.values(
+                                                getMemory().getClustersForOrigin(origin)
+                                            ).map((domain) => domain.id)
+                                        )
                                     );
+                                    for (const domain of deep_copy) {
+                                        window.open(`https://${domain}`);
+                                    }
                                 }
-                            }
-                        }}
-                    >
-                        <img src="/assets/icons/bulb.svg" width="20" height="20" />
-                        <span>Odwiedź wszystkie domeny</span>
-                    </button>
+                            }}
+                        >
+                            <img src="/assets/icons/bulb.svg" width="20" height="20" />
+                            <span>Odwiedź wszystkie domeny</span>
+                        </button>
+                    ) : null}
                 </nav>
             ) : null}
 
@@ -202,6 +207,7 @@ const Sidebar = () => {
                         setWarningDataDialogAck={setWarningDataDialogAck}
                         detailsVisibility={detailsVisibility}
                         setDetailsVisibility={setDetailsVisibility}
+                        setStolenDataView={setStolenDataView}
                     />
                 )}
             </section>

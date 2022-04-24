@@ -11,13 +11,10 @@ function handleNewFile(
     const reader = new FileReader();
     reader.addEventListener('load', () => {
         const content = JSON.parse(reader.result as string);
-        content.log.entries = content.log.entries.filter(
-            (har_entry: HAREntry) =>
-                entries.some((entry) => entry.matchesHAREntry(har_entry))
+        content.log.entries = content.log.entries.filter((har_entry: HAREntry) =>
+            entries.some((entry) => entry.matchesHAREntry(har_entry))
         );
-        setFiltered(
-            new Blob([JSON.stringify(content)], { type: 'application/json' })
-        );
+        setFiltered(new Blob([JSON.stringify(content)], { type: 'application/json' }));
     });
     reader.readAsText(element.files[0]);
 }
@@ -30,10 +27,7 @@ function generateFakeHAR(entries: StolenDataEntry[]) {
             } else if (request1.shorthost > request2.shorthost) {
                 return 1;
             } else {
-                return (
-                    request2.getBalancedPriority() -
-                    request1.getBalancedPriority()
-                );
+                return request2.getBalancedPriority() - request1.getBalancedPriority();
             }
         })
         .filter((_, index, array) => {
@@ -43,10 +37,7 @@ function generateFakeHAR(entries: StolenDataEntry[]) {
             }
             return true;
         })
-        .sort(
-            (entry1, entry2) =>
-                entry2.getBalancedPriority() - entry1.getBalancedPriority()
-        );
+        .sort((entry1, entry2) => entry2.getBalancedPriority() - entry1.getBalancedPriority());
 
     return {
         log: {
@@ -75,15 +66,10 @@ function generateFakeHAR(entries: StolenDataEntry[]) {
     };
 }
 
-export default function HARConverter({
-    entries,
-}: {
-    entries: StolenDataEntry[];
-}) {
+export default function HARConverter({ entries }: { entries: StolenDataEntry[] }) {
     const [filtered, setFiltered] = React.useState<Blob | null>(null);
     const [filename, setFilename] = React.useState('');
-    const [fakeHAR, setFakeHAR] =
-        React.useState<ReturnType<typeof generateFakeHAR>>();
+    const [fakeHAR, setFakeHAR] = React.useState<ReturnType<typeof generateFakeHAR>>();
     React.useEffect(() => {
         setFakeHAR(generateFakeHAR(entries));
     }, []);

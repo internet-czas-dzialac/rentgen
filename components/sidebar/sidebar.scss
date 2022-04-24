@@ -3,7 +3,7 @@
 .sidebar {
     .header {
         display: grid;
-        grid-template-columns: 1.75rem 1fr 1.25rem;
+        grid-template-columns: 1.75rem 1fr 10rem;
         align-items: center;
         max-height: 3.5rem;
         min-height: 3.5rem;
@@ -12,10 +12,6 @@
         top: 0;
         background: #ffffff;
         z-index: 1;
-
-        &--without-logo {
-            grid-template-columns: 1fr 1.25rem;
-        }
 
         .webpage-metadata {
             word-break: break-all;
@@ -110,6 +106,43 @@
             padding: 0.5rem 0.5rem;
             display: flex;
             align-self: flex-start;
+        }
+    }
+
+
+    .button {
+        border: 0;
+        outline: 0;
+        height: 3rem;
+        font-size: 0.875rem;
+        line-height: 0.875rem;
+        height: 2.5rem;
+        cursor: pointer;
+        background-color: #000 !important;
+        
+        &--report {
+            font-weight: 800;
+            padding: 0 1.5rem;
+            margin-left: 0.5rem;
+            background-color: #000;
+            color: $icd-rentgen-color;
+
+            &:hover {
+                background-image: linear-gradient(
+                    to right,
+                    $icd-rentgen-color 0%,
+                    $icd-rentgen-color 4%,
+                    #000 4%,
+                    #000 100%
+                );
+                animation: slidebg 1s cubic-bezier(0.19, 1, 0.22, 1) infinite;
+            }
+        }
+
+        @keyframes slidebg {
+            to {
+                background-position: 155px;
+            }
         }
     }
 }

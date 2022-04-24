@@ -15,7 +15,7 @@ function StolenDataValue({ entry }: { entry: StolenDataEntry; prefixKey?: string
         body = <></>;
     } else {
         body = (
-            <div data-version={version}>{maskString(entry.value, 1, MAX_STRING_VALUE_LENGTH)}</div>
+            <div data-version={version}>{entry.value}</div>
         );
     }
     return (
@@ -26,7 +26,7 @@ function StolenDataValue({ entry }: { entry: StolenDataEntry; prefixKey?: string
                 getMemory().emit('change', false, entry.request.shorthost, 'clicked value');
                 e.stopPropagation();
             }}
-            title={maskString(entry.value, 1, MAX_STRING_VALUE_LENGTH)}
+            title={entry.value}
         >
             {body}
         </td>
@@ -41,7 +41,7 @@ function StolenDataRow({ entry }: { entry: StolenDataEntry }) {
             data-version={version}
             className={`${entry.isMarked ? 'toggled' : 'untoggled'}`}
         >
-            <td className="checkbox">
+            {/* <td className="checkbox">
                 <input
                     type="checkbox"
                     checked={entry.isMarked}
@@ -55,18 +55,18 @@ function StolenDataRow({ entry }: { entry: StolenDataEntry }) {
                         );
                     }}
                 />
-            </td>
+            </td> */}
             <th
                 title={`Nazwa: ${entry.name}\nŹródło: ${entry.source}`}
-                onClick={() => {
-                    entry.toggleMark();
-                    getMemory().emit(
-                        'change',
-                        false,
-                        entry.request.shorthost,
-                        'Clicked entry name'
-                    );
-                }}
+                // onClick={() => {
+                //     entry.toggleMark();
+                //     getMemory().emit(
+                //         'change',
+                //         false,
+                //         entry.request.shorthost,
+                //         'Clicked entry name'
+                //     );
+                // }}
             >
                 {entry.name}
             </th>

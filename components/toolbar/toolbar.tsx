@@ -19,6 +19,7 @@ const Toolbar = () => {
     const [stolenDataView, setStolenDataView] = React.useState<boolean>(true);
     const [eventCounts, setEventCounts] = useEmitter(getMemory());
     const [cookieDomainCopy, setCookieDomainCopy] = React.useState<string | null>(null);
+    const [marksOccurrence, setMarksOccurrence] = React.useState<boolean>(false);
     const [exposedOriginDomainCopy, setExposedOriginDomainCopy] = React.useState<string | null>(
         null
     );
@@ -108,6 +109,23 @@ const Toolbar = () => {
                 );
         }
     }, [eventCounts['*'], origin]);
+
+    React.useEffect(() => {
+        for (const cluster of Object.values(getMemory().getClustersForOrigin(origin))) {
+            if (cluster.hasMarks()) {
+                return setMarksOccurrence(true);
+            }
+        }
+
+        return setMarksOccurrence(false);
+    }, [eventCounts['*']]);
+
+    function autoMark() {
+        for (const cluster of Object.values(getMemory().getClustersForOrigin(origin))) {
+            cluster.autoMark();
+        }
+        return setMarksOccurrence(true);
+    }
 
     return (
         <div className="toolbar">
@@ -204,6 +222,7 @@ const Toolbar = () => {
                                     'width=' + screen.width,
                                     'fullscreen=yes',
                                 ].join(',');
+                                autoMark();
                                 window.open(
                                     `/components/sidebar/sidebar.html?origin=${origin}`,
                                     'new_window',
@@ -221,6 +240,7 @@ const Toolbar = () => {
                                     'width=' + screen.width,
                                     'fullscreen=yes',
                                 ].join(',');
+                                autoMark();
                                 window.open(
                                     `/components/report-window/report-window.html?origin=${origin}`,
                                     'new_window',

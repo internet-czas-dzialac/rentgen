@@ -5,15 +5,15 @@ import { Problem } from './problems/problem';
 import { UnlawfulCookieAccess } from './problems/unlawful-cookies';
 
 export default function deduceProblems(
-   answers: ParsedAnswers,
-   clusters: Record<string, RequestCluster>
+    answers: ParsedAnswers,
+    clusters: Record<string, RequestCluster>
 ): Problem[] {
-   const problems = [];
-   if (answers.popup_type === 'none') {
-      problems.push(new NoInformationAtAllProblem(answers, clusters));
-   }
-   if (UnlawfulCookieAccess.qualifies(answers, Object.values(clusters))) {
-      problems.push(new UnlawfulCookieAccess(answers, clusters));
-   }
-   return problems;
+    const problems = [];
+    if (answers.popup_type === 'none') {
+        problems.push(new NoInformationAtAllProblem(answers, clusters));
+    }
+    if (UnlawfulCookieAccess.qualifies(answers, Object.values(clusters))) {
+        problems.push(new UnlawfulCookieAccess(answers, clusters));
+    }
+    return problems;
 }
