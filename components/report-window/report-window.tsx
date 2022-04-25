@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import { getMemory } from '../../memory';
 import { useEmitter } from '../../util';
@@ -47,10 +47,6 @@ function Report() {
 
         const result = (
             <div {...{ 'data-version': counter }}>
-                <nav>
-                    <img src="../assets/icon-addon.svg" width={48} height={48}></img>{' '}
-                    <h1>Rentgen - Generuj treść maila dla {origin}</h1>
-                </nav>
                 {mode === 'survey' ? (
                     <Questions
                         hosts={Object.values(clusters)
@@ -68,7 +64,24 @@ function Report() {
                 {/* <HARConverter {...{ entries }} /> */}
             </div>
         );
-        return result;
+        return (
+            <Fragment>
+                <header className="header">
+                    <img src="../../assets/icon-addon.svg" height={32}></img>
+                    <div className="webpage-metadata">
+                        {origin ? (
+                            <>
+                                <span>Generowanie raportu </span>
+                                <span className="webpage-metadata--hyperlink">{origin}</span>
+                            </>
+                        ) : (
+                            <span>Przejdź do wybranej strony internetowej</span>
+                        )}
+                    </div>
+                </header>
+                <section>{result}</section>
+            </Fragment>
+        );
     } catch (e) {
         console.error(e);
         return <div>ERROR! {JSON.stringify(e)}</div>;

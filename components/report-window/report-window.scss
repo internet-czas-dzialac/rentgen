@@ -1,31 +1,31 @@
 @import './../../styles/colors.scss';
-// @import './../../styles/fonts';
 
 html {
-   font-size: 1rem;
-   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
-      'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 1rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell,
+        'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
 body {
-   background-color: #fff;
+    background-color: #fff;
+    margin: 3rem 3rem;
 }
 
 nav {
-   position: sticky;
-   top: 0;
-   background-color: #fff;
-   display: flex;
-   flex-wrap: wrap;
-   justify-content: left;
-   align-items: center;
-   padding: 1rem 1rem;
-   border-bottom: 2px solid $ultra-light-grey;
-   height: 5rem;
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+    align-items: center;
+    padding: 1rem 1rem;
+    border-bottom: 2px solid $ultra-light-grey;
+    height: 5rem;
 
-   img {
-      margin-right: 0.5rem;
-   }
+    img {
+        margin-right: 0.5rem;
+    }
 }
 
 p,
@@ -33,5 +33,104 @@ li,
 h1,
 h2,
 h3 {
-   max-width: 70ex;
+    max-width: 70ex;
+}
+
+.header {
+    display: grid;
+    grid-template-columns: 1.75rem 1fr;
+    align-items: center;
+    max-height: 3.5rem;
+    min-height: 3.5rem;
+    border-bottom: 1px solid $light-grey;
+    position: sticky;
+    top: 0;
+    background: #ffffff;
+    z-index: 1;
+
+    .webpage-metadata {
+        word-break: break-all;
+        display: flex;
+        flex-flow: column;
+        flex-wrap: nowrap;
+        font-size: 0.875rem;
+        font-weight: 600;
+        justify-content: center;
+        padding-left: 1rem;
+        color: #000;
+
+        &--hyperlink {
+            font-weight: 400;
+            color: $ultra-black-color;
+            max-height: 2rem;
+            overflow: hidden;
+        }
+    }
+}
+
+.sv_main {
+    .sv_container {
+        color: #000;
+        padding: 1rem 0;
+    }
+    .sv_body {
+        border: none !important;
+    }
+}
+
+.sv_q_radiogroup {
+    margin-bottom: .5rem;
+}
+
+.sv_row {
+    background-color: #fff !important;
+}
+
+.sv_nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin: 2rem 0;
+}
+
+.sv_prev_btn {
+    grid-column-start: 0;
+    justify-self: flex-start;
+}
+
+.sv_next_btn {
+    grid-column-start: 2;
+    justify-self: flex-end;
+}
+
+.sv_prev_btn,
+.sv_next_btn {
+    border: 0;
+    outline: 0;
+    height: 3rem;
+    font-size: 0.875rem;
+    line-height: 0.875rem;
+    height: 2.5rem;
+    cursor: pointer;
+    background-color: #000 !important;
+    font-weight: 800;
+    padding: 0 1.5rem;
+    background-color: #000;
+    color: $icd-rentgen-color;
+
+    // &:hover {
+    //     background-image: linear-gradient(
+    //         to right,
+    //         $icd-rentgen-color 0%,
+    //         $icd-rentgen-color 4%,
+    //         #000 4%,
+    //         #000 100%
+    //     );
+    //     animation: slidebg 1s cubic-bezier(0.19, 1, 0.22, 1) infinite;
+    // }
+
+    // @keyframes slidebg {
+    //     to {
+    //         background-position: 155px;
+    //     }
+    // }
 }

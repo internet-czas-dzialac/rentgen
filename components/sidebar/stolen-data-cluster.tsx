@@ -14,9 +14,7 @@ function StolenDataValue({ entry }: { entry: StolenDataEntry; prefixKey?: string
     if (!entry.value) {
         body = <></>;
     } else {
-        body = (
-            <div data-version={version}>{entry.value}</div>
-        );
+        body = <div data-version={version}>{entry.value}</div>;
     }
     return (
         <td
@@ -41,35 +39,7 @@ function StolenDataRow({ entry }: { entry: StolenDataEntry }) {
             data-version={version}
             className={`${entry.isMarked ? 'toggled' : 'untoggled'}`}
         >
-            {/* <td className="checkbox">
-                <input
-                    type="checkbox"
-                    checked={entry.isMarked}
-                    onChange={() => {
-                        entry.toggleMark();
-                        getMemory().emit(
-                            'change',
-                            false,
-                            entry.request.shorthost,
-                            'clicked checkbox'
-                        );
-                    }}
-                />
-            </td> */}
-            <th
-                title={`Nazwa: ${entry.name}\nŹródło: ${entry.source}`}
-                // onClick={() => {
-                //     entry.toggleMark();
-                //     getMemory().emit(
-                //         'change',
-                //         false,
-                //         entry.request.shorthost,
-                //         'Clicked entry name'
-                //     );
-                // }}
-            >
-                {entry.name}
-            </th>
+            <th title={`Nazwa: ${entry.name}\nŹródło: ${entry.source}`}>{entry.name}</th>
             <td className="icons">
                 {entry.source === 'cookie' ? (
                     <span title="Dane przechowywane w Cookies">
