@@ -149,9 +149,10 @@ body {
                 padding: 0 1.5rem;
                 margin-left: 0.5rem;
                 background-color: #000;
-                color: $icd-rentgen-color;
-
+                color: #fff;
+                
                 &:hover {
+                    color: $icd-rentgen-color;
                     background-image: linear-gradient(
                         to right,
                         $icd-rentgen-color 0%,

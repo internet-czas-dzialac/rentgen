@@ -49,6 +49,8 @@ esbuild
             'test.ts',
             'components/report-window/report-window.tsx',
             'background.ts',
+            'styles/global.scss',
+            'styles/fonts.scss'
         ],
         bundle: true,
         // minify: true,

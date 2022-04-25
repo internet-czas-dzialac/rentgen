@@ -13,7 +13,7 @@ export default function Questions({
         onComplete: (sender) => onComplete(sender.data),
     });
     if (!survey) {
-        return <div>Wczytywanie....</div>;
+        return <div>Wczytywanie...</div>;
     }
     return <Survey.Survey model={survey} />;
 }

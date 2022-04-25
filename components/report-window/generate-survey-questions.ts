@@ -176,7 +176,7 @@ export default function generateSurveyQuestions(hosts: string[]) {
                 ],
             },
             {
-                title: 'Obowiązek informacyjny i machanizm pozyskiwania zgody',
+                title: 'Obowiązek informacyjny i mechanizm pozyskiwania zgody',
                 elements: [
                     {
                         type: 'radiogroup',
