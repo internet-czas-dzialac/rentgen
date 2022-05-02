@@ -7,11 +7,16 @@
         flex-flow: column;
         border-bottom: none;
 
+        .domain-checkbox {
+            margin-right: 0.5rem;
+            width: 0.875rem;
+        }
+
         .domain {
             color: $ultra-black-color;
             font-size: 0.875rem;
             font-weight: 600;
-            text-decoration: none;
+            text-decoration: underline;
         }
 
         .subdomains-container {

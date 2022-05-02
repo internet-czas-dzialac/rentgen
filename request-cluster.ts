@@ -174,4 +174,11 @@ export class RequestCluster extends EventEmitter {
             entry.autoMark();
         });
     }
+
+    undoMark() {
+        this.calculateRepresentativeStolenData();
+        this.representativeStolenData.forEach((entry) => {
+            entry.unmark();
+        });
+    }
 }

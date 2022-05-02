@@ -30,6 +30,13 @@ const Sidebar = () => {
     const [cookiesOrOriginOnly, setCookiesOrOriginOnly] = React.useState<boolean>(false);
     const [eventCounts, setEventCounts] = useEmitter(getMemory());
     const [marksOccurrence, setMarksOccurrence] = React.useState<boolean>(false);
+    const [infoDataDialogAck, setInfoDataDialogAck] = React.useState<boolean>(
+        localStorage.getItem('infoDataDialogAck') === null
+            ? true
+            : localStorage.getItem('infoDataDialogAck') == 'true'
+            ? true
+            : false
+    );
     const [warningDataDialogAck, setWarningDataDialogAck] = React.useState<boolean>(
         localStorage.getItem('warningDataDialogAck') === null
             ? true
@@ -165,12 +172,32 @@ const Sidebar = () => {
             <section>
                 {stolenDataView ? (
                     <>
+                        {infoDataDialogAck ? (
+                            <section className="dialog-container dialog-container--info">
+                                <span>
+                                    <strong>Uwaga!</strong> Wtyczka Rentgen automatycznie zaznacza
+                                    wybrane domeny, możesz teraz przejść do generowania raportu lub
+                                    dokonać korekty.
+                                </span>
+                                <button
+                                    onClick={() => {
+                                        setInfoDataDialogAck(false);
+                                        localStorage.setItem(
+                                            'infoDataDialogAck',
+                                            false as unknown as string
+                                        );
+                                    }}
+                                >
+                                    <img src="/assets/icons/close_big.svg" width="16" height="16" />
+                                </button>
+                            </section>
+                        ) : null}
                         {warningDataDialogAck ? (
-                            <section className="warning-container">
+                            <section className="dialog-container dialog-container--warning">
                                 <span>
                                     <strong>Uwaga!</strong> Niekoniecznie każda przechwycona poniżej
-                                    informacja jest daną osobową. Niektóre z podanych domen mogą
-                                    należeć do właściciela strony i nie reprezentować podmiotów
+                                    informacja jest daną osobową. Niektóre z podanych domen mogą
+                                    należeć do właściciela strony i nie reprezentować podmiotów
                                     trzecich.
                                 </span>
                                 <button

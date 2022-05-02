@@ -39,6 +39,21 @@ function StolenDataRow({ entry }: { entry: StolenDataEntry }) {
             data-version={version}
             className={`${entry.isMarked ? 'toggled' : 'untoggled'}`}
         >
+            <td className="checkbox">
+                <input
+                    type="checkbox"
+                    checked={entry.isMarked}
+                    onChange={() => {
+                        entry.toggleMark();
+                        getMemory().emit(
+                            'change',
+                            false,
+                            entry.request.shorthost,
+                            'clicked checkbox'
+                        );
+                    }}
+                />
+            </td>
             <th title={`Nazwa: ${entry.name}\nŹródło: ${entry.source}`}>{entry.name}</th>
             <td className="icons">
                 {entry.source === 'cookie' ? (
@@ -107,15 +122,30 @@ export default function StolenDataCluster({
 }) {
     const cluster = getMemory().getClustersForOrigin(origin)[shorthost];
     const fullHosts = cluster.getFullHosts();
+    const [version] = useEmitter(cluster);
 
     /* console.log('Stolen data cluster!', shorthost, refreshToken); */
+
+    console.log(cluster.getMarkedEntries());
 
     return (
         <div className="stolen-data-cluster-container">
             <header className="domains-container">
-                <a className="domain" href={'https://' + cluster.id}>
-                    {cluster.id}
-                </a>
+                <div>
+                    <input
+                        type="checkbox"
+                        className="domain-checkbox"
+                        data-version={version}
+                        checked={cluster.hasMarks()}
+                        onChange={() => {
+                            cluster.hasMarks() ? cluster.undoMark() : cluster.autoMark();
+                            getMemory().emit('change', true, cluster.id, 'clicked checkbox');
+                        }}
+                    />
+                    <a className="domain" href={'https://' + cluster.id}>
+                        {cluster.id}
+                    </a>
+                </div>
                 <div className="subdomains-container">
                     {fullHosts.map((host, index) => (
                         <a className="subdomain" key={host} href={`https://${host}`}>

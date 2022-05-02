@@ -215,24 +215,6 @@ const Toolbar = () => {
                     </section>
                     <section className="actions">
                         <button
-                            className="button button--details"
-                            onClick={() => {
-                                const params = [
-                                    'height=' + screen.height,
-                                    'width=' + screen.width,
-                                    'fullscreen=yes',
-                                ].join(',');
-                                autoMark();
-                                window.open(
-                                    `/components/sidebar/sidebar.html?origin=${origin}`,
-                                    'new_window',
-                                    params
-                                );
-                            }}
-                        >
-                            Pokaż szczegóły
-                        </button>
-                        <button
                             className="button button--report"
                             onClick={() => {
                                 const params = [
@@ -242,7 +224,7 @@ const Toolbar = () => {
                                 ].join(',');
                                 autoMark();
                                 window.open(
-                                    `/components/report-window/report-window.html?origin=${origin}`,
+                                    `/components/sidebar/sidebar.html?origin=${origin}`,
                                     'new_window',
                                     params
                                 );

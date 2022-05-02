@@ -136,21 +136,12 @@ body {
             line-height: 0.875rem;
             cursor: pointer;
 
-            &--details {
-                margin-right: 0.5rem;
-                color: #000;
-                text-decoration:underline;
-                background-color: #fff;
-                font-weight: 700;
-            }
-            
             &--report {
                 font-weight: 800;
                 padding: 0 1.5rem;
-                margin-left: 0.5rem;
                 background-color: #000;
                 color: #fff;
-                
+
                 &:hover {
                     color: $icd-rentgen-color;
                     background-image: linear-gradient(
