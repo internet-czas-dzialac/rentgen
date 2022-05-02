@@ -13,10 +13,6 @@ export class UnlawfulCookieAccess extends Problem {
     static qualifies(answers: ParsedAnswers, clusters: RequestCluster[]): boolean {
         // są cookiesy, nie było zgody, nie są konieczne do działania strony
         const cookie_clusters = Object.values(clusters).filter((c) => c.hasMarkedCookies());
-
-        console.log(answers, cookie_clusters, clusters);
-        // tutaj jest problem z answerami vs to co jest w clusters
-
         return cookie_clusters.some((cluster) => {
             const hostAnswers = answers.hosts[cluster.id];
             return (

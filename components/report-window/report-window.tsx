@@ -8,14 +8,7 @@ import Questions from './questions';
 import EmailContent from './email-content';
 import { parseAnswers, ParsedAnswers } from './parse-answers';
 
-interface Host {
-    [name: string]: boolean;
-}
-
 function Report() {
-    const [hosts, setHosts] = React.useState<Host>({});
-    const [surveyMode, setSurveyMode] = React.useState<boolean>(false);
-
     try {
         const url = new URL(document.location.toString());
         const origin = url.searchParams.get('origin');
@@ -25,6 +18,21 @@ function Report() {
         );
         const [mode, setMode] = React.useState(url.searchParams.get('mode') || 'survey');
         const clusters = getMemory().getClustersForOrigin(origin);
+        /* const [entries, setEntries] = React.useState<StolenDataEntry[]>([]); */
+        /* React.useEffect(() => {
+         *     setEntries(
+         *         Object.values(clusters)
+         *             .map((cluster) => {
+         *                 cluster.calculateRepresentativeStolenData();
+         *                 return cluster.representativeStolenData;
+         *             })
+         *             .reduce(reduceConcat, [])
+         *             .filter((entry) => entry.isMarked)
+         *     );
+         * }, []); */
+        /* if (entries.length == 0) {
+         *     return <>Wczytywanie...</>;
+         * } */
 
         React.useEffect(() => {
             const url = new URL(document.location.toString());
@@ -32,15 +40,7 @@ function Report() {
             url.searchParams.set('answers', JSON.stringify(answers));
             url.searchParams.set('mode', mode);
             history.pushState({}, 'Rentgen', url.toString());
-            setHosts(
-                Object.fromEntries(
-                    Object.values(clusters)
-                        .filter((cluster) => cluster.getMarkedRequests().length > 0)
-                        .map((cluster) => [cluster.id, true])
-                )
-            );
         }, [mode, answers, origin]);
-
         const visited_url = Object.values(clusters)
             .find((cluster) => cluster.getMarkedRequests().length > 0)
             ?.getMarkedRequests()[0].originalURL;
@@ -49,12 +49,9 @@ function Report() {
             <div {...{ 'data-version': counter }}>
                 {mode === 'survey' ? (
                     <Questions
-                        // hosts={Object.values(clusters)
-                        //     .filter((cluster) => cluster.getMarkedRequests().length > 0)
-                        //     .map((cluster) => cluster.id)}
-                        hosts={Object.entries(hosts)
-                            .filter((host) => host[1])
-                            .map((host) => host[0])}
+                        hosts={Object.values(clusters)
+                            .filter((cluster) => cluster.getMarkedRequests().length > 0)
+                            .map((cluster) => cluster.id)}
                         onComplete={(answers) => {
                             setAnswers(parseAnswers(answers));
                             setMode('preview');
@@ -67,58 +64,23 @@ function Report() {
                 {/* <HARConverter {...{ entries }} /> */}
             </div>
         );
-
-        function markHost(name: string) {
-            const clone_hosts = Object.assign({}, hosts);
-            clone_hosts[name] = !clone_hosts[name];
-            setHosts(clone_hosts);
-            console.log(hosts);
-        }
-
         return (
-            <div>
+            <Fragment>
                 <header className="header">
                     <img src="../../assets/icon-addon.svg" height={32}></img>
                     <div className="webpage-metadata">
-                        <span>Generowanie raportu </span>
-                        <span className="webpage-metadata--hyperlink">{origin}</span>
+                        {origin ? (
+                            <>
+                                <span>Generowanie raportu </span>
+                                <span className="webpage-metadata--hyperlink">{origin}</span>
+                            </>
+                        ) : (
+                            <span>Przejdź do wybranej strony internetowej</span>
+                        )}
                     </div>
                 </header>
-                {surveyMode ? (
-                    <section>{result}</section>
-                ) : (
-                    <section>
-                        Wybór hostów
-                        <ul>
-                            {
-                                //     Object.values(clusters)
-                                // .filter((cluster) => cluster.getMarkedRequests().length > 0)
-                                // .map((cluster) => cluster.id)
-
-                                Object.keys(hosts).map((host) => {
-                                    return (
-                                        <li key={host}>
-                                            <label htmlFor={host} onClick={() => markHost(host)}>
-                                                <input
-                                                    name={host}
-                                                    type="checkbox"
-                                                    // onChange={() => markHost(host)}
-                                                    readOnly={true}
-                                                    checked={hosts[host]}
-                                                ></input>
-                                                {host}
-                                            </label>
-                                        </li>
-                                    );
-                                })
-                            }
-
-                            {/*  */}
-                        </ul>
-                        <button onClick={() => setSurveyMode(true)}>Zatwierdź</button>
-                    </section>
-                )}
-            </div>
+                <section>{result}</section>
+            </Fragment>
         );
     } catch (e) {
         console.error(e);
