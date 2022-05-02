@@ -21,7 +21,7 @@ function StolenDataValue({ entry }: { entry: StolenDataEntry; prefixKey?: string
             className="value"
             onClick={(e) => {
                 entry.toggleMark();
-                getMemory().emit('change', false, entry.request.shorthost, 'clicked value');
+                getMemory().emit('change', entry.request.shorthost);
                 e.stopPropagation();
             }}
             title={entry.value}
@@ -45,12 +45,7 @@ function StolenDataRow({ entry }: { entry: StolenDataEntry }) {
                     checked={entry.isMarked}
                     onChange={() => {
                         entry.toggleMark();
-                        getMemory().emit(
-                            'change',
-                            false,
-                            entry.request.shorthost,
-                            'clicked checkbox'
-                        );
+                        getMemory().emit('change', entry.request.shorthost);
                     }}
                 />
             </td>
@@ -139,7 +134,7 @@ export default function StolenDataCluster({
                         checked={cluster.hasMarks()}
                         onChange={() => {
                             cluster.hasMarks() ? cluster.undoMark() : cluster.autoMark();
-                            getMemory().emit('change', true, cluster.id, 'clicked checkbox');
+                            getMemory().emit('change', cluster.id);
                         }}
                     />
                     <a className="domain" href={'https://' + cluster.id}>

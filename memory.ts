@@ -1,7 +1,7 @@
 import ExtendedRequest from './extended-request';
 import { getshorthost, makeThrottle } from './util';
-import { EventEmitter } from 'events';
 import { RequestCluster } from './request-cluster';
+import { SaferEmitter } from './safer-emitter';
 
 function setDomainsNumber(counter: number, tabId: number) {
     browser.browserAction.setBadgeText({ text: counter < 0 ? '0' : counter.toString(), tabId });
@@ -11,9 +11,8 @@ function setDomainsNumber(counter: number, tabId: number) {
     });
 }
 
-export default class Memory extends EventEmitter {
+export default class Memory extends SaferEmitter {
     origin_to_history = {} as Record<string, Record<string, RequestCluster>>;
-    private throttle = makeThrottle(100);
     async register(request: ExtendedRequest) {
         await request.init();
         if (!request.isThirdParty()) {
@@ -28,7 +27,7 @@ export default class Memory extends EventEmitter {
             this.origin_to_history[request.origin][shorthost] = cluster;
         }
         this.origin_to_history[request.origin][shorthost].add(request);
-        this.emit('change', false, shorthost, 'registered request(shorthost emit)');
+        this.emit('change', shorthost);
 
         Object.values(this.getClustersForOrigin(request.origin)).some((cluster) =>
             cluster.hasCookies()
@@ -64,62 +63,8 @@ export default class Memory extends EventEmitter {
         );
     }
 
-    private originalEmit(type: string, ...args: unknown[]) {
-        let doError = type === 'error';
-
-        let events = (this as any)._events;
-        if (events !== undefined) doError = doError && events.error === undefined;
-        else if (!doError) return false;
-
-        // If there is no 'error' event listener then throw.
-        if (doError) {
-            let er;
-            if (args.length > 0) er = args[0];
-            if (er instanceof Error) {
-                // Note: The comments on the `throw` lines are intentional, they show
-                // up in Node's output if this results in an unhandled exception.
-                throw er; // Unhandled 'error' event
-            }
-            // At least give some kind of context to the user
-            let err = new Error('Unhandled error.' + (er ? ' (' + (er as any).message + ')' : ''));
-            (err as any).context = er;
-            throw err; // Unhandled 'error' event
-        }
-
-        let handler = events[type];
-        if (handler === undefined) return false;
-        if (typeof handler === 'function') {
-            try {
-                Reflect.apply(handler, this, args);
-            } catch (error) {
-                events[type] = undefined;
-            }
-        } else {
-            let listeners = [...handler];
-
-            listeners
-                .filter((e) => {
-                    try {
-                        e.call;
-                    } catch (error) {
-                        return false;
-                    }
-                    return true;
-                })
-                .forEach((listener) => {
-                    try {
-                        Reflect.apply(listener, this, args);
-                    } catch (error) {
-                        console.error(error);
-                        debugger;
-                    }
-                });
-        }
-        return true;
-    }
-
-    emit(eventName: string, immediate = false, data = 'any', reason: string): boolean {
-        setTimeout(() => this.originalEmit(eventName, data), 0);
+    emit(eventName: string, data = 'any'): boolean {
+        setTimeout(() => super.emit(eventName, data), 0);
         return;
     }
 

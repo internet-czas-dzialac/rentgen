@@ -1,12 +1,13 @@
 import { EventEmitter } from 'events';
 import ExtendedRequest from './extended-request';
+import { SaferEmitter } from './safer-emitter';
 import { Sources, StolenDataEntry } from './stolen-data-entry';
 
 import { allSubhosts, isSameURL, reduceConcat, unique } from './util';
 
 const source_priority: Array<Sources> = ['cookie', 'pathname', 'queryparams', 'header'];
 
-export class RequestCluster extends EventEmitter {
+export class RequestCluster extends SaferEmitter {
     public requests: ExtendedRequest[] = [];
     public representativeStolenData: StolenDataEntry[] = [];
     public expanded: boolean;

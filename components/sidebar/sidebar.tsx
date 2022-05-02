@@ -104,7 +104,7 @@ const Sidebar = () => {
                     <button
                         onClick={() => {
                             getMemory().removeRequestsFor(origin);
-                            getMemory().emit('change', false, origin, 'clicked trash');
+                            getMemory().emit('change', origin);
                             setMarksOccurrence(false);
                         }}
                     >
@@ -114,7 +114,7 @@ const Sidebar = () => {
                     <button
                         onClick={() => {
                             getMemory().removeCookiesFor(origin);
-                            getMemory().emit('change', false, origin, 'clicked clear cookies');
+                            getMemory().emit('change', origin);
                             setMarksOccurrence(false);
                         }}
                     >

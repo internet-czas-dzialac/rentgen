@@ -3,3 +3,5 @@ node_modules
 sidebar.js
 /web-ext-artifacts/
 lib/*
+/yarn-error.log
+/rentgen.zip

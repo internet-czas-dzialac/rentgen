@@ -1,5 +1,6 @@
 import { EventEmitter } from 'events';
 import ExtendedRequest, { HAREntry } from './extended-request';
+import { SaferEmitter } from './safer-emitter';
 
 import {
     getshorthost,
@@ -33,7 +34,7 @@ const id = (function* id() {
 
 export type DecodingSchema = 'base64' | 'raw';
 
-export class StolenDataEntry extends EventEmitter {
+export class StolenDataEntry extends SaferEmitter {
     public isIAB = false;
     public id: number;
     private marked = false;
