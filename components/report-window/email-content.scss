@@ -1,0 +1,31 @@
+@import './../../styles/colors.scss';
+
+.mail-container {
+    box-shadow: rgba(12, 12, 13, 0.1) 0px 1px 4px 0px;
+    background-color: #fff;
+    max-width: 40rem;
+    margin-top: 0.5rem;
+
+    &__header {
+        display: flex;
+        justify-content: flex-end;
+
+        &--control {
+        }
+    }
+
+    &__content {
+        height: 75vh;
+        overflow-y: scroll;
+        padding: 1rem 2rem;
+        color: $black-color;
+    }
+
+    h2 {
+        font-size: 1.125rem;
+    }
+
+    p {
+        font-size: 1rem;
+    }
+}

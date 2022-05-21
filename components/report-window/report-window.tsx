@@ -7,6 +7,7 @@ import './report-window.scss';
 import Questions from './questions';
 import EmailContent from './email-content';
 import { parseAnswers, ParsedAnswers } from './parse-answers';
+import ScreenshotGenerator from './screenshot-generator';
 
 function Report() {
     try {
@@ -54,9 +55,14 @@ function Report() {
                             .map((cluster) => cluster.id)}
                         onComplete={(answers) => {
                             setAnswers(parseAnswers(answers));
-                            setMode('preview');
+                            setMode('screenshots');
                         }}
                     ></Questions>
+                ) : (
+                    ''
+                )}
+                {mode === 'screenshots' ? (
+                    <ScreenshotGenerator {...{ visited_url, clusters }} />
                 ) : (
                     ''
                 )}

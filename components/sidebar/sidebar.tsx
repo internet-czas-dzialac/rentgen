@@ -175,9 +175,8 @@ const Sidebar = () => {
                         {infoDataDialogAck ? (
                             <section className="dialog-container dialog-container--info">
                                 <span>
-                                    <strong>Uwaga!</strong> Wtyczka Rentgen automatycznie zaznacza
-                                    wybrane domeny, możesz teraz przejść do generowania raportu lub
-                                    dokonać korekty.
+                                    <strong>Rentgen automatycznie zaznacza wybrane domeny</strong>,
+                                    możesz teraz przejść do generowania raportu lub dokonać korekty.
                                 </span>
                                 <button
                                     onClick={() => {
