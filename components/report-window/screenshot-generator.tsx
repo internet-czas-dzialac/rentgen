@@ -77,88 +77,98 @@ export default function ScreenshotGenerator({
             {mode === 'idle' ? (
                 <Fragment>
                     <h1>Przygotowanie zrzutów ekranów</h1>
-                    <p>
-                        Dla potwierdzenia przechwyconych danych, warto załączyć zrzuty ekranów
-                        narzędzi deweloperskich do maila dla administratora oraz Urzędu Ochrony
-                        Danych Osobowych.
-                    </p>
-                    <p>
-                        Jeżeli nie wiesz jak wykonać zrzuty ekranów, skorzystaj z{' '}
-                        <a href="">naszej instrukcji</a> lub wtyczka Rentgen może wygenerować je za
-                        Ciebie.
-                    </p>
+                    <div className="container">
+                        <h2>Notka informacyjna</h2>
+                        <p>
+                            Dla potwierdzenia przechwyconych danych, warto załączyć zrzuty ekranów
+                            narzędzi deweloperskich do maila dla administratora oraz Urzędu Ochrony
+                            Danych Osobowych.
+                        </p>
+                        <p>
+                            Jeżeli nie wiesz jak wykonać zrzuty ekranów, skorzystaj z{' '}
+                            <a href="">naszej instrukcji</a> lub wtyczka Rentgen może wygenerować je
+                            za Ciebie.
+                        </p>
+                    </div>
 
-                    <button
-                        className="sv_prev_btn"
-                        onClick={() => {
-                            setReportWindowMode('preview');
-                        }}
-                    >
-                        Pomiń
-                    </button>
-                    <button
-                        className="sv_next_btn"
-                        onClick={async () => {
-                            setMode('in_progress');
-                            const task = await createTask(visited_url, Object.keys(clusters));
-                            const urlArr = task.url.split('/');
-                            setTaskId(urlArr[urlArr.length - 1]);
-                            const response = await subscribeTask(task.url);
-                            setImages(response.files);
-                            console.log('output', response);
-                        }}
-                    >
-                        Wygeneruj
-                    </button>
+                    <div className="buttons-container">
+                        <button
+                            className="sv_prev_btn"
+                            onClick={() => {
+                                setReportWindowMode('preview');
+                            }}
+                        >
+                            Pomiń
+                        </button>
+                        <button
+                            className="sv_next_btn"
+                            onClick={async () => {
+                                setMode('in_progress');
+                                const task = await createTask(visited_url, Object.keys(clusters));
+                                const urlArr = task.url.split('/');
+                                setTaskId(urlArr[urlArr.length - 1]);
+                                const response = await subscribeTask(task.url);
+                                setImages(response.files);
+                                console.log('output', response);
+                            }}
+                        >
+                            Wygeneruj
+                        </button>
+                    </div>
                 </Fragment>
             ) : null}
 
             {mode === 'in_progress' || mode === 'finished' ? (
                 <Fragment>
                     <h1>Przygotowujemy zrzuty ekranów</h1>
-                    <p>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore sint
-                        laudantium blanditiis aperiam quos expedita voluptatem iure, nam aliquam vel
-                        minus aliquid incidunt consequatur illo velit dolorem error exercitationem
-                        tempora?
-                    </p>
+                    <div className="container">
+                        <h2>To może chwilkę zająć</h2>
+                        <p>
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore sint
+                            laudantium blanditiis aperiam quos expedita voluptatem iure, nam aliquam
+                            vel minus aliquid incidunt consequatur illo velit dolorem error
+                            exercitationem tempora?
+                        </p>
 
-                    <div className="images">
-                        {images.map((filename: string) => {
-                            return (
-                                <div
-                                    key={`${taskId}_${filename}`}
-                                    className="browser browser--filled"
-                                    style={{
-                                        backgroundImage: `url(http://65.108.60.135:3000/static/${taskId}/${filename})`,
-                                    }}
-                                >
-                                    <div className="browser__header">
-                                        <div className="browser__header--address-bar">
-                                            {filename}
+                        <div className="images">
+                            {images.map((filename: string) => {
+                                return (
+                                    <div
+                                        key={`${taskId}_${filename}`}
+                                        className="browser browser--filled"
+                                        style={{
+                                            backgroundImage: `url(http://65.108.60.135:3000/static/${taskId}/${filename})`,
+                                        }}
+                                    >
+                                        <div className="browser__header">
+                                            <div className="browser__header--address-bar">
+                                                {filename}
+                                            </div>
+                                            <div className="browser__header--controls">· · ·</div>
                                         </div>
+                                        <div className="browser__content"></div>
+                                    </div>
+                                );
+                            })}
+
+                            {mode === 'in_progress' ? (
+                                <div className="browser">
+                                    <div className="browser__header">
+                                        <div className="browser__header--address-bar"></div>
                                         <div className="browser__header--controls">· · ·</div>
                                     </div>
                                     <div className="browser__content"></div>
                                 </div>
-                            );
-                        })}
-
-                        {mode === 'in_progress' ? (
-                            <div className="browser">
-                                <div className="browser__header">
-                                    <div className="browser__header--address-bar"></div>
-                                    <div className="browser__header--controls">· · ·</div>
-                                </div>
-                                <div className="browser__content"></div>
-                            </div>
+                            ) : null}
+                        </div>
+                    </div>
+                    <div className="buttons-container">
+                        {mode === 'finished' ? (
+                            <button className="sv_next_btn" onClick={() => downloadFiles()}>
+                                Pobierz zrzuty ekranów
+                            </button>
                         ) : null}
                     </div>
-                    {mode === 'finished' ? (
-                        <button className="sv_next_btn" onClick={() => downloadFiles()}>
-                            Pobierz zrzuty ekranów
-                        </button>
-                    ) : null}
                 </Fragment>
             ) : null}
         </div>

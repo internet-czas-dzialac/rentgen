@@ -11,7 +11,7 @@ html {
 
 body {
     background-color: #f9f9fa;
-    margin: 3rem 3rem;
+    padding: 0rem 0.75rem;
 }
 
 nav {
@@ -36,7 +36,7 @@ li,
 h1,
 h2,
 h3 {
-    max-width: 70ex;
+    max-width: 100ex;
 }
 
 h1 {
@@ -77,6 +77,9 @@ h1 {
     font-family: 'OpenSans' !important;
     background-color: transparent;
     .sv_p_root {
+        max-width: 100ex;
+        margin: 0 auto;
+
         & > .sv_row:nth-child(2n) {
             background-color: #fff;
         }
@@ -172,7 +175,7 @@ h1 {
 .sv_nav {
     display: flex;
     margin: 2rem 0;
-    justify-content: flex-end;
+    justify-content: center;
 }
 
 .sv_prev_btn,
@@ -183,6 +186,7 @@ h1 {
     line-height: 0.875rem !important;
     height: 2.5rem;
     cursor: pointer;
+    min-width: 100px;
 }
 .sv_next_btn {
     background-color: #000 !important;

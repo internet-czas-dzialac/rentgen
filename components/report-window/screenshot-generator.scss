@@ -2,6 +2,12 @@
 
 h1 {
     font-size: 1.1rem;
+    margin-bottom: calc(24 / 16 * 1rem);
+}
+
+h2 {
+    font-weight: 600;
+    font-size: 0.875rem;
 }
 
 .images {
@@ -9,6 +15,27 @@ h1 {
     grid-gap: 1rem;
     flex-wrap: wrap;
     margin: 2rem 0;
+}
+
+.generator-container {
+    max-width: 100ex;
+    margin: 0 auto;
+    font-size: calc(14 / 16 * 1rem);
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0;
+    padding: 1em 0;
+}
+
+.container {
+    padding: 0.75rem 1.5rem;
+    margin-bottom: 1rem;
+    border-radius: 3px;
+    box-shadow: rgba(12, 12, 13, 0.1) 0px 1px 4px 0px;
+    background-color: #fff;
 }
 
 .browser {
