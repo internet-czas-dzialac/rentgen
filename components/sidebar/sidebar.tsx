@@ -79,15 +79,9 @@ const Sidebar = () => {
                 <button
                     className="button button--report"
                     onClick={() => {
-                        const params = [
-                            'height=' + screen.height,
-                            'width=' + screen.width,
-                            'fullscreen=yes',
-                        ].join(',');
                         window.open(
                             `/components/report-window/report-window.html?origin=${origin}`,
-                            'new_window',
-                            params
+                            'new_tab'
                         );
                     }}
                 >

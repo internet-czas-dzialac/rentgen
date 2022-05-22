@@ -217,17 +217,12 @@ const Toolbar = () => {
                         <button
                             className="button button--report"
                             onClick={() => {
-                                const params = [
-                                    'height=' + screen.height,
-                                    'width=' + screen.width,
-                                    'fullscreen=yes',
-                                ].join(',');
                                 autoMark();
                                 window.open(
                                     `/components/sidebar/sidebar.html?origin=${origin}`,
-                                    'new_window',
-                                    params
+                                    'new_tab'
                                 );
+                                window.close(); // close toolbar popup
                             }}
                         >
                             Generuj raport

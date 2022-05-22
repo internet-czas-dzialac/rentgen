@@ -59,6 +59,19 @@ export default function ScreenshotGenerator({
         return response as screenshotTask;
     }
 
+    function downloadFiles() {
+        const urls = images.map((el) => `http://65.108.60.135:3000/static/${taskId}/${el}`);
+
+        for (const url of urls) {
+            let a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', '');
+            a.setAttribute('target', '_blank');
+            a.click();
+        }
+        setReportWindowMode('preview');
+    }
+
     return (
         <div className="generator-container">
             {mode === 'idle' ? (
@@ -103,11 +116,18 @@ export default function ScreenshotGenerator({
             {mode === 'in_progress' || mode === 'finished' ? (
                 <Fragment>
                     <h1>Przygotowujemy zrzuty ekranów</h1>
+                    <p>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore sint
+                        laudantium blanditiis aperiam quos expedita voluptatem iure, nam aliquam vel
+                        minus aliquid incidunt consequatur illo velit dolorem error exercitationem
+                        tempora?
+                    </p>
 
                     <div className="images">
                         {images.map((filename: string) => {
                             return (
                                 <div
+                                    key={`${taskId}_${filename}`}
                                     className="browser browser--filled"
                                     style={{
                                         backgroundImage: `url(http://65.108.60.135:3000/static/${taskId}/${filename})`,
@@ -135,7 +155,9 @@ export default function ScreenshotGenerator({
                         ) : null}
                     </div>
                     {mode === 'finished' ? (
-                        <button className="sv_next_btn">Pobierz zrzuty ekranów</button>
+                        <button className="sv_next_btn" onClick={() => downloadFiles()}>
+                            Pobierz zrzuty ekranów
+                        </button>
                     ) : null}
                 </Fragment>
             ) : null}
