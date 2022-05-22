@@ -1,0 +1,66 @@
+@import './../../styles/colors.scss';
+
+.images {
+    display: flex;
+    grid-gap: 1rem;
+    flex-wrap: wrap;
+    margin: 2rem 0;
+}
+
+.browser {
+    height: 9.667rem;
+    width: 16rem;
+    font-weight: 800 !important;
+    // box-shadow: rgba(12, 12, 13, 0.1) 0px 1px 4px 0px;
+    color: $disabled-grey !important;
+    border: 1px solid $disabled-grey;
+    background-image: linear-gradient(to bottom, $icd-rentgen-color 20%, #fff 20%, #fff 100%);
+    animation: xray 2s cubic-bezier(0, 1.43, 0.39, 1.43) infinite;
+
+    &--filled {
+        background-size: contain;
+        background-position-y: 18px;
+        animation: none;
+
+        .browser__header {
+            background-color: #fff;
+        }
+    }
+
+    @keyframes xray {
+        to {
+            background-position-y: 11.1rem;
+        }
+    }
+
+    &__header {
+        height: 1.667rem;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        padding: 0 0.5rem;
+        font-size: 1.25rem;
+        border-bottom: 1px solid $disabled-grey;
+
+        &--address-bar {
+            border: 1px solid $disabled-grey;
+            height: 1rem;
+            width: 10rem;
+            font-size: 0.667rem;
+            font-weight: 400;
+            padding-left: 0.25rem;
+            color: #000;
+        }
+
+        &--controls {
+            padding-bottom: 0.25rem;
+            font-weight: 900;
+        }
+    }
+
+    &__content {
+        height: 7.667rem;
+    }
+}

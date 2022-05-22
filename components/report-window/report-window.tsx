@@ -19,21 +19,6 @@ function Report() {
         );
         const [mode, setMode] = React.useState(url.searchParams.get('mode') || 'survey');
         const clusters = getMemory().getClustersForOrigin(origin);
-        /* const [entries, setEntries] = React.useState<StolenDataEntry[]>([]); */
-        /* React.useEffect(() => {
-         *     setEntries(
-         *         Object.values(clusters)
-         *             .map((cluster) => {
-         *                 cluster.calculateRepresentativeStolenData();
-         *                 return cluster.representativeStolenData;
-         *             })
-         *             .reduce(reduceConcat, [])
-         *             .filter((entry) => entry.isMarked)
-         *     );
-         * }, []); */
-        /* if (entries.length == 0) {
-         *     return <>Wczytywanie...</>;
-         * } */
 
         React.useEffect(() => {
             const url = new URL(document.location.toString());
@@ -62,7 +47,9 @@ function Report() {
                     ''
                 )}
                 {mode === 'screenshots' ? (
-                    <ScreenshotGenerator {...{ visited_url, clusters }} />
+                    <ScreenshotGenerator
+                        {...{ visited_url, clusters, setReportWindowMode: setMode }}
+                    />
                 ) : (
                     ''
                 )}

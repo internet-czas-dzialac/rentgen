@@ -2,6 +2,21 @@ import React, { Fragment } from 'react';
 import { RequestCluster } from '../../request-cluster';
 import './screenshot-generator.scss';
 
+enum taskState {
+    WAITING = 'waiting',
+    RUNNING = 'running',
+    FINISHED = 'finished',
+}
+
+interface screenshotTask {
+    url: string;
+    domains: string[];
+    id: string;
+    status: taskState;
+    output: string;
+    files: string[];
+}
+
 function createTaskEndpoint(visited_url: string, domains: string[]) {
     return `http://65.108.60.135:3000/api/requests?url=${visited_url}${domains.reduce(
         (prev: string, curr: string) => prev + '&domains[]=' + curr,
@@ -13,39 +28,45 @@ function createTask(visited_url: string, domains: string[]) {
     return fetch(createTaskEndpoint(visited_url, domains), { method: 'POST' });
 }
 
-async function subscribe(path: string) {
-    let request = await fetch(path, { method: 'GET' });
-    const response = await request.json();
-
-    if (response.status === 'running' || response.status === 'waiting') {
-        console.debug(response.status);
-
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        await subscribe(path);
-    } else if (response.status === 'finished') {
-        console.log('response', response);
-        return response;
-    }
+function pollTask(path: string): Promise<Response> {
+    return fetch(path, { method: 'GET' });
 }
 
 export default function ScreenshotGenerator({
     visited_url,
     clusters,
+    setReportWindowMode,
 }: {
     visited_url: string;
     clusters: Record<string, RequestCluster>;
+    setReportWindowMode: Function;
 }) {
-    const [isLoading, setLoading] = React.useState<boolean>(false);
-    const [output, setOutput] = React.useState<string[]>([]);
+    const [mode, setMode] = React.useState<string>('idle');
+    const [images, setImages] = React.useState<string[]>([]);
+    const [taskId, setTaskId] = React.useState<string>(null);
+
+    async function subscribeTask(path: string): Promise<screenshotTask> {
+        let response = { status: taskState.WAITING };
+        while (response.status === taskState.WAITING || response.status === taskState.RUNNING) {
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+            response = await (await pollTask(path)).json();
+            setImages((response as screenshotTask)?.files);
+        }
+
+        if (response.status === taskState.FINISHED) {
+            setMode('finished');
+        }
+        return response as screenshotTask;
+    }
 
     return (
         <div className="generator-container">
-            {!isLoading ? (
+            {mode === 'idle' ? (
                 <Fragment>
                     <h1>Przygotowanie zrzutów ekranów</h1>
                     <p>
                         Dla potwierdzenia przechwyconych danych, warto załączyć zrzuty ekranów
-                        narzędzi deweloperskich do maila dla administratora oraz Urzędzu Ochrony
+                        narzędzi deweloperskich do maila dla administratora oraz Urzędu Ochrony
                         Danych Osobowych.
                     </p>
                     <p>
@@ -54,30 +75,70 @@ export default function ScreenshotGenerator({
                         Ciebie.
                     </p>
 
-                    <button>Pomiń</button>
                     <button
+                        className="sv_prev_btn"
+                        onClick={() => {
+                            setReportWindowMode('preview');
+                        }}
+                    >
+                        Pomiń
+                    </button>
+                    <button
+                        className="sv_next_btn"
                         onClick={async () => {
-                            setLoading(true);
+                            setMode('in_progress');
                             const task = await createTask(visited_url, Object.keys(clusters));
-                            const response = await subscribe(task.url);
-
-                            setOutput(response.files);
+                            const urlArr = task.url.split('/');
+                            setTaskId(urlArr[urlArr.length - 1]);
+                            const response = await subscribeTask(task.url);
+                            setImages(response.files);
                             console.log('output', response);
                         }}
                     >
                         Wygeneruj
                     </button>
                 </Fragment>
-            ) : (
+            ) : null}
+
+            {mode === 'in_progress' || mode === 'finished' ? (
                 <Fragment>
                     <h1>Przygotowujemy zrzuty ekranów</h1>
 
-                    <pre>{createTaskEndpoint(visited_url, Object.keys(clusters))}</pre>
+                    <div className="images">
+                        {images.map((filename: string) => {
+                            return (
+                                <div
+                                    className="browser browser--filled"
+                                    style={{
+                                        backgroundImage: `url(http://65.108.60.135:3000/static/${taskId}/${filename})`,
+                                    }}
+                                >
+                                    <div className="browser__header">
+                                        <div className="browser__header--address-bar">
+                                            {filename}
+                                        </div>
+                                        <div className="browser__header--controls">· · ·</div>
+                                    </div>
+                                    <div className="browser__content"></div>
+                                </div>
+                            );
+                        })}
 
-                    {JSON.stringify(output)}
-                    <button>In progress</button>
+                        {mode === 'in_progress' ? (
+                            <div className="browser">
+                                <div className="browser__header">
+                                    <div className="browser__header--address-bar"></div>
+                                    <div className="browser__header--controls">· · ·</div>
+                                </div>
+                                <div className="browser__content"></div>
+                            </div>
+                        ) : null}
+                    </div>
+                    {mode === 'finished' ? (
+                        <button className="sv_next_btn">Pobierz zrzuty ekranów</button>
+                    ) : null}
                 </Fragment>
-            )}
+            ) : null}
         </div>
     );
 }

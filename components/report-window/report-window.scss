@@ -1,6 +1,7 @@
 @import './../../styles/colors.scss';
 
 * {
+    box-sizing: border-box;
     font-family: 'OpenSans' !important;
 }
 
@@ -44,10 +45,8 @@ h3 {
     align-items: center;
     max-height: 3.5rem;
     min-height: 3.5rem;
-    // border-bottom: 1px solid $light-grey;
     position: sticky;
     top: 0;
-    // background: #ffffff;
     z-index: 1;
 
     .webpage-metadata {
@@ -75,7 +74,6 @@ h3 {
     background-color: transparent;
     .sv_p_root {
         & > .sv_row:nth-child(2n) {
-            // background-color: hsl(217.5, 7.8%, 96%);
             background-color: #fff;
         }
 
@@ -84,7 +82,6 @@ h3 {
         }
 
         & > .sv_row {
-            // border-bottom: 1px solid #d1d1d1;
             border-bottom: none;
             background-color: #fff;
             box-shadow: rgba(12, 12, 13, 0.1) 0px 1px 4px 0px;
