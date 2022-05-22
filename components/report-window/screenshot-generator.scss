@@ -1,5 +1,9 @@
 @import './../../styles/colors.scss';
 
+h1 {
+    font-size: 1.1rem;
+}
+
 .images {
     display: flex;
     grid-gap: 1rem;
