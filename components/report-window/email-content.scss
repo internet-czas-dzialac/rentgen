@@ -1,10 +1,24 @@
 @import './../../styles/colors.scss';
 
+h1 {
+    font-size: 1.1rem;
+    margin-bottom: calc(24 / 16 * 1rem);
+}
+
+.generator-container {
+    max-width: 100ex;
+    margin: 0 auto;
+    font-size: calc(14 / 16 * 1rem);
+}
+
 .mail-container {
     box-shadow: rgba(12, 12, 13, 0.1) 0px 1px 4px 0px;
     background-color: #fff;
-    max-width: 40rem;
     margin-top: 0.5rem;
+
+    max-width: 100ex;
+    margin: 0 auto;
+    font-size: calc(14 / 16 * 1rem);
 
     &__header {
         display: flex;
@@ -22,10 +36,11 @@
     }
 
     h2 {
-        font-size: 1.125rem;
+        font-weight: 700;
+        font-size: 1rem;
     }
 
     p {
-        font-size: 1rem;
+        font-size: calc(14 / 16 * 1rem);
     }
 }
