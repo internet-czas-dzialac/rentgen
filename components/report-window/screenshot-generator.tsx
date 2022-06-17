@@ -2,11 +2,19 @@ import React, { Fragment } from 'react';
 import { RequestCluster } from '../../request-cluster';
 import './screenshot-generator.scss';
 
+const SS_URL = 'http://65.108.60.135:3000';
+
 enum taskState {
     WAITING = 'waiting',
     RUNNING = 'running',
     FINISHED = 'finished',
 }
+
+type Screenshot = {
+    url: string;
+    domain: string;
+    found_headers: string[];
+};
 
 interface screenshotTask {
     url: string;
@@ -14,11 +22,11 @@ interface screenshotTask {
     id: string;
     status: taskState;
     output: string;
-    files: string[];
+    images: Screenshot[];
 }
 
 function createTaskEndpoint(visited_url: string, domains: string[]) {
-    return `http://65.108.60.135:3000/api/requests?url=${visited_url}${domains.reduce(
+    return `${SS_URL}/api/requests?url=${visited_url}${domains.reduce(
         (prev: string, curr: string) => prev + '&domains[]=' + curr,
         ''
     )}`;
@@ -42,7 +50,7 @@ export default function ScreenshotGenerator({
     setReportWindowMode: Function;
 }) {
     const [mode, setMode] = React.useState<string>('idle');
-    const [images, setImages] = React.useState<string[]>([]);
+    const [images, setImages] = React.useState<Screenshot[]>([]);
     const [taskId, setTaskId] = React.useState<string>(null);
 
     async function subscribeTask(path: string): Promise<screenshotTask> {
@@ -50,7 +58,7 @@ export default function ScreenshotGenerator({
         while (response.status === taskState.WAITING || response.status === taskState.RUNNING) {
             await new Promise((resolve) => setTimeout(resolve, 1000));
             response = await (await pollTask(path)).json();
-            setImages((response as screenshotTask)?.files);
+            setImages((response as screenshotTask)?.images);
         }
 
         if (response.status === taskState.FINISHED) {
@@ -60,7 +68,7 @@ export default function ScreenshotGenerator({
     }
 
     function downloadFiles() {
-        const urls = images.map((el) => `http://65.108.60.135:3000/static/${taskId}/${el}`);
+        const urls = images.map((el) => `${SS_URL}${el}`);
 
         for (const url of urls) {
             let a = document.createElement('a');
@@ -108,7 +116,7 @@ export default function ScreenshotGenerator({
                                 const urlArr = task.url.split('/');
                                 setTaskId(urlArr[urlArr.length - 1]);
                                 const response = await subscribeTask(task.url);
-                                setImages(response.files);
+                                setImages(response.images);
                                 console.log('output', response);
                             }}
                         >
@@ -131,18 +139,18 @@ export default function ScreenshotGenerator({
                         </p>
 
                         <div className="images">
-                            {images.map((filename: string) => {
+                            {images.map((screenshot) => {
                                 return (
                                     <div
-                                        key={`${taskId}_${filename}`}
+                                        key={`${taskId}_${screenshot.url}`}
                                         className="browser browser--filled"
                                         style={{
-                                            backgroundImage: `url(http://65.108.60.135:3000/static/${taskId}/${filename})`,
+                                            backgroundImage: `url(${SS_URL}${screenshot.url})`,
                                         }}
                                     >
                                         <div className="browser__header">
                                             <div className="browser__header--address-bar">
-                                                {filename}
+                                                {screenshot.url}
                                             </div>
                                             <div className="browser__header--controls">· · ·</div>
                                         </div>
