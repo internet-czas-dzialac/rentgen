@@ -24,6 +24,10 @@ const Toolbar = () => {
         null
     );
 
+    const first_sentence_cookie = 'Strona dokonała zapisu i odczytu plików Cookie dla domen ';
+    const first_sentence_history =
+        'Część informacji o Twojej historii przeglądania została wysłana do ';
+
     React.useEffect(() => {
         const listener = async () => {
             const tab = await getCurrentTab();
@@ -51,30 +55,25 @@ const Toolbar = () => {
             .filter((cluster) => cluster.exposesOrigin())
             .map((cluster) => cluster.id);
         setExposedOriginDomainCopy('');
-        const first_sentence = `Strona ${origin} wysłała informacje o części Twojej historii przeglądania do `;
 
         switch (exposedOriginDomains.length) {
             case 0:
                 return null;
             case 1:
-                return setExposedOriginDomainCopy(first_sentence + `${exposedOriginDomains[0]}.`);
+                return setExposedOriginDomainCopy(`${exposedOriginDomains[0]}.`);
             case 2:
                 return setExposedOriginDomainCopy(
-                    first_sentence + `${exposedOriginDomains[0]} oraz ${exposedOriginDomains[1]}.`
+                    `${exposedOriginDomains[0]} oraz ${exposedOriginDomains[1]}.`
                 );
             case 3:
                 return setExposedOriginDomainCopy(
-                    first_sentence +
-                        `${exposedOriginDomains[0]}, ${exposedOriginDomains[1]} oraz ${exposedOriginDomains[2]}.`
+                    `${exposedOriginDomains[0]}, ${exposedOriginDomains[1]} oraz ${exposedOriginDomains[2]}.`
                 );
             default:
                 return setExposedOriginDomainCopy(
-                    first_sentence +
-                        `${exposedOriginDomains[0]}, ${exposedOriginDomains[1]} (i ${
-                            exposedOriginDomains.length - 2 < 2
-                                ? 2
-                                : exposedOriginDomains.length - 2
-                        } innych).`
+                    `${exposedOriginDomains[0]}, ${exposedOriginDomains[1]} (i ${
+                        exposedOriginDomains.length - 2 < 2 ? 2 : exposedOriginDomains.length - 2
+                    } innych).`
                 );
         }
     }, [eventCounts['*'], origin]);
@@ -84,28 +83,23 @@ const Toolbar = () => {
             .filter((cluster) => cluster.hasCookies())
             .map((cluster) => cluster.id);
         setCookieDomainCopy('');
-        const first_sentence = `Strona ${origin} dokonała zapisu i odczytu plików Cookie dla domen `;
 
         switch (cookieDomains.length) {
             case 0:
                 return null;
             case 1:
-                return setCookieDomainCopy(first_sentence + `${cookieDomains[0]}.`);
+                return setCookieDomainCopy(`${cookieDomains[0]}.`);
             case 2:
-                return setCookieDomainCopy(
-                    first_sentence + `${cookieDomains[0]} oraz ${cookieDomains[1]}.`
-                );
+                return setCookieDomainCopy(`${cookieDomains[0]} oraz ${cookieDomains[1]}.`);
             case 3:
                 return setCookieDomainCopy(
-                    first_sentence +
-                        `${cookieDomains[0]}, ${cookieDomains[1]} oraz ${cookieDomains[2]}.`
+                    `${cookieDomains[0]}, ${cookieDomains[1]} oraz ${cookieDomains[2]}.`
                 );
             default:
                 return setCookieDomainCopy(
-                    first_sentence +
-                        `${cookieDomains[0]}, ${cookieDomains[1]} (i ${
-                            cookieDomains.length - 2 < 2 ? 2 : cookieDomains.length - 2
-                        } innych).`
+                    `${cookieDomains[0]}, ${cookieDomains[1]} (i ${
+                        cookieDomains.length - 2 < 2 ? 2 : cookieDomains.length - 2
+                    } innych).`
                 );
         }
     }, [eventCounts['*'], origin]);
@@ -184,27 +178,33 @@ const Toolbar = () => {
             </section>
 
             <section className="details">
-                <p
-                    data-event={`${eventCounts['*']}`}
-                    title={Object.values(getMemory().getClustersForOrigin(origin))
-                        .filter((cluster) => cluster.exposesOrigin())
-                        .map((domain) => domain.id)
-                        .join(', ')}
-                >
-                    {exposedOriginDomainCopy}
-                </p>
-                <p
-                    data-event={`${eventCounts['*']}`}
-                    title={Object.values(getMemory().getClustersForOrigin(origin))
-                        .filter((cluster) => cluster.hasCookies())
-                        .map((domain) => domain.id)
-                        .join(', ')}
-                >
-                    {cookieDomainCopy}
-                </p>
+                {exposedOriginDomainCopy ? (
+                    <p
+                        data-event={`${eventCounts['*']}`}
+                        title={Object.values(getMemory().getClustersForOrigin(origin))
+                            .filter((cluster) => cluster.exposesOrigin())
+                            .map((domain) => domain.id)
+                            .join(', ')}
+                    >
+                        {first_sentence_cookie}
+                        <strong>{exposedOriginDomainCopy}</strong>
+                    </p>
+                ) : null}
+                {cookieDomainCopy ? (
+                    <p
+                        data-event={`${eventCounts['*']}`}
+                        title={Object.values(getMemory().getClustersForOrigin(origin))
+                            .filter((cluster) => cluster.hasCookies())
+                            .map((domain) => domain.id)
+                            .join(', ')}
+                    >
+                        {first_sentence_history}
+                        <strong>{cookieDomainCopy}</strong>
+                    </p>
+                ) : null}
             </section>
 
-            {exposedOriginDomainCopy !== null || cookieDomainCopy !== null ? (
+            {exposedOriginDomainCopy || cookieDomainCopy ? (
                 <Fragment>
                     <section className="about">
                         <p>
@@ -229,7 +229,13 @@ const Toolbar = () => {
                         </button>
                     </section>
                 </Fragment>
-            ) : null}
+            ) : (
+                <Fragment>
+                    <section className="about about__no-errors">
+                        <p>Nie znaleziono problemów na tej stronie.</p>
+                    </section>
+                </Fragment>
+            )}
         </div>
     );
 };
