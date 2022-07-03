@@ -59,6 +59,10 @@ export default function ScreenshotGenerator({
             await new Promise((resolve) => setTimeout(resolve, 1000));
             response = await (await pollTask(path)).json();
             setImages((response as screenshotTask)?.images);
+            document.querySelector('.images').scrollTo({
+                top: document.querySelector('.images').scrollHeight,
+                behavior: 'smooth',
+            });
         }
 
         if (response.status === taskState.FINISHED) {
@@ -117,6 +121,7 @@ export default function ScreenshotGenerator({
                                 setTaskId(urlArr[urlArr.length - 1]);
                                 const response = await subscribeTask(task.url);
                                 setImages(response.images);
+                                console.log('response.images', response.images);
                                 console.log('output', response);
                             }}
                         >
@@ -130,12 +135,10 @@ export default function ScreenshotGenerator({
                 <Fragment>
                     <h1>Przygotowujemy zrzuty ekranów</h1>
                     <div className="container">
-                        <h2>To może chwilkę zająć</h2>
+                        <h2>To może chwilkę zająć...</h2>
                         <p>
-                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore sint
-                            laudantium blanditiis aperiam quos expedita voluptatem iure, nam aliquam
-                            vel minus aliquid incidunt consequatur illo velit dolorem error
-                            exercitationem tempora?
+                            Nasz serwer właśnie odwiedza wskazaną przez Ciebie stronę i przygotowuje
+                            zrzuty ekranów narzędzi deweloperskich.
                         </p>
 
                         <div className="images">
@@ -150,7 +153,7 @@ export default function ScreenshotGenerator({
                                     >
                                         <div className="browser__header">
                                             <div className="browser__header--address-bar">
-                                                {screenshot.url}
+                                                {screenshot.url.split('-').slice(-2).join('-')}
                                             </div>
                                             <div className="browser__header--controls">· · ·</div>
                                         </div>

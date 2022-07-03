@@ -11,10 +11,16 @@ h2 {
 }
 
 .images {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 100%;
     grid-gap: 1rem;
-    flex-wrap: wrap;
-    margin: 2rem 0;
+    margin: 2rem 0 1rem;
+    max-height: 45vh;
+    overflow-y: scroll;
+    overflow-x: clip;
+    z-index: 1;
+    position: relative;
 }
 
 .generator-container {
@@ -39,18 +45,16 @@ h2 {
 }
 
 .browser {
-    height: 9.667rem;
-    width: 16rem;
+    height: 8.667rem;
     font-weight: 800 !important;
-    // box-shadow: rgba(12, 12, 13, 0.1) 0px 1px 4px 0px;
     color: $disabled-grey !important;
     border: 1px solid $disabled-grey;
     background-image: linear-gradient(to bottom, $icd-rentgen-color 20%, #fff 20%, #fff 100%);
     animation: xray 2s cubic-bezier(0, 1.43, 0.39, 1.43) infinite;
 
     &--filled {
-        background-size: contain;
-        background-position-y: 18px;
+        background-size: 100%;
+        background-position-y: 19px;
         animation: none;
 
         .browser__header {
@@ -83,6 +87,9 @@ h2 {
             font-weight: 400;
             padding-left: 0.25rem;
             color: #000;
+            overflow: visible;
+            word-break: break-all;
+            inline-size: 10rem;
         }
 
         &--controls {
@@ -92,6 +99,6 @@ h2 {
     }
 
     &__content {
-        height: 7.667rem;
+        height: 6.667rem;
     }
 }

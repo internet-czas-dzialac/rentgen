@@ -5,7 +5,7 @@ import { Explainers } from './explainers';
 import { ParsedAnswers } from './parse-answers';
 import { v } from './verbs';
 import './email-content.scss';
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 
 declare var PLUGIN_NAME: string;
 declare var PLUGIN_URL: string;
@@ -28,18 +28,26 @@ export default function EmailContent({
                 .reduce((a, b) => a.concat(b), [])
         )
     ).map((explainer_key) => Explainers[explainer_key]);
+    const [copied, setCopy] = useState<boolean>(false);
+
+    function copyTextToClipboard() {
+        // Should be changed in the future to Clipboard API (https://developer.mozilla.org/en-US/docs/Web/API/Clipboard/write#browser_compatibility)
+        let r = document.createRange();
+        r.selectNode(document.querySelector('.mail-container__content'));
+        window.getSelection().addRange(r);
+        document.execCommand('copy');
+        window.getSelection().removeAllRanges();
+        setCopy(true);
+    }
+
     return (
         <Fragment>
             <div className="generator-container">
                 <h1>Treść maila</h1>
                 <div className="mail-container">
                     <div className="mail-container__header">
-                        <div className="mail-container__header--control">
-                            <button>Kopiuj</button>
-                        </div>
+                        <div className="mail-container__header--control"></div>
                     </div>
-
-                    {/* <pre>{JSON.stringify(answers, null, 3)}</pre> */}
                     <article className="mail-container__content">
                         <p>Dzień dobry,</p>
                         <p>
@@ -68,6 +76,11 @@ export default function EmailContent({
                             ochronie danych, dalej: „RODO”).
                         </p>
                     </article>
+                </div>
+                <div className="buttons-container">
+                    <button className="sv_next_btn" onClick={() => copyTextToClipboard()}>
+                        {copied ? 'Skopiowano!' : 'Kopiuj'}
+                    </button>
                 </div>
             </div>
         </Fragment>
