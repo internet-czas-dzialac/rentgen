@@ -79,9 +79,21 @@ export default function EmailContent({
                 </div>
                 <div className="buttons-container">
                     <button className="sv_next_btn" onClick={() => copyTextToClipboard()}>
-                        {copied ? 'Skopiowano!' : 'Kopiuj'}
+                        {copied ? 'Skopiowano!' : 'Kopiuj treść wiadomości'}
                     </button>
                 </div>
+                {copied ? (
+                    <section className="greeting-text">
+                        <strong>Przed Tobą ostatni krok! 😊</strong>
+                        <p>
+                            <a href="mailto:?subject=Zapytanie o przetwarzanie moich danych osobowych przez Państwa stronę">
+                                Przejdź do swojego klienta pocztowego
+                            </a>
+                            , załącz zrzuty ekranów, wklej treść wiadomości i wyślij ją do
+                            administratorów witryny {visited_url.split('/').slice(0, 3).join('/')}.
+                        </p>
+                    </section>
+                ) : null}
             </div>
         </Fragment>
     );

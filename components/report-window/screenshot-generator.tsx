@@ -133,13 +133,23 @@ export default function ScreenshotGenerator({
 
             {mode === 'in_progress' || mode === 'finished' ? (
                 <Fragment>
-                    <h1>Przygotowujemy zrzuty ekranów</h1>
+                    <h1>Przygotowanie zrzutów ekranów</h1>
                     <div className="container">
-                        <h2>To może chwilkę zająć...</h2>
-                        <p>
-                            Nasz serwer właśnie odwiedza wskazaną przez Ciebie stronę i przygotowuje
-                            zrzuty ekranów narzędzi deweloperskich.
-                        </p>
+                        {mode === 'in_progress' ? (
+                            <Fragment>
+                                <h2>To może chwilkę zająć...</h2>
+                                <p>
+                                    Nasz serwer właśnie odwiedza wskazaną przez Ciebie stronę
+                                    i przygotowuje zrzuty ekranów narzędzi deweloperskich.
+                                </p>
+                            </Fragment>
+                        ) : null}
+                        {mode === 'finished' ? (
+                            <Fragment>
+                                <h2>Gotowe!</h2>
+                                <p>Zrzuty ekranów narzędzi deweloperskich są gotowe do pobrania.</p>
+                            </Fragment>
+                        ) : null}
 
                         <div className="images">
                             {images.map((screenshot) => {
@@ -175,9 +185,11 @@ export default function ScreenshotGenerator({
                     </div>
                     <div className="buttons-container">
                         {mode === 'finished' ? (
-                            <button className="sv_next_btn" onClick={() => downloadFiles()}>
-                                Pobierz zrzuty ekranów
-                            </button>
+                            <Fragment>
+                                <button className="sv_next_btn" onClick={() => downloadFiles()}>
+                                    Pobierz zrzuty ekranów i przejdź dalej
+                                </button>
+                            </Fragment>
                         ) : null}
                     </div>
                 </Fragment>

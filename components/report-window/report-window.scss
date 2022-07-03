@@ -18,7 +18,6 @@ body {
 nav {
     position: sticky;
     top: 0;
-    // background-color: #fff;
     display: flex;
     flex-wrap: wrap;
     justify-content: left;
@@ -53,6 +52,7 @@ h1 {
     position: sticky;
     top: 0;
     z-index: 1;
+    user-select: none;
 
     .webpage-metadata {
         word-break: break-all;

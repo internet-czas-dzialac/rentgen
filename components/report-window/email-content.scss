@@ -29,10 +29,13 @@ h1 {
     }
 
     &__content {
-        height: 50vh;
+        max-height: 50vh;
         overflow-y: scroll;
         padding: 1rem 2rem;
         color: $black-color;
+        a {
+            color: $ultra-black-color;
+        }
     }
 
     h2 {
@@ -42,5 +45,14 @@ h1 {
 
     p {
         font-size: calc(14 / 16 * 1rem);
+    }
+}
+
+.greeting-text {
+    font-size: 1rem;
+
+    a {
+        color: $ultra-black-color;
+        font-weight: 700;
     }
 }

@@ -3,6 +3,7 @@
 body {
     width: 400px;
     overflow-x: hidden;
+    user-select: none;
 }
 
 .toolbar {
@@ -19,6 +20,7 @@ body {
         top: 0;
         background: #ffffff;
         z-index: 1;
+        user-select: none;
 
         .webpage-metadata {
             word-break: break-all;

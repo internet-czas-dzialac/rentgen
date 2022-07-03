@@ -220,14 +220,15 @@ export default function generateSurveyQuestions(hosts: string[]) {
                         type: 'html',
                         visibleIf:
                             '{is_incognito_different} != "no" and ({popup_type} = "none" or {popup_type} = "page") ',
-                        html: /* HTML */ `Jeżeli w trybie incognito widzisz więcej okienek z
-                            informacjami o przetwarzaniu danych osobowych, wykonaj analizę w
-                            normalnym trybie ponownie - ale najpierw usuń pliki cookies tej strony.
+                        html: /* HTML */ `Jeżeli w trybie incognito {widzisz} więcej okienek z
+                            informacjami o przetwarzaniu danych osobowych, {wykonaj} analizę w
+                            normalnym trybie ponownie - ale najpierw {usuń} pliki cookies tej
+                            strony.
                             <a
                                 href="https://support.mozilla.org/pl/kb/usuwanie-ciasteczek-i-danych-stron-firefox?redirectslug=usuwanie-ciasteczek&redirectlocale=pl"
                                 target="_blank"
                             >
-                                Zobacz, jak to zrobić
+                                {Zobacz}, jak to zrobić
                             </a>`,
                     },
                     {
@@ -285,7 +286,7 @@ export default function generateSurveyQuestions(hosts: string[]) {
                             },
                             {
                                 value: 'yes',
-                                text: 'Nie. Muszę wykonać więcej czynności aby odmówić wszystkich zgód, albo opcja niewyrażenia zgody jest mało widoczna.',
+                                text: 'Nie. {Muszę} wykonać więcej czynności aby odmówić wszystkich zgód, albo opcja niewyrażenia zgody jest mało widoczna.',
                             },
                         ],
                     },
@@ -339,7 +340,7 @@ export default function generateSurveyQuestions(hosts: string[]) {
                         name: 'administrator_identity_available_before_choice',
                         isRequired: true,
                         visibleIf: '{popup_type} = "some_choice"',
-                        title: 'Czy przed podjęciem wyboru dot. {Twoich} danych masz możliwość poznać tożsamość administratora strony?',
+                        title: 'Czy przed podjęciem wyboru dot. {Twoich} danych {masz} możliwość poznać tożsamość administratora strony?',
                         choices: [
                             {
                                 value: 'yes',
@@ -363,10 +364,10 @@ export default function generateSurveyQuestions(hosts: string[]) {
                         name: 'policy_readable',
                         isRequired: true,
                         choices: [
-                            { value: 'yes', text: 'dostępna i czytelna' },
+                            { value: 'yes', text: 'Dostępna i czytelna' },
                             {
                                 value: 'entirely_obscured_by_popup',
-                                text: 'dostępna, ale nieczytelna. Zasłania ją całkowicie lub prawie całkowicie popup o RODO lub nie można się do niej doklikać bez podjęcia wyboru w okienku',
+                                text: 'Dostępna, ale nieczytelna. Zasłania ją całkowicie lub prawie całkowicie popup o RODO lub nie można się do niej doklikać bez podjęcia wyboru w okienku',
                             },
                             {
                                 value: 'cant_find',

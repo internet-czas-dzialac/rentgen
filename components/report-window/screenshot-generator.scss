@@ -27,6 +27,10 @@ h2 {
     max-width: 100ex;
     margin: 0 auto;
     font-size: calc(14 / 16 * 1rem);
+
+    a {
+        color: $ultra-black-color;
+    }
 }
 
 .buttons-container {
