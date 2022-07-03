@@ -128,6 +128,7 @@ function generateHostPage(
                 visibleIf: `{${f('legitimate_interest_activity_specified')}} = "precise" or {${f(
                     'consent_problems'
                 )}} = "none"`,
+                isRequired: true,
                 choices: [
                     { value: 'yes', text: 'Tak' },
                     { value: 'no', text: 'Nie' },
@@ -138,6 +139,7 @@ function generateHostPage(
                 type: 'radiogroup',
                 title: `Czy w {Twojej} ocenie wysłanie {Twoich} danych do właściciela domeny  ${host} było konieczne do świadczenia zażądanej przez {Ciebie} usługi drogą elektroniczną?`,
                 name: f('was_processing_necessary'),
+                isRequired: true,
                 ...defaultValue('was_processing_necessary'),
                 visibleIf: `{${f('legal_basis_type')}} = "legitimate_interest" or {${f(
                     'present'
@@ -156,6 +158,10 @@ export default function generateSurveyQuestions(hosts: string[]) {
     return {
         showQuestionNumbers: 'off',
         showProgressBar: 'top',
+        pagePrevText: 'Wróć',
+        pageNextText: 'Dalej',
+        completeText: 'Dalej',
+        locale: 'pl',
         clearInvisibleValues: 'onHidden',
         pages: [
             {

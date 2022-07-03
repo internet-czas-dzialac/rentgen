@@ -173,6 +173,10 @@ h1 {
     margin-bottom: 0.5rem;
 }
 
+.sv_q_radiogroup_label {
+    cursor: pointer;
+}
+
 .sv_nav {
     display: flex;
     margin: 2rem 0;
@@ -180,7 +184,8 @@ h1 {
 }
 
 .sv_prev_btn,
-.sv_next_btn {
+.sv_next_btn,
+.sv_complete_btn {
     border: 0;
     outline: 0;
     font-size: 0.875rem !important;
@@ -189,7 +194,8 @@ h1 {
     cursor: pointer;
     min-width: 100px;
 }
-.sv_next_btn {
+.sv_next_btn,
+.sv_complete_btn {
     background-color: #000 !important;
     font-weight: 800 !important;
     padding: 0 1.5rem;
