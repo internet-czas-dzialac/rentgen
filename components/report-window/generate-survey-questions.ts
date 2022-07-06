@@ -165,6 +165,16 @@ export default function generateSurveyQuestions(hosts: string[]) {
         clearInvisibleValues: 'onHidden',
         pages: [
             {
+                title: 'Tytuł - co to za ankieta?',
+                elements: [
+                    {
+                        type: 'html',
+                        name: 'intro',
+                        html: '<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab, odit dicta at aut esse culpa eveniet iure odio voluptates veniam sit. Libero explicabo, perspiciatis ad expedita officiis inventore impedit ducimus!</p>',
+                    },
+                ],
+            },
+            {
                 title: 'Zaimki',
                 elements: [
                     {
