@@ -208,9 +208,8 @@ const Toolbar = () => {
                 <Fragment>
                     <section className="about">
                         <p>
-                            Takie przetwarzanie danych może być niezgodne z prawem. Kliknij
-                            w przycisk „Generuj raport”, aby pomóc ustalić, czy ta strona nie
-                            narusza RODO.
+                            Takie przetwarzanie danych może być niezgodne z prawem. Przejdź do
+                            analizy aby pomóc ustalić, czy ta strona nie narusza RODO.
                         </p>
                     </section>
                     <section className="actions">
@@ -225,7 +224,7 @@ const Toolbar = () => {
                                 window.close(); // close toolbar popup
                             }}
                         >
-                            Generuj raport
+                            Przejdź do analizy
                         </button>
                     </section>
                 </Fragment>

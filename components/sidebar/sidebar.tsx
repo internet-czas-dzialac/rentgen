@@ -169,8 +169,11 @@ const Sidebar = () => {
                         {infoDataDialogAck ? (
                             <section className="dialog-container dialog-container--info">
                                 <span>
-                                    <strong>Rentgen automatycznie zaznacza wybrane domeny</strong>,
-                                    możesz teraz przejść do generowania raportu lub dokonać korekty.
+                                    <strong>
+                                        Rentgen automatycznie zaznacza wybrane domeny na podstawie
+                                        zebranych danych.
+                                    </strong>{' '}
+                                    Możesz teraz przejść do generowania raportu lub dokonać korekty.
                                 </span>
                                 <button
                                     onClick={() => {
@@ -188,7 +191,7 @@ const Sidebar = () => {
                         {warningDataDialogAck ? (
                             <section className="dialog-container dialog-container--warning">
                                 <span>
-                                    <strong>Uwaga!</strong> Niekoniecznie każda przechwycona poniżej
+                                    <strong>Uwaga!</strong> Niekoniecznie każda przesłana poniżej
                                     informacja jest daną osobową. Niektóre z podanych domen mogą
                                     należeć do właściciela strony i nie reprezentować podmiotów
                                     trzecich.

@@ -31,7 +31,7 @@ const words = {
     wykonaj: ['wykonaj', 'wykonaj', 'wykonaj', 'wykonajcie'],
     wyraziłem: ['wyraziłem', 'wyraziłam', 'wyraziłom', 'wyraziliśmy'],
     wyraziłeś: ['wyraziłeś', 'wyraziłaś', 'wyraziłoś', 'wyraziliście'],
-    zamknąłem: ['zamknąłem', 'zamknęłom', 'zamknęłom', 'zamknęliśmy'],
+    zamknąłem: ['zamknąłem', 'zamknęłam', 'zamknęłom', 'zamknęliśmy'],
     zobacz: ['zobacz', 'zobacz', 'zobacz', 'zobaczcie'],
     zamknąłeś: ['zamknąłeś', 'zamknęłaś', 'zamknęłoś', 'zamknęliście'],
     znalazłem: ['znalazłem', 'znalazłam', 'znalazłom', 'znaleźliśmy'],
