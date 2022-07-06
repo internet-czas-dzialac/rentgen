@@ -31,4 +31,48 @@
             width: 3rem;
         }
     }
+
+    .buttons {
+        display: flex;
+        flex-flow: column;
+        padding: 0.5rem 0 1rem;
+
+        .button-container {
+            padding: 0.25rem 0;
+        }
+
+        button {
+            border: none;
+            cursor: pointer;
+            color: $ultra-black-color;
+            padding: 0;
+            display: flex;
+            flex-wrap: nowrap;
+            line-height: 1.25rem;
+            background: #fff;
+            width: 100%;
+
+            &:hover {
+                color: #000;
+                text-decoration: underline;
+                svg path {
+                    fill: #000;
+                }
+            }
+
+            &:disabled {
+                cursor: not-allowed;
+                color: $disabled-grey;
+                svg path {
+                    fill: $disabled-grey;
+                }
+            }
+
+            span {
+                padding-left: 0.5rem;
+                font-size: 0.875rem;
+                font-weight: 500;
+            }
+        }
+    }
 }

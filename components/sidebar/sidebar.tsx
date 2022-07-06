@@ -91,29 +91,16 @@ const Sidebar = () => {
 
             {stolenDataView ? (
                 <nav>
-                    <button onClick={() => setStolenDataView(!stolenDataView)}>
-                        <img src="/assets/icons/settings.svg" width="20" height="20" />
-                        <span>Ustawienia</span>
-                    </button>
                     <button
                         onClick={() => {
-                            getMemory().removeRequestsFor(origin);
-                            getMemory().emit('change', origin);
-                            setMarksOccurrence(false);
+                            window.open(
+                                `/components/report-window/report-window.html?origin=${origin}`,
+                                'new_tab'
+                            );
                         }}
                     >
-                        <img src="/assets/icons/trash_full.svg" width="20" height="20" />
-                        <span>Wyczyść historię wtyczki</span>
-                    </button>
-                    <button
-                        onClick={() => {
-                            getMemory().removeCookiesFor(origin);
-                            getMemory().emit('change', origin);
-                            setMarksOccurrence(false);
-                        }}
-                    >
-                        <img src="/assets/icons/cookie.svg" width="20" height="20" />
-                        <span>Wyczyść ciasteczka</span>
+                        <img src="/assets/icons/report.svg" width="20" height="20" />
+                        <span>Generuj raport</span>
                     </button>
                     <button
                         onClick={() => {
@@ -134,6 +121,11 @@ const Sidebar = () => {
                             {detailsVisibility ? 'Ukryj szczegóły' : 'Wyświetlaj szczegóły'}
                         </span>
                     </button>
+                    <button onClick={() => setStolenDataView(!stolenDataView)}>
+                        <img src="/assets/icons/settings.svg" width="20" height="20" />
+                        <span>Ustawienia</span>
+                    </button>
+
                     {localStorage.getItem('blottingBrowser') ===
                     'nikttakniesplamitwojejprzeglądarkijakspidersweb' ? (
                         <button
@@ -231,6 +223,16 @@ const Sidebar = () => {
                         detailsVisibility={detailsVisibility}
                         setDetailsVisibility={setDetailsVisibility}
                         setStolenDataView={setStolenDataView}
+                        removeCookies={() => {
+                            getMemory().removeCookiesFor(origin);
+                            getMemory().emit('change', origin);
+                            setMarksOccurrence(false);
+                        }}
+                        removeRequests={() => {
+                            getMemory().removeRequestsFor(origin);
+                            getMemory().emit('change', origin);
+                            setMarksOccurrence(false);
+                        }}
                     />
                 )}
             </section>

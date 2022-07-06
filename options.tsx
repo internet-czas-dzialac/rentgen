@@ -13,6 +13,8 @@ export default function Options({
     detailsVisibility,
     setDetailsVisibility,
     setStolenDataView,
+    removeCookies,
+    removeRequests,
 }: {
     minValueLength: number;
     setMinValueLength: (n: number) => void;
@@ -25,6 +27,8 @@ export default function Options({
     detailsVisibility: boolean;
     setDetailsVisibility: (b: boolean) => void;
     setStolenDataView: (b: boolean) => void;
+    removeCookies: () => void;
+    removeRequests: () => void;
 }) {
     return (
         <Fragment>
@@ -112,6 +116,21 @@ export default function Options({
                         </label>
                     </div>
                 </fieldset>
+                <span>Narzędzia deweloperskie</span>
+                <div className="buttons">
+                    <div className="button-container">
+                        <button onClick={() => removeRequests()}>
+                            <img src="/assets/icons/trash_full.svg" width="20" height="20" />
+                            <span>Wyczyść historię wtyczki</span>
+                        </button>
+                    </div>
+                    <div className="button-container">
+                        <button onClick={() => removeCookies()}>
+                            <img src="/assets/icons/cookie.svg" width="20" height="20" />
+                            <span>Wyczyść ciasteczka</span>
+                        </button>
+                    </div>
+                </div>
             </div>
         </Fragment>
     );
