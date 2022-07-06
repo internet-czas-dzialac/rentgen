@@ -135,15 +135,11 @@ const Toolbar = () => {
                         <span>Przejdź do wybranej strony internetowej</span>
                     )}
                 </div>
-                {stolenDataView ? (
+                {origin ? (
                     <a href="https://internet-czas-dzialac.pl">
                         <img src="/assets/icons/info_circle_outline.svg" width="20" height="20" />
                     </a>
-                ) : (
-                    <button onClick={() => setStolenDataView(true)}>
-                        <img src="/assets/icons/short_left.svg" width="20" height="20" />
-                    </button>
-                )}
+                ) : null}
             </header>
 
             <section className="summary">

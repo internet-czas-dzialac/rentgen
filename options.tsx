@@ -81,6 +81,7 @@ export default function Options({
                         <input
                             type="number"
                             id="minValueLength"
+                            min={1}
                             value={minValueLength}
                             onChange={(e) => {
                                 setMinValueLength(parseInt(e.target.value));

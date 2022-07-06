@@ -137,13 +137,18 @@ export default function StolenDataCluster({
                             getMemory().emit('change', cluster.id);
                         }}
                     />
-                    <a className="domain" href={'https://' + cluster.id}>
+                    <a className="domain" href={'https://' + cluster.id} target="_blank">
                         {cluster.id}
                     </a>
                 </div>
                 <div className="subdomains-container">
                     {fullHosts.map((host, index) => (
-                        <a className="subdomain" key={host} href={`https://${host}`}>
+                        <a
+                            className="subdomain"
+                            key={host}
+                            href={`https://${host}`}
+                            target="_blank"
+                        >
                             {host} {`${fullHosts.length - 1 !== index ? '· ' : ''}`}
                         </a>
                     ))}
