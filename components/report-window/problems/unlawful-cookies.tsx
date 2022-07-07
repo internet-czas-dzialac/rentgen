@@ -118,7 +118,7 @@ export class UnlawfulCookieAccess extends Problem {
                             return (
                                 <p>
                                     Nie {_('wyraziłem')} zgody na takie przetwarzanie {_('moich')}{' '}
-                                    danych osobowych. W okienku pytającym o zgodję nic nie{' '}
+                                    danych osobowych. W okienku pytającym o zgodę nic nie{' '}
                                     {_('kliknąłem')}. Nie jest zatem spełniony warunek 1.
                                 </p>
                             );
