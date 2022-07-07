@@ -60,10 +60,10 @@ function generateHostPage(
                     'present'
                 )}} != "not_mentioned" and {${f('present')}} != "not_before_making_a_choice"`,
                 choices: [
-                    { value: 'consent', text: 'to zgoda.' },
+                    { value: 'consent', text: 'to zgoda (art. 6 ust. 1 lit. a RODO).' },
                     {
                         value: 'legitimate_interest',
-                        text: 'to uzasadniony interes.',
+                        text: 'to uzasadniony interes (art. 6 ust. 1 lit. f RODO).',
                     },
                     { value: 'not_mentioned', text: 'nie jest wskazana nigdzie na stronie.' },
                 ],

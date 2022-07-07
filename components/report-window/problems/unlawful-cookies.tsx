@@ -162,9 +162,12 @@ export class UnlawfulCookieAccess extends Problem {
                     ''
                 )}
                 <p>
-                    {_('Proszę')} o wskazanie, czy być może stosowali Państwo inną podstawę prawną
-                    do takiego przetwarzania {_('moich')} danych osobowych, czy przetwarzali je
-                    państwo bez ważnej podstawy prawnej?
+                    {_('Proszę')} o wskazanie,{' '}
+                    <strong>
+                        czy być może stosowali Państwo inną podstawę prawną do takiego przetwarzania{' '}
+                        {_('moich')} danych osobowych, czy przetwarzali je państwo bez ważnej
+                        podstawy prawnej?
+                    </strong>
                 </p>
                 {maybe_unnecessary_hosts.length > 1 ? (
                     <p>

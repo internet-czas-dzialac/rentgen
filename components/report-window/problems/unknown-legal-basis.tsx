@@ -61,8 +61,11 @@ export class UnknownLegalBasis extends Problem {
                     o tym, jaka jest podstawa prawna takiego przetwarzania danych.
                 </p>
                 <p>
-                    Zwracam się zatem z pytaniem: jakie były podstawy prawne ujawnienia moich danych
-                    każdemu z wyżej wymienionych podmiotów przez Państwa stronę?
+                    Zwracam się zatem z pytaniem:{' '}
+                    <strong>
+                        jakie były podstawy prawne ujawnienia moich danych każdemu z wyżej
+                        wymienionych podmiotów przez Państwa stronę?
+                    </strong>
                 </p>
             </>
         );
