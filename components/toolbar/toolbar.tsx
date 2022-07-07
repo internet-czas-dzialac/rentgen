@@ -145,22 +145,22 @@ const Toolbar = () => {
             <section className="summary">
                 <div className="counters-wrapper">
                     <div className="counters">
-                        <div className="counter counter--browser-history">
-                            <img src="/assets/icons/warning.svg#color" width="24" height="24" />
-                            <span data-event={`${eventCounts['*']}`}>
-                                {
-                                    Object.values(getMemory().getClustersForOrigin(origin)).filter(
-                                        (cluster) => cluster.exposesOrigin()
-                                    ).length
-                                }
-                            </span>
-                        </div>
                         <div className="counter counter--cookies">
                             <img src="/assets/icons/cookie.svg#color" width="24" height="24" />
                             <span data-event={`${eventCounts['*']}`}>
                                 {
                                     Object.values(getMemory().getClustersForOrigin(origin)).filter(
                                         (cluster) => cluster.hasCookies()
+                                    ).length
+                                }
+                            </span>
+                        </div>
+                        <div className="counter counter--browser-history">
+                            <img src="/assets/icons/warning.svg#color" width="24" height="24" />
+                            <span data-event={`${eventCounts['*']}`}>
+                                {
+                                    Object.values(getMemory().getClustersForOrigin(origin)).filter(
+                                        (cluster) => cluster.exposesOrigin()
                                     ).length
                                 }
                             </span>
@@ -174,18 +174,6 @@ const Toolbar = () => {
             </section>
 
             <section className="details">
-                {exposedOriginDomainCopy ? (
-                    <p
-                        data-event={`${eventCounts['*']}`}
-                        title={Object.values(getMemory().getClustersForOrigin(origin))
-                            .filter((cluster) => cluster.exposesOrigin())
-                            .map((domain) => domain.id)
-                            .join(', ')}
-                    >
-                        {first_sentence_cookie}
-                        <strong>{exposedOriginDomainCopy}</strong>
-                    </p>
-                ) : null}
                 {cookieDomainCopy ? (
                     <p
                         data-event={`${eventCounts['*']}`}
@@ -194,8 +182,20 @@ const Toolbar = () => {
                             .map((domain) => domain.id)
                             .join(', ')}
                     >
-                        {first_sentence_history}
+                        {first_sentence_cookie}
                         <strong>{cookieDomainCopy}</strong>
+                    </p>
+                ) : null}
+                {exposedOriginDomainCopy ? (
+                    <p
+                        data-event={`${eventCounts['*']}`}
+                        title={Object.values(getMemory().getClustersForOrigin(origin))
+                            .filter((cluster) => cluster.exposesOrigin())
+                            .map((domain) => domain.id)
+                            .join(', ')}
+                    >
+                        {first_sentence_history}
+                        <strong>{exposedOriginDomainCopy}</strong>
                     </p>
                 ) : null}
             </section>
