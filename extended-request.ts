@@ -117,9 +117,10 @@ export default class ExtendedRequest {
 
     async cacheOrigin(): Promise<void> {
         let url: string;
-        if (this.data.tabId && this.data.tabId >= 0) {
-            const tab = await browser.tabs.get(this.data.tabId);
-            url = tab.url;
+        if (this.data.type === 'main_frame') {
+            url = this.data.url;
+        } else if (this.data.originUrl) {
+            url = this.data.originUrl;
         } else if (
             (this.data as any)?.frameAncestors &&
             (this.data as any).frameAncestors[0] !== undefined
