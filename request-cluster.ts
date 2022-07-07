@@ -182,4 +182,15 @@ export class RequestCluster extends SaferEmitter {
             entry.unmark();
         });
     }
+
+    getDataTypeDescription(noun = 'Twojej') {
+        let types_of_data: string[] = [];
+        if (this.exposesOrigin()) {
+            types_of_data.push(`część ${noun} historii przeglądania`);
+        }
+        if (this.hasMarkedCookies()) {
+            types_of_data.push('unikalne ID z cookies');
+        }
+        return types_of_data.join(', ');
+    }
 }

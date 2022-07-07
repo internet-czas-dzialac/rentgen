@@ -3,6 +3,9 @@ import { v } from '../verbs';
 import { Problem } from './problem';
 
 export default class NoInformationAtAllProblem extends Problem {
+    qualifies() {
+        return this.answers.popup_type === 'none';
+    }
     getEmailContent() {
         const _ = (word: string) => v(word, this.answers.zaimek);
         return (

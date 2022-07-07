@@ -50,6 +50,7 @@ export function parseAnswers({
     mentions_passive_consent,
     rejection_is_hard,
     administrator_identity_available_before_choice,
+    popup_action,
     ...rest
 }: RawAnswers): ParsedAnswers {
     return {
@@ -62,6 +63,7 @@ export function parseAnswers({
         mentions_passive_consent,
         rejection_is_hard,
         administrator_identity_available_before_choice,
+        popup_action,
         hosts: parseHostAnswers(rest),
     } as ParsedAnswers;
 }

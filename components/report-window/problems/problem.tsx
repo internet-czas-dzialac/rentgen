@@ -19,6 +19,7 @@ export abstract class Problem {
 
     abstract getEmailContent(): JSX.Element;
     abstract getNecessaryExplainers(): ExplainerKey[];
+    abstract qualifies(): boolean;
 
     getMarkedClusters() {
         return Object.values(this.clusters).filter((c) => c.hasMarks());

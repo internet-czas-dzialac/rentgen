@@ -1,7 +1,5 @@
-import { RequestCluster } from '../../../request-cluster';
 import { wordlist } from '../../../util';
 import { ExplainerKey } from '../explainers';
-import { ParsedAnswers } from '../parse-answers';
 import { v } from '../verbs';
 import { Problem } from './problem';
 
@@ -10,16 +8,16 @@ export class UnlawfulCookieAccess extends Problem {
         return ['cookies_are_pii', 'responsibility_for_third_parties'];
     }
 
-    static qualifies(answers: ParsedAnswers, clusters: RequestCluster[]): boolean {
+    qualifies(): boolean {
         // są cookiesy, nie było zgody, nie są konieczne do działania strony
-        const cookie_clusters = Object.values(clusters).filter((c) => c.hasMarkedCookies());
+        const cookie_clusters = Object.values(this.clusters).filter((c) => c.hasMarkedCookies());
         return cookie_clusters.some((cluster) => {
-            const hostAnswers = answers.hosts[cluster.id];
+            const hostAnswers = this.answers.hosts[cluster.id];
             return (
                 (hostAnswers.present == 'not_mentioned' ||
                     hostAnswers.present == 'not_before_making_a_choice' ||
-                    ['none', 'closed_popup', 'deny_all'].includes(answers.popup_action) ||
-                    answers.popup_type === 'none') &&
+                    ['none', 'closed_popup', 'deny_all'].includes(this.answers.popup_action) ||
+                    this.answers.popup_type === 'none') &&
                 hostAnswers.was_processing_necessary != 'yes'
             );
         });

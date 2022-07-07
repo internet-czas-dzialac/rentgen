@@ -16,14 +16,7 @@ function generateHostPage(
         return { defaultValueExpression: `{${f(name, previous_cluster)}}` };
     }
     const domain = cluster.id;
-    let types_of_data: string[] = [];
-    if (cluster.exposesOrigin()) {
-        types_of_data.push('część Twojej historii przeglądania');
-    }
-    if (cluster.hasMarkedCookies()) {
-        types_of_data.push('unikalne ID z cookies');
-    }
-    const danych = types_of_data.join(', ');
+    const danych = cluster.getDataTypeDescription();
     return {
         title: cluster.id,
         elements: [

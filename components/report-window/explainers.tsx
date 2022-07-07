@@ -20,7 +20,7 @@ export const Explainers: Record<ExplainerKey, (zaimek_index: 0 | 1 | 2 | 3) => J
                 W wypadku, gdy ujawnienie czy dostęp do danych osobowych zostało dokonane przez
                 skrypty podmiotów trzecich (np. Google, Facebook, itp), których autorem nie jest
                 Administrator strony, Administrator wciąż jest odpowiedzialny za procesy
-                przetwarzania danych osobowych, jakie realizują te skrypty&mdash;w myśl treści{' '}
+                przetwarzania danych osobowych, jakie realizują te skrypty - w myśl treści{' '}
                 <a href="https://curia.europa.eu/juris/document/document.jsf?text=&docid=216555&pageIndex=0&doclang=PL&mode=lst&dir=&occ=first&part=1&cid=1254905">
                     wyroku TSUE w sprawie C-40/17
                 </a>

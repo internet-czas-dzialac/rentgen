@@ -48,7 +48,6 @@ export class SaferEmitter extends EventEmitter {
                         Reflect.apply(listener, this, args);
                     } catch (error) {
                         console.error(error);
-                        debugger;
                     }
                 });
         }

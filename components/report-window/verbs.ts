@@ -8,6 +8,7 @@ const words = {
     mnie: ['mnie', 'mnie', 'mnie', 'nas'],
     moich: ['moich', 'moich', 'moich', 'naszych'],
     moje: ['moje', 'moje', 'moje', 'nasze'],
+    moja: ['moja', 'moja', 'moja', 'nasza'],
     mojej: ['mojej', 'mojej', 'mojej', 'naszej'],
     muszę: ['muszę', 'muszę', 'muszę', 'musimy'],
     odkliknąłeś: ['odkliknąłeś', 'odkliknęłaś', 'odklikęłoś', 'odkliknęliście'],
