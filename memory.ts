@@ -3,7 +3,7 @@ import { getshorthost, makeThrottle } from './util';
 import { RequestCluster } from './request-cluster';
 import { SaferEmitter } from './safer-emitter';
 
-function setDomainsNumber(counter: number, tabId: number) {
+function setDomainsCount(counter: number, tabId: number) {
     browser.browserAction.setBadgeText({ text: counter < 0 ? '0' : counter.toString(), tabId });
     browser.browserAction.setTitle({
         title: 'Rentgen',
@@ -35,10 +35,12 @@ export default class Memory extends SaferEmitter {
             ? browser.browserAction.setBadgeBackgroundColor({ color: '#ff726b' })
             : browser.browserAction.setBadgeBackgroundColor({ color: '#ffb900' });
 
-        setDomainsNumber(
-            Object.values(this.getClustersForOrigin(request.origin)).length,
-            request.tabId
-        );
+        if (request.tabId >= 0) {
+            setDomainsCount(
+                Object.values(this.getClustersForOrigin(request.origin)).length,
+                request.tabId
+            );
+        }
     }
 
     constructor() {
