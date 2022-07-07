@@ -39,6 +39,7 @@ export default class NoInformationAtAllProblem extends Problem {
             })
         ) {
             explainers.push('cookies_are_pii');
+            explainers.push('responsibility_for_third_parties');
         }
         return explainers;
     }

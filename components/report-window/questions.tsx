@@ -1,15 +1,16 @@
 import * as Survey from 'survey-react';
+import { RequestCluster } from '../../request-cluster';
 import RawAnswers from './raw-answers';
 import useSurvey from './use-survey';
 
 export default function Questions({
-    hosts,
+    clusters,
     onComplete,
 }: {
-    hosts: string[];
+    clusters: RequestCluster[];
     onComplete: (data: RawAnswers) => void;
 }) {
-    const survey = useSurvey(hosts, {
+    const survey = useSurvey(clusters, {
         onComplete: (sender) => onComplete(sender.data),
     });
     if (!survey) {

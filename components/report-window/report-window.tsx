@@ -35,9 +35,9 @@ function Report() {
             <div {...{ 'data-version': counter }}>
                 {mode === 'survey' ? (
                     <Questions
-                        hosts={Object.values(clusters)
-                            .filter((cluster) => cluster.getMarkedRequests().length > 0)
-                            .map((cluster) => cluster.id)}
+                        clusters={Object.values(clusters).filter(
+                            (cluster) => cluster.getMarkedRequests().length > 0
+                        )}
                         onComplete={(answers) => {
                             setAnswers(parseAnswers(answers));
                             setMode('screenshots');

@@ -1,26 +1,37 @@
+import { RequestCluster } from '../../request-cluster';
+
 function generateHostPage(
-    host: string,
+    cluster: RequestCluster,
     index: number,
-    all_hosts: string[]
-): { title: string; elements: any[]; visibleIf: string } {
-    function f(name: string, h = host) {
-        return `${h.replace(/\./g, '_')}|${name}`;
+    all_clusters: RequestCluster[]
+): { title: string; elements: any[]; visibleIf?: string } {
+    function f(name: string, c = cluster) {
+        return `${c.id.replace(/\./g, '_')}|${name}`;
     }
-    const previous_host: string | null = index > 0 ? all_hosts[index - 1] : null;
+    const previous_cluster: RequestCluster | null = index > 0 ? all_clusters[index - 1] : null;
     function defaultValue(name: string) {
-        if (!previous_host) {
+        if (!previous_cluster) {
             return {};
         }
-        return { defaultValueExpression: `{${f(name, previous_host)}}` };
+        return { defaultValueExpression: `{${f(name, previous_cluster)}}` };
     }
+    const domain = cluster.id;
+    let types_of_data: string[] = [];
+    if (cluster.exposesOrigin()) {
+        types_of_data.push('część Twojej historii przeglądania');
+    }
+    if (cluster.hasMarkedCookies()) {
+        types_of_data.push('unikalne ID z cookies');
+    }
+    const danych = types_of_data.join(', ');
     return {
-        title: host,
+        title: cluster.id,
         elements: [
             {
                 type: 'radiogroup',
                 name: f('present'),
                 isRequired: true,
-                title: `Cel ujawnienia danych właścicielowi domeny ${host}`,
+                title: `Cel ujawnienia danych (${danych}) właścicielowi domeny ${domain}`,
                 ...defaultValue('present'),
                 visibleIf: '{popup_type} != "none"',
                 choices: [
@@ -76,7 +87,7 @@ function generateHostPage(
                 choices: [
                     {
                         value: 'claims_consent_but_sends_before_consent',
-                        text: `Strona wysłała {moje} dane do ${host} zanim {wyraziłem} na to zgodę`,
+                        text: `Strona wysłała {moje} dane do ${domain} zanim {wyraziłem} na to zgodę`,
                     },
                     {
                         value: 'claims_consent_but_there_was_no_easy_refuse',
@@ -111,18 +122,18 @@ function generateHostPage(
             },
             {
                 type: 'text',
-                title: `Jak administrator opisał to, na czym polega uzasadniony interes w kontekście ${host}?`,
+                title: `Jak administrator opisał to, na czym polega uzasadniony interes w kontekście ${domain}?`,
                 name: f('legitimate_interest_description'),
                 visibleIf: `{${f('legitimate_interest_activity_specified')}} = 'vague'`,
                 placeholder: 'marketing',
                 defaultValueExpression:
                     index == 0
                         ? 'marketing'
-                        : `{${f('legitimate_interest_description', previous_host)}}`,
+                        : `{${f('legitimate_interest_description', previous_cluster)}}`,
             },
             {
                 type: 'radiogroup',
-                title: `Czy domena ${host} należy do podmiotu spoza Europy (np. Google, Facebook)?`,
+                title: `Czy domena ${domain} należy do podmiotu spoza Europy (np. Google, Facebook)?`,
                 name: f('outside_eu'),
                 ...defaultValue('outside_eu'),
                 visibleIf: `{${f('legitimate_interest_activity_specified')}} = "precise" or {${f(
@@ -137,7 +148,7 @@ function generateHostPage(
             },
             {
                 type: 'radiogroup',
-                title: `Czy w {Twojej} ocenie wysłanie {Twoich} danych do właściciela domeny  ${host} było konieczne do świadczenia zażądanej przez {Ciebie} usługi drogą elektroniczną?`,
+                title: `Czy w {Twojej} ocenie ujawnienie {Twoich} danych (${danych}) właścicielowi domeny ${domain} było konieczne do świadczenia zażądanej przez {Ciebie} usługi drogą elektroniczną?`,
                 name: f('was_processing_necessary'),
                 isRequired: true,
                 ...defaultValue('was_processing_necessary'),
@@ -154,7 +165,7 @@ function generateHostPage(
     };
 }
 
-export default function generateSurveyQuestions(hosts: string[]) {
+export default function generateSurveyQuestions(clusters: RequestCluster[]) {
     return {
         showQuestionNumbers: 'off',
         showProgressBar: 'top',
@@ -393,7 +404,7 @@ export default function generateSurveyQuestions(hosts: string[]) {
                     },
                 ],
             },
-            ...hosts.map(generateHostPage),
+            ...clusters.map(generateHostPage),
         ],
     };
 }

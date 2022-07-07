@@ -7,7 +7,7 @@ import { Problem } from './problem';
 
 export class UnlawfulCookieAccess extends Problem {
     getNecessaryExplainers(): ExplainerKey[] {
-        return [];
+        return ['cookies_are_pii', 'responsibility_for_third_parties'];
     }
 
     static qualifies(answers: ParsedAnswers, clusters: RequestCluster[]): boolean {
@@ -76,7 +76,8 @@ export class UnlawfulCookieAccess extends Problem {
                     <li>
                         Użytkownik wyraził zgodę na takie przetwarzanie danych <em>po</em> tym, jak
                         został poinformowany bezpośrednio o celu uzyskania dostępu do tej
-                        informacji;
+                        informacji. Zgodnie z Art. 174 ustawy Prawo Telekomunikacyjne, taka zgoda
+                        musiałaby spełniać warunki zgody ustalone przez RODO;
                     </li>
                     <li>
                         Dostęp do treści plików cookies jest konieczny do dostarczania usługi

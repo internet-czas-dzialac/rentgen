@@ -1,16 +1,17 @@
 import * as React from 'react';
 import * as Survey from 'survey-react';
+import { RequestCluster } from '../../request-cluster';
 import generateSurveyQuestions from './generate-survey-questions';
 import RawAnswers from './raw-answers';
 import verbs, { v } from './verbs';
 
 export default function useSurvey(
-    hosts: string[],
+    clusters: RequestCluster[],
     { onComplete }: { onComplete: (sender: { data: RawAnswers }) => void }
 ): Survey.ReactSurveyModel {
     const [survey, setSurvey] = React.useState<Survey.Model>(null);
     React.useEffect(() => {
-        const model = generateSurveyQuestions(hosts);
+        const model = generateSurveyQuestions(clusters);
         console.log(model);
         const survey = new Survey.Model(model);
         survey.onProcessTextValue.add(function (
