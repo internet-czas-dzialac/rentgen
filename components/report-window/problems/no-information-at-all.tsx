@@ -37,7 +37,6 @@ export default class NoInformationAtAllProblem extends Problem {
 
         if (
             this.getMarkedClusters().some((cluster) => {
-                console.log(cluster);
                 return cluster.hasMarkedCookies();
             })
         ) {

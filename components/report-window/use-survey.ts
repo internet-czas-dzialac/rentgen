@@ -12,7 +12,6 @@ export default function useSurvey(
     const [survey, setSurvey] = React.useState<Survey.Model>(null);
     React.useEffect(() => {
         const model = generateSurveyQuestions(clusters);
-        console.log(model);
         const survey = new Survey.Model(model);
         survey.onProcessTextValue.add(function (
             sender: Survey.SurveyModel,

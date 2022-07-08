@@ -91,9 +91,6 @@ export default class ExtendedRequest {
         this.url = data.url;
         this.shorthost = getshorthost(data.url);
         this.requestBody = ((data as any).requestBody as undefined | RequestBody) || {};
-        if (this.url.includes('criteo')) {
-            console.log(this);
-        }
         ExtendedRequest.by_id[data.requestId] = this;
 
         this.data = Object.assign({}, data);

@@ -119,10 +119,6 @@ export default function StolenDataCluster({
     const fullHosts = cluster.getFullHosts();
     const [version] = useEmitter(cluster);
 
-    /* console.log('Stolen data cluster!', shorthost, refreshToken); */
-
-    console.log(cluster.getMarkedEntries());
-
     return (
         <div className="stolen-data-cluster-container">
             <header className="domains-container">
