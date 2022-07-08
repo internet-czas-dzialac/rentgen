@@ -42,6 +42,8 @@ function parseHostAnswers(
 
 export function parseAnswers({
     zaimek,
+    user_role,
+    email_type,
     is_incognito_different,
     policy_readable,
     popup_type,
@@ -55,6 +57,8 @@ export function parseAnswers({
 }: RawAnswers): ParsedAnswers {
     return {
         zaimek,
+        user_role,
+        email_type,
         is_incognito_different,
         policy_readable,
         popup_type,

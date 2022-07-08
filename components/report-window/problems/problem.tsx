@@ -17,7 +17,7 @@ function formatRange(cluster: RequestCluster) {
 export abstract class Problem {
     constructor(public answers: ParsedAnswers, public clusters: Record<string, RequestCluster>) {}
 
-    abstract getEmailContent(): JSX.Element;
+    abstract getEmailContent(mode: 'email' | 'report', tone: 'polite' | 'official'): JSX.Element;
     abstract getNecessaryExplainers(): ExplainerKey[];
     abstract qualifies(): boolean;
 

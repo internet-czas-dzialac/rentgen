@@ -1,5 +1,6 @@
 const words = {
     ciebie: ['ciebie', 'ciebie', 'ciebie', 'was'],
+    chciałbym: ['chciałbym', 'chciałabym', 'chciałobym', 'chcielibyśmy'],
     dokonałeś: ['dokonałeś', 'dokonałaś', 'dokonałoś', 'dokonaliście'],
     jesteś: ['jesteś', 'jesteś', 'jesteś', 'jesteście'],
     kliknąłem: ['kliknąłem', 'kliknęłam', 'klinkęłom', 'kliknęliśmy'],
@@ -8,6 +9,7 @@ const words = {
     mnie: ['mnie', 'mnie', 'mnie', 'nas'],
     moich: ['moich', 'moich', 'moich', 'naszych'],
     moje: ['moje', 'moje', 'moje', 'nasze'],
+    mojego: ['mojefo', 'mojego', 'mojego', 'naszego'],
     moja: ['moja', 'moja', 'moja', 'nasza'],
     mojej: ['mojej', 'mojej', 'mojej', 'naszej'],
     muszę: ['muszę', 'muszę', 'muszę', 'musimy'],

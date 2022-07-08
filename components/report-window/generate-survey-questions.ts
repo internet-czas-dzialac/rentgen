@@ -24,7 +24,7 @@ function generateHostPage(
                 type: 'radiogroup',
                 name: f('present'),
                 isRequired: true,
-                title: `Cel ujawnienia danych (${danych}) właścicielowi domeny ${domain}`,
+                title: `Strona udostępniła właścicielowi domeny ${domain} ${danych}. Cel takiego przetwarzania danych:`,
                 ...defaultValue('present'),
                 visibleIf: '{popup_type} != "none"',
                 choices: [
@@ -169,28 +169,53 @@ export default function generateSurveyQuestions(clusters: RequestCluster[]) {
         clearInvisibleValues: 'onHidden',
         pages: [
             {
-                title: 'Tytuł - co to za ankieta?',
+                title: 'Dodatkowe pytania',
                 elements: [
                     {
                         type: 'html',
                         name: 'intro',
                         html: /* HTML */ `<p>
-                            Analiza ruchu strony zakończona. Aby lepiej oszacować, gdzie są
-                            potencjalne obszary robocze pod względem zgodności z RODO, możesz
-                            udzielić odpowiedzi na pytania dotyczące funkcjonowania strony. Wtyczka
-                            wtedy wygeneruje raport lub treść maila, którą możesz wysłać do
-                            administratora strony.
+                            Analiza ruchu sieciowego generowanego przez stronę została zakończona.
+                            Teraz, aby lepiej oszacować, gdzie są potencjalne obszary robocze pod
+                            względem zgodności z RODO, możesz udzielić odpowiedzi na pytania
+                            dotyczące funkcjonowania strony. Wtyczka wtedy wygeneruje raport lub
+                            treść maila, którą możesz wysłać do administratora strony.
                         </p>`,
                     },
                 ],
             },
             {
-                title: 'Zaimki',
+                title: 'Kontekst analizy',
                 elements: [
                     {
                         type: 'radiogroup',
+                        name: 'user_role',
+                        title: 'Jestem:',
+                        choices: [
+                            { value: 'user', text: 'użytkownikiem strony' },
+                            { value: 'admin', text: 'administratorem strony' },
+                        ],
+                    },
+                    {
+                        type: 'radiogroup',
+                        name: 'email_type',
+                        title: 'Chcę:',
+                        visibleIf: "{user_role} = 'user'",
+                        choices: [
+                            {
+                                value: 'polite_information',
+                                text: 'uprzejmie poinformować administratora strony o potencjalnych problemach ze zgodnością z RODO na jego stronie',
+                            },
+                            {
+                                value: 'official_request',
+                                text: 'wysłać formalne zapytanie do administratora strony, na które ma obowiązek odpowiedzieć. Jeżeli administrator nie odpowie na takie zapytanie, może to być podstawą złożenia skargi do UODO',
+                            },
+                        ],
+                    },
+                    {
+                        type: 'radiogroup',
                         name: 'zaimek',
-                        title: 'Forma czasownika:',
+                        title: 'Forma czasownika, jaka będzie użyta w raporcie:',
                         isRequired: true,
                         choices: [
                             { value: 0, text: 'Wysłałem' },
@@ -312,7 +337,7 @@ export default function generateSurveyQuestions(clusters: RequestCluster[]) {
                             },
                             {
                                 value: 'yes',
-                                text: 'Nie. {Muszę} wykonać więcej czynności aby odmówić wszystkich zgód, albo opcja niewyrażenia zgody jest mało widoczna.',
+                                text: 'Nie. {Muszę} wykonać więcej czynności (np. kliknięć) aby odmówić wszystkich zgód, albo opcja niewyrażenia zgody jest mało widoczna.',
                             },
                         ],
                     },

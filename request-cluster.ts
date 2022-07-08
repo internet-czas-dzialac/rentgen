@@ -191,6 +191,10 @@ export class RequestCluster extends SaferEmitter {
         if (this.hasMarkedCookies()) {
             types_of_data.push('unikalne ID z cookies');
         }
+        if (types_of_data.length > 1) {
+            types_of_data[types_of_data.length - 1] =
+                'oraz ' + types_of_data[types_of_data.length - 1];
+        }
         return types_of_data.join(', ');
     }
 }

@@ -16,6 +16,8 @@ export type HostRawAnswers = {
 
 export type BasicRawAnswers = {
     zaimek: 0 | 1 | 2 | 3;
+    user_role: 'user' | 'admin';
+    email_type: 'polite_information' | 'official_request';
     is_incognito_different: [] | ['incognito_is_the_same'];
     policy_readable: 'yes' | 'vague' | 'cant_find';
     popup_action: 'none' | 'closed_popup' | 'accept_all' | 'deny_all' | 'other';
