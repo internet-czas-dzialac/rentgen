@@ -64,6 +64,7 @@ function Report() {
                             setReportWindowMode: setMode,
                             setRequestPath: setScrRequestPath,
                             downloadFiles: downloadFiles,
+                            user_role: answers.user_role,
                         }}
                     />
                 ) : (
@@ -77,6 +78,7 @@ function Report() {
                             clusters,
                             scrRequestPath,
                             downloadFiles: downloadFiles,
+                            user_role: answers.user_role,
                         }}
                     />
                 ) : (

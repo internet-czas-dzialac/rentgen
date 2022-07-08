@@ -55,12 +55,14 @@ export default function ScreenshotGenerator({
     setReportWindowMode,
     setRequestPath,
     downloadFiles,
+    user_role,
 }: {
     visited_url: string;
     clusters: Record<string, RequestCluster>;
     setReportWindowMode: Function;
     setRequestPath: Function;
     downloadFiles: Function;
+    user_role: string;
 }) {
     const [mode, setMode] = React.useState<string>('idle');
     const [images, setImages] = React.useState<Screenshot[]>([]);
@@ -92,16 +94,26 @@ export default function ScreenshotGenerator({
                     <h1>Przygotowanie zrzutów ekranów</h1>
                     <div className="container">
                         <h2>Notka informacyjna</h2>
-                        <p>
-                            Dla potwierdzenia przechwyconych danych, warto załączyć zrzuty ekranów
-                            narzędzi deweloperskich do maila dla administratora oraz Urzędu Ochrony
-                            Danych Osobowych.
-                        </p>
-                        <p>
-                            Jeżeli nie wiesz jak wykonać zrzuty ekranów, skorzystaj z{' '}
-                            <a href="">naszej instrukcji</a> lub wtyczka Rentgen może wygenerować je
-                            za Ciebie.
-                        </p>
+
+                        {user_role === 'user' ? (
+                            <Fragment>
+                                <p>
+                                    Dla potwierdzenia przechwyconych danych, warto załączyć zrzuty
+                                    ekranów narzędzi deweloperskich do maila dla administratora oraz
+                                    Urzędu Ochrony Danych Osobowych.
+                                </p>
+                                <p>
+                                    Jeżeli nie wiesz jak przygotować zrzuty ekranów to wtyczka
+                                    Rentgen może wygenerować je za Ciebie.
+                                </p>
+                            </Fragment>
+                        ) : (
+                            <p>
+                                Wtyczka Rentgen może skorzystać z zewnętrznego serwisu, aby wykonać
+                                zrzuty ekranu będące dowodem na to, że strona przetwarza dane
+                                osobowe w sposób, jaki wykazała analiza ruchu sieciowego.
+                            </p>
+                        )}
                     </div>
 
                     <div className="buttons-container">
@@ -168,7 +180,7 @@ export default function ScreenshotGenerator({
                                     >
                                         <div className="browser__header">
                                             <div className="browser__header--address-bar">
-                                                {screenshot.url.split('-').slice(-2).join('-')}
+                                                🕸 {screenshot.domain}
                                             </div>
                                             <div className="browser__header--controls">· · ·</div>
                                         </div>

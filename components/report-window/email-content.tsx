@@ -16,12 +16,14 @@ export default function EmailContent({
     clusters,
     scrRequestPath,
     downloadFiles,
+    user_role,
 }: {
     answers: ParsedAnswers;
     visited_url: string;
     clusters: Record<string, RequestCluster>;
     scrRequestPath: string;
     downloadFiles: Function;
+    user_role: string;
 }) {
     console.log('rendering email!', answers);
     const _ = (key: string) => v(key, answers.zaimek);
@@ -118,7 +120,7 @@ export default function EmailContent({
                         {copied ? 'Skopiowano!' : 'Kopiuj treść'}
                     </button>
                 </div>
-                {copied ? (
+                {copied && user_role === 'user' ? (
                     <section className="greeting-text">
                         <strong>Przed Tobą ostatni krok! 😊</strong>
                         <p>

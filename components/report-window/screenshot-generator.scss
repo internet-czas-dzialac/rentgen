@@ -74,16 +74,17 @@ h2 {
         border-bottom: 1px solid $disabled-grey;
 
         &--address-bar {
-            border: 1px solid $disabled-grey;
+            border: 1px solid #8a949f;
             height: 1rem;
             width: 10rem;
             font-size: 0.667rem;
             font-weight: 400;
-            padding-left: 0.25rem;
+            padding: 0 0.25rem;
             color: #000;
-            overflow: visible;
-            word-break: break-all;
+            overflow: hidden;
+            word-break: normal;
             inline-size: 10rem;
+            text-overflow: ellipsis;
         }
 
         &--controls {
