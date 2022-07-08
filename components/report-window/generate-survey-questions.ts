@@ -174,7 +174,13 @@ export default function generateSurveyQuestions(clusters: RequestCluster[]) {
                     {
                         type: 'html',
                         name: 'intro',
-                        html: '<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab, odit dicta at aut esse culpa eveniet iure odio voluptates veniam sit. Libero explicabo, perspiciatis ad expedita officiis inventore impedit ducimus!</p>',
+                        html: /* HTML */ `<p>
+                            Analiza ruchu strony zakończona. Aby lepiej oszacować, gdzie są
+                            potencjalne obszary robocze pod względem zgodności z RODO, możesz
+                            udzielić odpowiedzi na pytania dotyczące funkcjonowania strony. Wtyczka
+                            wtedy wygeneruje raport lub treść maila, którą możesz wysłać do
+                            administratora strony.
+                        </p>`,
                     },
                 ],
             },
