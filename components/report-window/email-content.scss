@@ -5,12 +5,6 @@ h1 {
     margin-bottom: calc(24 / 16 * 1rem);
 }
 
-.generator-container {
-    max-width: 100ex;
-    margin: 0 auto;
-    font-size: calc(14 / 16 * 1rem);
-}
-
 .mail-container {
     box-shadow: rgba(12, 12, 13, 0.1) 0px 1px 4px 0px;
     background-color: #fff;
@@ -51,5 +45,30 @@ h1 {
     a {
         color: $ultra-black-color;
         font-weight: 700;
+    }
+}
+
+.buttons-email-container {
+    display: grid;
+    grid-gap: 1rem;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    margin: 2rem 0;
+    padding: 1em 0;
+
+    &--single {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .sv_prev_btn,
+    .sv_next_btn {
+        margin: 0 !important;
+    }
+
+    .sv_prev_btn {
+        grid-column: 2/3;
+    }
+
+    .sv_next_btn--single {
+        grid-column: 2;
     }
 }

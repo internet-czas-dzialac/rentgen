@@ -13,16 +13,25 @@ enum taskState {
 type Screenshot = {
     url: string;
     domain: string;
+    filename: string;
     found_headers: string[];
 };
 
 interface screenshotTask {
-    url: string;
     domains: string[];
+    elapsed_time_s: number;
+    finished_time: number;
     id: string;
-    status: taskState;
-    output: string;
     images: Screenshot[];
+    jobs_ahead: number;
+    output: string;
+    processing_took: number;
+    request_time: number;
+    started_time: number;
+    status: taskState;
+    url: string;
+    waiting_took: number;
+    zip_url: string;
 }
 
 function createTaskEndpoint(visited_url: string, domains: string[]) {
@@ -44,14 +53,19 @@ export default function ScreenshotGenerator({
     visited_url,
     clusters,
     setReportWindowMode,
+    setRequestPath,
+    downloadFiles,
 }: {
     visited_url: string;
     clusters: Record<string, RequestCluster>;
     setReportWindowMode: Function;
+    setRequestPath: Function;
+    downloadFiles: Function;
 }) {
     const [mode, setMode] = React.useState<string>('idle');
     const [images, setImages] = React.useState<Screenshot[]>([]);
     const [taskId, setTaskId] = React.useState<string>(null);
+    const [output, setOutput] = React.useState<any>({});
 
     async function subscribeTask(path: string): Promise<screenshotTask> {
         let response = { status: taskState.WAITING };
@@ -69,19 +83,6 @@ export default function ScreenshotGenerator({
             setMode('finished');
         }
         return response as screenshotTask;
-    }
-
-    function downloadFiles() {
-        const urls = images.map((el) => `${SS_URL}${el}`);
-
-        for (const url of urls) {
-            let a = document.createElement('a');
-            a.setAttribute('href', url);
-            a.setAttribute('download', '');
-            a.setAttribute('target', '_blank');
-            a.click();
-        }
-        setReportWindowMode('preview');
     }
 
     return (
@@ -108,6 +109,7 @@ export default function ScreenshotGenerator({
                             className="sv_prev_btn"
                             onClick={() => {
                                 setReportWindowMode('preview');
+                                setRequestPath(null);
                             }}
                         >
                             Pomiń
@@ -123,6 +125,9 @@ export default function ScreenshotGenerator({
                                 setImages(response.images);
                                 console.log('response.images', response.images);
                                 console.log('output', response);
+
+                                setOutput(response);
+                                setRequestPath(response.zip_url);
                             }}
                         >
                             Wygeneruj
@@ -186,7 +191,13 @@ export default function ScreenshotGenerator({
                     <div className="buttons-container">
                         {mode === 'finished' ? (
                             <Fragment>
-                                <button className="sv_next_btn" onClick={() => downloadFiles()}>
+                                <button
+                                    className="sv_next_btn"
+                                    onClick={() => {
+                                        downloadFiles(`${SS_URL}${output.zip_url}`);
+                                        setReportWindowMode('preview');
+                                    }}
+                                >
                                     Pobierz zrzuty ekranów i przejdź dalej
                                 </button>
                             </Fragment>

@@ -274,3 +274,14 @@ h1 {
     font-weight: 600;
     font-size: calc(14 / 16 * 1rem);
 }
+
+.generator-container {
+    max-width: 100ex;
+    margin: 0 auto;
+    font-size: calc(14 / 16 * 1rem);
+    margin-top: 3rem;
+
+    a {
+        color: $ultra-black-color;
+    }
+}

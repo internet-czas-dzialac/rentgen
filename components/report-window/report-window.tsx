@@ -9,6 +9,14 @@ import EmailContent from './email-content';
 import { parseAnswers, ParsedAnswers } from './parse-answers';
 import ScreenshotGenerator from './screenshot-generator';
 
+function downloadFiles(link: string) {
+    let a = document.createElement('a');
+    a.setAttribute('href', link);
+    a.setAttribute('download', '');
+    a.setAttribute('target', '_blank');
+    a.click();
+}
+
 function Report() {
     try {
         const url = new URL(document.location.toString());
@@ -18,6 +26,8 @@ function Report() {
             url.searchParams.get('answers') ? JSON.parse(url.searchParams.get('answers')) : null
         );
         const [mode, setMode] = React.useState(url.searchParams.get('mode') || 'survey');
+        const [scrRequestPath, setScrRequestPath] = React.useState('');
+
         const clusters = getMemory().getClustersForOrigin(origin);
 
         React.useEffect(() => {
@@ -48,13 +58,30 @@ function Report() {
                 )}
                 {mode === 'screenshots' ? (
                     <ScreenshotGenerator
-                        {...{ visited_url, clusters, setReportWindowMode: setMode }}
+                        {...{
+                            visited_url,
+                            clusters,
+                            setReportWindowMode: setMode,
+                            setRequestPath: setScrRequestPath,
+                            downloadFiles: downloadFiles,
+                        }}
                     />
                 ) : (
                     ''
                 )}
-                {mode === 'preview' ? <EmailContent {...{ answers, visited_url, clusters }} /> : ''}
-                {/* <HARConverter {...{ entries }} /> */}
+                {mode === 'preview' ? (
+                    <EmailContent
+                        {...{
+                            answers,
+                            visited_url,
+                            clusters,
+                            scrRequestPath,
+                            downloadFiles: downloadFiles,
+                        }}
+                    />
+                ) : (
+                    ''
+                )}
             </div>
         );
         return (

@@ -8,14 +8,20 @@ import { Fragment, useState } from 'react';
 import emailIntro from './email-intro';
 import { reportIntro } from './report-intro';
 
+const SS_URL = 'http://65.108.60.135:3000';
+
 export default function EmailContent({
     answers,
     visited_url,
     clusters,
+    scrRequestPath,
+    downloadFiles,
 }: {
     answers: ParsedAnswers;
     visited_url: string;
     clusters: Record<string, RequestCluster>;
+    scrRequestPath: string;
+    downloadFiles: Function;
 }) {
     console.log('rendering email!', answers);
     const _ = (key: string) => v(key, answers.zaimek);
@@ -88,9 +94,28 @@ export default function EmailContent({
                         )}
                     </article>
                 </div>
-                <div className="buttons-container">
-                    <button className="sv_next_btn" onClick={() => copyTextToClipboard()}>
-                        {copied ? 'Skopiowano!' : 'Kopiuj treść wiadomości'}
+                <div
+                    className={
+                        scrRequestPath
+                            ? 'buttons-email-container'
+                            : 'buttons-email-container buttons-email-container--single'
+                    }
+                >
+                    {scrRequestPath ? (
+                        <button
+                            className="sv_prev_btn"
+                            onClick={() => downloadFiles(`${SS_URL}${scrRequestPath}`)}
+                        >
+                            Pobierz zrzuty ekranów
+                        </button>
+                    ) : null}
+                    <button
+                        className={
+                            scrRequestPath ? 'sv_next_btn' : 'sv_next_btn sv_next_btn--single'
+                        }
+                        onClick={() => copyTextToClipboard()}
+                    >
+                        {copied ? 'Skopiowano!' : 'Kopiuj treść'}
                     </button>
                 </div>
                 {copied ? (
