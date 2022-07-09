@@ -36,7 +36,7 @@ export class UnknownLegalBasis extends Problem {
         );
     }
 
-    getEmailContent(mode: 'email' | 'report', tone: 'polite' | 'official') {
+    getEmailContent({ mode, tone }: { mode: 'email' | 'report'; tone: 'official' | 'polite' }) {
         const clusters = this.getRelatedClusters();
         const _ = (key: string) => v(key, this.answers.zaimek);
         return (

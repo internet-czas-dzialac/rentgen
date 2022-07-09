@@ -25,7 +25,6 @@ export default function EmailContent({
     downloadFiles: Function;
     user_role: string;
 }) {
-    console.log('rendering email!', answers);
     const _ = (key: string) => v(key, answers.zaimek);
     const problems = deduceProblems(answers, clusters);
     const explainers = Array.from(
@@ -64,7 +63,9 @@ export default function EmailContent({
                         {mode === 'email'
                             ? emailIntro(email_tone, _, visited_url)
                             : reportIntro(visited_url)}
-                        {problems.map((problem) => problem.getEmailContent(mode, email_tone))}
+                        {problems.map((problem, index) => (
+                            <problem.getEmailContent mode={mode} tone={email_tone} key={index} />
+                        ))}
                         {explainers.map((explainer) => explainer(answers.zaimek))}
                         <h2>Państwa rola jako współadministratora danych osobowych</h2>
                         {mode == 'email' ? (

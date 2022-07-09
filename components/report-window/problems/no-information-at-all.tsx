@@ -6,7 +6,7 @@ export default class NoInformationAtAllProblem extends Problem {
     qualifies() {
         return this.answers.popup_type === 'none';
     }
-    getEmailContent(mode: 'email' | 'report', tone: 'official' | 'polite') {
+    getEmailContent({ mode, tone }: { mode: 'email' | 'report'; tone: 'official' | 'polite' }) {
         const _ = (word: string) => v(word, this.answers.zaimek);
         return (
             <>

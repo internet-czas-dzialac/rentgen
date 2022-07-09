@@ -23,7 +23,7 @@ export class UnlawfulCookieAccess extends Problem {
         });
     }
 
-    getEmailContent(mode: 'email' | 'report', tone: 'official' | 'polite') {
+    getEmailContent({ mode, tone }: { mode: 'email' | 'report'; tone: 'official' | 'polite' }) {
         const cookie_clusters = Object.values(this.clusters).filter((c) => c.hasMarkedCookies());
         const unnecessary_hosts = Object.entries(this.answers.hosts)
             .filter(([, answers]) => answers.was_processing_necessary === 'no')
@@ -245,10 +245,12 @@ export class UnlawfulCookieAccess extends Problem {
                         </p>
                     )
                 ) : (
-                    <p>
-                        Jeżeli zgoda nadal ma być używana jako podstawa prawna do odczytu cookiesów
-                        przez skrypty wyżej wymienionych podmiotów, to należy zmienić mechanizm
-                        zgody tak, aby:{' '}
+                    <>
+                        <p>
+                            Jeżeli zgoda nadal ma być używana jako podstawa prawna do odczytu plików
+                            cookies przez skrypty wyżej wymienionych podmiotów, to należy zmienić
+                            mechanizm zgody tak, aby:{' '}
+                        </p>{' '}
                         <ul>
                             <li>
                                 dawał użytkownikowi końcowemu możliwość odmowy zgody w sposób równie
@@ -262,7 +264,7 @@ export class UnlawfulCookieAccess extends Problem {
                                 na nie zgody.
                             </li>
                         </ul>
-                    </p>
+                    </>
                 )}
                 {maybe_unnecessary_hosts.length > 1 && mode == 'email' && tone == 'official' ? (
                     <p>

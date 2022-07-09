@@ -1,6 +1,4 @@
-import { RequestCluster } from '../../../request-cluster';
 import { ExplainerKey } from '../explainers';
-import { ParsedHostAnswers } from '../parse-answers';
 import { v } from '../verbs';
 import { Problem } from './problem';
 
@@ -13,7 +11,7 @@ export class UnknownIdentity extends Problem {
         return this.answers.administrator_identity_available_before_choice == 'no';
     }
 
-    getEmailContent(mode: 'email' | 'report', tone: 'polite' | 'official') {
+    getEmailContent({ mode, tone }: { mode: 'email' | 'report'; tone: 'official' | 'polite' }) {
         const _ = (key: string) => v(key, this.answers.zaimek);
         return (
             <>

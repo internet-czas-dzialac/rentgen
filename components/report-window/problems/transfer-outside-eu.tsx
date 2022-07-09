@@ -20,7 +20,7 @@ export class TransferOutsideEU extends Problem {
             .map(([id]) => this.clusters[id]);
     }
 
-    getEmailContent(mode: 'email' | 'report') {
+    getEmailContent({ mode }: { mode: 'email' | 'report'; tone: 'official' | 'polite' }) {
         const clusters = this.getRelatedClusters();
         const _ = (key: string) => v(key, this.answers.zaimek);
         return (
