@@ -8,7 +8,7 @@ Note: At the moment, we support Polish language because this extension generates
 
 ## How build and run add-on
 
-1. Prepare node 16.x and npm 8.x
+1. Prepare node 16.x+ and npm 7.x+
 2. `npm install`
 3. `npm run build`
 4. The build code is located in the `lib/` directory
