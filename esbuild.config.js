@@ -12,7 +12,7 @@ const watch = process.argv.includes('--watch') && {
 let skipReactImports = {
     name: 'skipReactImports',
     setup(build) {
-        build.onResolve({ filter: /^react(-dom)?$/ }, (args) => {
+        build.onResolve({ filter: /^(react(-dom)?|survey-react)$/ }, (args) => {
             return {
                 path: args.path,
                 namespace: `globalExternal_${args.path}`,
@@ -29,6 +29,12 @@ let skipReactImports = {
         build.onLoad({ filter: /.*/, namespace: 'globalExternal_react-dom' }, () => {
             return {
                 contents: `module.exports = globalThis.ReactDOM`,
+                loader: 'js',
+            };
+        });
+        build.onLoad({ filter: /.*/, namespace: 'globalExternal_survey-react' }, () => {
+            return {
+                contents: `module.exports = globalThis.Survey`,
                 loader: 'js',
             };
         });
@@ -54,7 +60,7 @@ esbuild
             PLUGIN_NAME: '"Rentgen"',
             PLUGIN_URL: '"https://git.internet-czas-dzialac.pl/icd/rentgen"',
         },
-        external: ['react', 'react-dom'],
+        external: ['react', 'react-dom', 'survey-react'],
         watch,
     })
     .then(() => console.log('Add-on was built'))

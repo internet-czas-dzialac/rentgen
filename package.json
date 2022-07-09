@@ -9,7 +9,8 @@
         "watch": "node esbuild.config.js --watch",
         "ext-test": "web-ext run",
         "create-package": "web-ext build",
-        "typecheck": "tsc --noEmit"
+        "typecheck": "tsc --noEmit",
+        "lint": "web-ext lint"
     },
     "repository": {
         "type": "git",
