@@ -132,13 +132,9 @@ const Toolbar = () => {
         return setMarksOccurrence(true);
     }
 
-    if (!origin) {
-        return <div>Wczytywanie...</div>;
-    }
-
     return (
         <div className="toolbar">
-            <header className="header">
+            <header className={origin ? 'header' : 'header header--no-page'}>
                 <img src="../../assets/icon-addon.svg" height={32}></img>
                 <div className="webpage-metadata">
                     {origin ? (
@@ -157,95 +153,106 @@ const Toolbar = () => {
                 ) : null}
             </header>
 
-            <section className="summary">
-                <div className="counters-wrapper">
-                    <div className="counters">
-                        <div className="counter counter--cookies">
-                            <img src="/assets/icons/cookie.svg#color" width="24" height="24" />
-                            <span data-event={`${eventCounts['*']}`}>
-                                {
-                                    Object.values(getMemory().getClustersForOrigin(origin)).filter(
-                                        (cluster) => cluster.hasCookies()
-                                    ).length
-                                }
-                            </span>
-                        </div>
-                        <div className="counter counter--browser-history">
-                            <img src="/assets/icons/warning.svg#color" width="24" height="24" />
-                            <span data-event={`${eventCounts['*']}`}>
-                                {
-                                    Object.values(getMemory().getClustersForOrigin(origin)).filter(
-                                        (cluster) => cluster.exposesOrigin()
-                                    ).length
-                                }
-                            </span>
-                        </div>
-                    </div>
-                    <div className="big-counter" data-event={`${eventCounts['*']}`}>
-                        {Object.values(getMemory().getClustersForOrigin(origin)).length}
-                    </div>
-                </div>
-                <span className="notice">Liczba wykrytych domen podmiotów trzecich</span>
-            </section>
-
-            <section className="details">
-                {cookieDomainCopy ? (
-                    <p
-                        data-event={`${eventCounts['*']}`}
-                        title={Object.values(getMemory().getClustersForOrigin(origin))
-                            .filter((cluster) => cluster.hasCookies())
-                            .map((domain) => domain.id)
-                            .join(', ')}
-                    >
-                        {first_sentence_cookie}
-                        <strong>{cookieDomainCopy}</strong>
-                    </p>
-                ) : null}
-                {exposedOriginDomainCopy ? (
-                    <p
-                        data-event={`${eventCounts['*']}`}
-                        title={Object.values(getMemory().getClustersForOrigin(origin))
-                            .filter((cluster) => cluster.exposesOrigin())
-                            .map((domain) => domain.id)
-                            .join(', ')}
-                    >
-                        {first_sentence_history}
-                        <strong>{exposedOriginDomainCopy}</strong>
-                    </p>
-                ) : null}
-            </section>
-
-            {exposedOriginDomainCopy || cookieDomainCopy ? (
+            {origin ? (
                 <Fragment>
-                    <section className="about">
-                        <p>
-                            Takie przetwarzanie danych może być niezgodne z prawem. Przejdź do
-                            analizy aby pomóc ustalić, czy ta strona nie narusza RODO.
-                        </p>
+                    {' '}
+                    <section className="summary">
+                        <div className="counters-wrapper">
+                            <div className="counters">
+                                <div className="counter counter--cookies">
+                                    <img
+                                        src="/assets/icons/cookie.svg#color"
+                                        width="24"
+                                        height="24"
+                                    />
+                                    <span data-event={`${eventCounts['*']}`}>
+                                        {
+                                            Object.values(
+                                                getMemory().getClustersForOrigin(origin)
+                                            ).filter((cluster) => cluster.hasCookies()).length
+                                        }
+                                    </span>
+                                </div>
+                                <div className="counter counter--browser-history">
+                                    <img
+                                        src="/assets/icons/warning.svg#color"
+                                        width="24"
+                                        height="24"
+                                    />
+                                    <span data-event={`${eventCounts['*']}`}>
+                                        {
+                                            Object.values(
+                                                getMemory().getClustersForOrigin(origin)
+                                            ).filter((cluster) => cluster.exposesOrigin()).length
+                                        }
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="big-counter" data-event={`${eventCounts['*']}`}>
+                                {Object.values(getMemory().getClustersForOrigin(origin)).length}
+                            </div>
+                        </div>
+                        <span className="notice">Liczba wykrytych domen podmiotów trzecich</span>
                     </section>
-                    <section className="actions">
-                        <button
-                            className="button button--report"
-                            onClick={() => {
-                                autoMark();
-                                window.open(
-                                    `/components/sidebar/sidebar.html?origin=${origin}`,
-                                    'new_tab'
-                                );
-                                window.close(); // close toolbar popup
-                            }}
-                        >
-                            Przejdź do analizy
-                        </button>
+                    <section className="details">
+                        {cookieDomainCopy ? (
+                            <p
+                                data-event={`${eventCounts['*']}`}
+                                title={Object.values(getMemory().getClustersForOrigin(origin))
+                                    .filter((cluster) => cluster.hasCookies())
+                                    .map((domain) => domain.id)
+                                    .join(', ')}
+                            >
+                                {first_sentence_cookie}
+                                <strong>{cookieDomainCopy}</strong>
+                            </p>
+                        ) : null}
+                        {exposedOriginDomainCopy ? (
+                            <p
+                                data-event={`${eventCounts['*']}`}
+                                title={Object.values(getMemory().getClustersForOrigin(origin))
+                                    .filter((cluster) => cluster.exposesOrigin())
+                                    .map((domain) => domain.id)
+                                    .join(', ')}
+                            >
+                                {first_sentence_history}
+                                <strong>{exposedOriginDomainCopy}</strong>
+                            </p>
+                        ) : null}
                     </section>
+                    {exposedOriginDomainCopy || cookieDomainCopy ? (
+                        <Fragment>
+                            <section className="about">
+                                <p>
+                                    Takie przetwarzanie danych może być niezgodne z prawem. Przejdź
+                                    do analizy aby pomóc ustalić, czy ta strona nie narusza RODO.
+                                </p>
+                            </section>
+                            <section className="actions">
+                                <button
+                                    className="button button--report"
+                                    onClick={() => {
+                                        autoMark();
+                                        window.open(
+                                            `/components/sidebar/sidebar.html?origin=${origin}`,
+                                            'new_tab'
+                                        );
+                                        window.close(); // close toolbar popup
+                                    }}
+                                >
+                                    Przejdź do analizy
+                                </button>
+                            </section>
+                        </Fragment>
+                    ) : (
+                        <Fragment>
+                            <section className="about about__no-errors">
+                                <p>Nie znaleziono problemów na tej stronie.</p>
+                            </section>
+                        </Fragment>
+                    )}
                 </Fragment>
-            ) : (
-                <Fragment>
-                    <section className="about about__no-errors">
-                        <p>Nie znaleziono problemów na tej stronie.</p>
-                    </section>
-                </Fragment>
-            )}
+            ) : null}
         </div>
     );
 };

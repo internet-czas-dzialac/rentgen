@@ -22,6 +22,10 @@ body {
         z-index: 1;
         user-select: none;
 
+        &--no-page {
+            border-bottom: 0;
+        }
+
         .webpage-metadata {
             word-break: break-all;
             display: flex;
