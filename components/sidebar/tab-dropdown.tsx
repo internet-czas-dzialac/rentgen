@@ -1,4 +1,5 @@
 import React from 'react';
+import { Tab } from '../../util';
 
 export default function TabDropdown({
     setPickedTab,
@@ -7,7 +8,7 @@ export default function TabDropdown({
     setPickedTab: (tab_id: number) => void;
     pickedTab: number;
 }) {
-    const [tabs, setTabs] = React.useState([]);
+    const [tabs, setTabs] = React.useState<Tab[]>([]);
     React.useEffect(() => {
         browser.tabs.query({ currentWindow: true }).then(setTabs);
     }, []);

@@ -1,4 +1,3 @@
-import { EventEmitter } from 'events';
 import ExtendedRequest from './extended-request';
 import { SaferEmitter } from './safer-emitter';
 import { Sources, StolenDataEntry } from './stolen-data-entry';
@@ -11,12 +10,18 @@ export class RequestCluster extends SaferEmitter {
     public requests: ExtendedRequest[] = [];
     public representativeStolenData: StolenDataEntry[] = [];
     public expanded: boolean;
+    public lastModified: number = 0;
+    public lastFullUrl: string | null = null;
     constructor(public id: string) {
         super();
     }
     add(request: ExtendedRequest) {
         this.requests.push(request);
         this.emit('change');
+        this.lastModified = Date.now();
+        if (request.originalURL) {
+            this.lastFullUrl = request.originalURL;
+        }
     }
 
     toggleExpanded(state: boolean) {

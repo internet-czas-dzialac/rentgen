@@ -16,10 +16,9 @@ import './toolbar.scss';
 
 const Toolbar = () => {
     const [origin, setOrigin] = React.useState<string | null>(null);
-    const [stolenDataView, setStolenDataView] = React.useState<boolean>(true);
-    const [eventCounts, setEventCounts] = useEmitter(getMemory());
+    const [eventCounts] = useEmitter(getMemory());
     const [cookieDomainCopy, setCookieDomainCopy] = React.useState<string | null>(null);
-    const [marksOccurrence, setMarksOccurrence] = React.useState<boolean>(false);
+    const [_, setMarksOccurrence] = React.useState<boolean>(false);
     const [exposedOriginDomainCopy, setExposedOriginDomainCopy] = React.useState<string | null>(
         null
     );
@@ -33,6 +32,7 @@ const Toolbar = () => {
             const tab = await getCurrentTab();
 
             if (tab !== undefined) {
+                if (!tab.url) return;
                 const url = new URL(tab.url);
                 if (url.origin.startsWith('moz-extension')) {
                     return;
@@ -58,23 +58,27 @@ const Toolbar = () => {
 
         switch (exposedOriginDomains.length) {
             case 0:
-                return null;
+                break;
             case 1:
-                return setExposedOriginDomainCopy(`${exposedOriginDomains[0]}.`);
+                setExposedOriginDomainCopy(`${exposedOriginDomains[0]}.`);
+                break;
             case 2:
-                return setExposedOriginDomainCopy(
+                setExposedOriginDomainCopy(
                     `${exposedOriginDomains[0]} oraz ${exposedOriginDomains[1]}.`
                 );
+                break;
             case 3:
-                return setExposedOriginDomainCopy(
+                setExposedOriginDomainCopy(
                     `${exposedOriginDomains[0]}, ${exposedOriginDomains[1]} oraz ${exposedOriginDomains[2]}.`
                 );
+                break;
             default:
-                return setExposedOriginDomainCopy(
+                setExposedOriginDomainCopy(
                     `${exposedOriginDomains[0]}, ${exposedOriginDomains[1]} (i ${
                         exposedOriginDomains.length - 2 < 2 ? 2 : exposedOriginDomains.length - 2
                     } innych).`
                 );
+                break;
         }
     }, [eventCounts['*'], origin]);
 
@@ -86,25 +90,30 @@ const Toolbar = () => {
 
         switch (cookieDomains.length) {
             case 0:
-                return null;
+                null;
             case 1:
-                return setCookieDomainCopy(`${cookieDomains[0]}.`);
+                setCookieDomainCopy(`${cookieDomains[0]}.`);
+                break;
             case 2:
-                return setCookieDomainCopy(`${cookieDomains[0]} oraz ${cookieDomains[1]}.`);
+                setCookieDomainCopy(`${cookieDomains[0]} oraz ${cookieDomains[1]}.`);
+                break;
             case 3:
-                return setCookieDomainCopy(
+                setCookieDomainCopy(
                     `${cookieDomains[0]}, ${cookieDomains[1]} oraz ${cookieDomains[2]}.`
                 );
+                break;
             default:
-                return setCookieDomainCopy(
+                setCookieDomainCopy(
                     `${cookieDomains[0]}, ${cookieDomains[1]} (i ${
                         cookieDomains.length - 2 < 2 ? 2 : cookieDomains.length - 2
                     } innych).`
                 );
+                break;
         }
     }, [eventCounts['*'], origin]);
 
     React.useEffect(() => {
+        if (!origin) return;
         for (const cluster of Object.values(getMemory().getClustersForOrigin(origin))) {
             if (cluster.hasMarks()) {
                 return setMarksOccurrence(true);
@@ -115,10 +124,15 @@ const Toolbar = () => {
     }, [eventCounts['*']]);
 
     function autoMark() {
+        if (!origin) return;
         for (const cluster of Object.values(getMemory().getClustersForOrigin(origin))) {
             cluster.autoMark();
         }
         return setMarksOccurrence(true);
+    }
+
+    if (!origin) {
+        return <div>Wczytywanie...</div>;
     }
 
     return (

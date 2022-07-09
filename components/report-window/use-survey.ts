@@ -8,8 +8,8 @@ import verbs, { v } from './verbs';
 export default function useSurvey(
     clusters: RequestCluster[],
     { onComplete }: { onComplete: (sender: { data: RawAnswers }) => void }
-): Survey.ReactSurveyModel {
-    const [survey, setSurvey] = React.useState<Survey.Model>(null);
+): Survey.ReactSurveyModel | null {
+    const [survey, setSurvey] = React.useState<Survey.Model | null>(null);
     React.useEffect(() => {
         const model = generateSurveyQuestions(clusters);
         const survey = new Survey.Model(model);

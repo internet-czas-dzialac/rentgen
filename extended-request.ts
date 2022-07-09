@@ -75,12 +75,12 @@ export default class ExtendedRequest {
     public tabId: number;
     public url: string;
     public shorthost: string;
-    public requestHeaders: Request['requestHeaders'] = [];
-    public originalURL: string;
+    public requestHeaders: { name: string; value?: string; binaryValue?: number[] }[] = [];
+    public originalURL: string | null = null;
     public origin: string;
     public initialized = false;
-    public stolenData: StolenDataEntry[];
-    public originalPathname: string;
+    public stolenData: StolenDataEntry[] = [];
+    public originalPathname: string | null = null;
     public requestBody: RequestBody;
 
     static by_id = {} as Record<string, ExtendedRequest>;
@@ -97,20 +97,21 @@ export default class ExtendedRequest {
         (this.data as any).frameAncestors = [
             ...(data as any).frameAncestors.map((e: any) => ({ url: e.url })),
         ];
+        this.origin = this.cacheOrigin();
     }
 
     addHeaders(headers: Request['requestHeaders']) {
-        this.requestHeaders = headers;
+        this.requestHeaders = headers || [];
         return this;
     }
 
-    async init() {
-        await this.cacheOrigin();
+    init() {
+        this.cacheOrigin();
         this.initialized = true;
         this.stolenData = this.getAllStolenData();
     }
 
-    async cacheOrigin(): Promise<void> {
+    cacheOrigin(): string {
         let url: string;
         if (this.data.type === 'main_frame') {
             url = this.data.url;
@@ -135,6 +136,7 @@ export default class ExtendedRequest {
         this.originalURL = url;
         this.origin = new URL(url).origin;
         this.originalPathname = new URL(url).pathname;
+        return this.origin;
     }
 
     isThirdParty() {

@@ -39,10 +39,12 @@ export default function EmailContent({
     function copyTextToClipboard() {
         // Should be changed in the future to Clipboard API (https://developer.mozilla.org/en-US/docs/Web/API/Clipboard/write#browser_compatibility)
         let r = document.createRange();
-        r.selectNode(document.querySelector('.mail-container__content'));
-        window.getSelection().addRange(r);
+        const container = document.querySelector('.mail-container__content');
+        if (!container) return;
+        r.selectNode(container);
+        window.getSelection()?.addRange(r);
         document.execCommand('copy');
-        window.getSelection().removeAllRanges();
+        window.getSelection()?.removeAllRanges();
         setCopy(true);
     }
 

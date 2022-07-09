@@ -22,15 +22,17 @@ function Report() {
         const url = new URL(document.location.toString());
         const origin = url.searchParams.get('origin');
         const [counter] = useEmitter(getMemory());
+        const rawAnswers = url.searchParams.get('answers');
         const [answers, setAnswers] = React.useState<ParsedAnswers>(
-            url.searchParams.get('answers') ? JSON.parse(url.searchParams.get('answers')) : null
+            rawAnswers ? JSON.parse(rawAnswers) : null
         );
         const [mode, setMode] = React.useState(url.searchParams.get('mode') || 'survey');
         const [scrRequestPath, setScrRequestPath] = React.useState('');
 
-        const clusters = getMemory().getClustersForOrigin(origin);
+        const clusters = getMemory().getClustersForOrigin(origin || '');
 
         React.useEffect(() => {
+            if (!origin) return;
             const url = new URL(document.location.toString());
             url.searchParams.set('origin', origin);
             url.searchParams.set('answers', JSON.stringify(answers));
@@ -38,8 +40,12 @@ function Report() {
             history.pushState({}, 'Rentgen', url.toString());
         }, [mode, answers, origin]);
         const visited_url = Object.values(clusters)
-            .find((cluster) => cluster.getMarkedRequests().length > 0)
-            ?.getMarkedRequests()[0].originalURL;
+            .sort((clusterA, clusterB) => (clusterA.lastModified > clusterB.lastModified ? -1 : 1))
+            .find((cluster) => !!cluster.lastFullUrl)?.lastFullUrl;
+
+        if (!visited_url) {
+            return <div>Wczytywanie...</div>;
+        }
 
         const result = (
             <div {...{ 'data-version': counter }}>

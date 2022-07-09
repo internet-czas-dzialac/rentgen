@@ -122,7 +122,10 @@ function generateHostPage(
                 defaultValueExpression:
                     index == 0
                         ? 'marketing'
-                        : `{${f('legitimate_interest_description', previous_cluster)}}`,
+                        : `{${f(
+                              'legitimate_interest_description',
+                              previous_cluster || undefined
+                          )}}`,
             },
             {
                 type: 'radiogroup',

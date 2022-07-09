@@ -36,7 +36,11 @@ export function getshorthost(host: string) {
         .replace(/^.*:\/\//, '')
         .replace(/\/.*$/, '')
         .split('.');
-    let lookback = !['co', 'com'].includes(parts.at(-2)) ? -2 : -3;
+    const second_last = parts.at(-2);
+    if (!second_last) {
+        throw new Error('url too short?');
+    }
+    let lookback = !['co', 'com'].includes(second_last) ? -2 : -3;
     if (parts.at(-2) == 'doubleclick' || parts.at(-2) == 'google') {
         lookback = -4; // to distinguish between google ads and stats
     } else if (parts.at(-2) == 'google') {
@@ -89,7 +93,7 @@ export async function getTabByID(id: number) {
 }
 
 export function parseToObject(str: unknown): Record<string | symbol, unknown> {
-    let result: Record<string | symbol, unknown>;
+    let result: Record<string | symbol, unknown> = {};
     let original_string: string;
     if (typeof str === 'string') {
         original_string = str;
@@ -97,6 +101,8 @@ export function parseToObject(str: unknown): Record<string | symbol, unknown> {
     } else if (typeof str == 'object') {
         result = str as Record<string | symbol, unknown>;
         original_string = (result[Symbol.for('originalString')] as string) || JSON.stringify(str);
+    } else {
+        return {};
     }
     result[Symbol.for('originalString')] = original_string;
     return result;
@@ -149,10 +155,11 @@ export function getDate() {
 }
 
 export function toBase64(file: File): Promise<string> {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         const FR = new FileReader();
         FR.addEventListener('load', (e) => {
-            resolve(e.target.result as string);
+            const target = e.target;
+            target ? resolve(target.result as string) : reject('empty file?');
         });
         FR.readAsDataURL(file);
     });
@@ -199,7 +206,8 @@ export function isBase64JSON(s: unknown): s is string {
 
 export function flattenObject(
     obj: unknown,
-    parser: (to_parse: unknown) => string | Record<string, unknown> = (id) => id.toString(),
+    parser: (to_parse: { toString: () => string }) => string | Record<string, unknown> = (id) =>
+        id.toString(),
     key = '',
     ret = [] as [string, string][],
     parsed = false
@@ -220,7 +228,7 @@ export function flattenObject(
             flattenObject(value, parser, prefix + subkey, ret);
         }
     } else if (!parsed) {
-        flattenObject(parser(obj), parser, key, ret, true);
+        flattenObject(parser(obj as { toString: () => string }), parser, key, ret, true);
     } else if (typeof obj === 'string') {
         ret.push([key, obj]);
     } else {
@@ -231,7 +239,8 @@ export function flattenObject(
 
 export function flattenObjectEntries(
     entries: [string, unknown][],
-    parser: (to_parse: unknown) => string | Record<string, unknown> = (id) => id.toString()
+    parser: (to_parse: { toString: () => string }) => string | Record<string, unknown> = (id) =>
+        id.toString()
 ): [string, string][] {
     return flattenObject(Object.fromEntries(entries), parser);
 }

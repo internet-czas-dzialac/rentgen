@@ -16,7 +16,9 @@ function handleNewFile(
         );
         setFiltered(new Blob([JSON.stringify(content)], { type: 'application/json' }));
     });
-    reader.readAsText(element.files[0]);
+    const file = element?.files?.[0];
+    if (!file) throw new Error('file empty?');
+    reader.readAsText(file);
 }
 
 function generateFakeHAR(entries: StolenDataEntry[]) {
@@ -80,8 +82,11 @@ export default function HARConverter({ entries }: { entries: StolenDataEntry[] }
                 type="file"
                 accept=".har"
                 onChange={(e) => {
-                    setFilename(e.target.files[0].name);
-                    handleNewFile(e.target, entries, setFiltered);
+                    const file = e.target?.files?.[0];
+                    if (file) {
+                        setFilename(file.name);
+                        handleNewFile(e.target, entries, setFiltered);
+                    }
                 }}
             />
             {(filtered && (

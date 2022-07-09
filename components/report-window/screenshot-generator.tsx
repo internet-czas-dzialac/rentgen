@@ -66,7 +66,7 @@ export default function ScreenshotGenerator({
 }) {
     const [mode, setMode] = React.useState<string>('idle');
     const [images, setImages] = React.useState<Screenshot[]>([]);
-    const [taskId, setTaskId] = React.useState<string>(null);
+    const [taskId, setTaskId] = React.useState<string | null>(null);
     const [output, setOutput] = React.useState<any>({});
 
     async function subscribeTask(path: string): Promise<screenshotTask> {
@@ -75,8 +75,8 @@ export default function ScreenshotGenerator({
             await new Promise((resolve) => setTimeout(resolve, 1000));
             response = await (await pollTask(path)).json();
             setImages((response as screenshotTask)?.images);
-            document.querySelector('.images').scrollTo({
-                top: document.querySelector('.images').scrollHeight,
+            document.querySelector('.images')?.scrollTo({
+                top: document.querySelector('.images')?.scrollHeight,
                 behavior: 'smooth',
             });
         }

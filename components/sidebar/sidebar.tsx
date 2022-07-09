@@ -1,20 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Options from '../../options';
-import { StolenData } from './stolen-data';
-import { getshorthost, useEmitter } from '../../util';
 import { getMemory } from '../../memory';
-
-async function getCurrentTab() {
-    const [tab] = await browser.tabs.query({
-        active: true,
-        windowId: browser.windows.WINDOW_ID_CURRENT,
-    });
-    return tab;
-}
-
+import Options from '../../options';
+import { useEmitter } from '../../util';
 import './../../styles/global.scss';
 import './sidebar.scss';
+import { StolenData } from './stolen-data';
 
 const Sidebar = () => {
     const url = new URL(document.location.toString());
@@ -28,8 +19,8 @@ const Sidebar = () => {
     const [cookiesOnly, setCookiesOnly] = React.useState<boolean>(false);
     const [stolenDataView, setStolenDataView] = React.useState<boolean>(true);
     const [cookiesOrOriginOnly, setCookiesOrOriginOnly] = React.useState<boolean>(false);
-    const [eventCounts, setEventCounts] = useEmitter(getMemory());
-    const [marksOccurrence, setMarksOccurrence] = React.useState<boolean>(false);
+    const [eventCounts] = useEmitter(getMemory());
+    const [_, setMarksOccurrence] = React.useState<boolean>(false);
     const [infoDataDialogAck, setInfoDataDialogAck] = React.useState<boolean>(
         localStorage.getItem('infoDataDialogAck') === null
             ? true
@@ -53,6 +44,7 @@ const Sidebar = () => {
     );
 
     React.useEffect(() => {
+        if (!origin) return;
         for (const cluster of Object.values(getMemory().getClustersForOrigin(origin))) {
             if (cluster.hasMarks()) {
                 return setMarksOccurrence(true);
@@ -62,6 +54,7 @@ const Sidebar = () => {
         return setMarksOccurrence(false);
     }, [eventCounts['*']]);
 
+    if (!origin) return <div>Błąd: Brak parametru "origin"</div>;
     return (
         <div className="sidebar">
             <header className="header">
@@ -204,7 +197,7 @@ const Sidebar = () => {
                         <StolenData
                             origin={origin}
                             eventCounts={eventCounts}
-                            minValueLength={minValueLength}
+                            minValueLength={minValueLength === null ? 7 : minValueLength}
                             cookiesOnly={cookiesOnly}
                             cookiesOrOriginOnly={cookiesOrOriginOnly}
                             detailsVisibility={detailsVisibility}
@@ -212,7 +205,7 @@ const Sidebar = () => {
                     </>
                 ) : (
                     <Options
-                        minValueLength={minValueLength}
+                        minValueLength={minValueLength === null ? 7 : minValueLength}
                         setMinValueLength={setMinValueLength}
                         cookiesOnly={cookiesOnly}
                         setCookiesOnly={setCookiesOnly}

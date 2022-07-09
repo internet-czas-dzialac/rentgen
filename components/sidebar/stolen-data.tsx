@@ -14,7 +14,7 @@ export function StolenData({
     detailsVisibility,
 }: {
     origin: string;
-    eventCounts: Record<string, number>;
+    eventCounts: Record<string, number | undefined>;
     minValueLength: number;
     cookiesOnly: boolean;
     cookiesOrOriginOnly: boolean;
@@ -43,7 +43,7 @@ export function StolenData({
                         origin={origin}
                         shorthost={cluster.id}
                         key={cluster.id + origin}
-                        refreshToken={eventCounts[cluster.id]}
+                        refreshToken={eventCounts[cluster.id] || 0}
                         minValueLength={minValueLength}
                         cookiesOnly={cookiesOnly}
                         cookiesOrOriginOnly={cookiesOrOriginOnly}
