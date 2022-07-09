@@ -4,7 +4,6 @@ import { ParsedAnswers } from '../parse-answers';
 
 function formatRange(cluster: RequestCluster) {
     const parts = [] as string[];
-    console.log(cluster);
     if (cluster.hasMarkedCookies()) {
         parts.push('mojego identyfikatora internetowego pozyskanego z Cookie');
     }

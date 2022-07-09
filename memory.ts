@@ -78,7 +78,6 @@ export default class Memory extends SaferEmitter {
         if (shorthost) {
             const cookies = await browser.cookies.getAll({ domain: shorthost });
             for (const cookie of cookies) {
-                console.log('removing cookie', cookie.name, 'from', cookie.domain);
                 await browser.cookies.remove({
                     name: cookie.name,
                     url: `https://${cookie.domain}`,

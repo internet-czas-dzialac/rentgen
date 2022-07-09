@@ -19,25 +19,19 @@ let skipReactImports = {
             };
         });
 
-        build.onLoad(
-            { filter: /.*/, namespace: 'globalExternal_react' },
-            () => {
-                return {
-                    contents: `module.exports = globalThis.React`,
-                    loader: 'js',
-                };
-            }
-        );
+        build.onLoad({ filter: /.*/, namespace: 'globalExternal_react' }, () => {
+            return {
+                contents: `module.exports = globalThis.React`,
+                loader: 'js',
+            };
+        });
 
-        build.onLoad(
-            { filter: /.*/, namespace: 'globalExternal_react-dom' },
-            () => {
-                return {
-                    contents: `module.exports = globalThis.ReactDOM`,
-                    loader: 'js',
-                };
-            }
-        );
+        build.onLoad({ filter: /.*/, namespace: 'globalExternal_react-dom' }, () => {
+            return {
+                contents: `module.exports = globalThis.ReactDOM`,
+                loader: 'js',
+            };
+        });
     },
 };
 
@@ -46,11 +40,10 @@ esbuild
         entryPoints: [
             'components/toolbar/toolbar.tsx',
             'components/sidebar/sidebar.tsx',
-            'test.ts',
             'components/report-window/report-window.tsx',
             'background.ts',
             'styles/global.scss',
-            'styles/fonts.scss'
+            'styles/fonts.scss',
         ],
         bundle: true,
         // minify: true,

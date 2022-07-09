@@ -135,9 +135,6 @@ export default function ScreenshotGenerator({
                                 setTaskId(urlArr[urlArr.length - 1]);
                                 const response = await subscribeTask(task.url);
                                 setImages(response.images);
-                                console.log('response.images', response.images);
-                                console.log('output', response);
-
                                 setOutput(response);
                                 setRequestPath(response.zip_url);
                             }}

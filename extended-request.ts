@@ -97,8 +97,6 @@ export default class ExtendedRequest {
         (this.data as any).frameAncestors = [
             ...(data as any).frameAncestors.map((e: any) => ({ url: e.url })),
         ];
-
-        // console.log('→→→',(this.data as any).frameAncestors, (data as any).frameAncestors);
     }
 
     addHeaders(headers: Request['requestHeaders']) {
