@@ -1,3 +1,4 @@
+'use strict';
 import { StolenDataEntry } from './stolen-data-entry';
 import {
     flattenObjectEntries,
@@ -76,11 +77,12 @@ export default class ExtendedRequest {
     public url: string;
     public shorthost: string;
     public requestHeaders: { name: string; value?: string; binaryValue?: number[] }[] = [];
-    public originalURL: string | null = null;
     public origin: string;
     public initialized = false;
     public stolenData: StolenDataEntry[] = [];
-    public originalPathname: string | null = null;
+    public originalURL: string | null = null; // sometimes we can only establish that the given request applied to a certain origin, not a full URL from the address bar - in case of service workers, for example. Hence the null
+    public originalPathname: string | null = null; // same as above
+    public originalHost: string;
     public requestBody: RequestBody;
 
     static by_id = {} as Record<string, ExtendedRequest>;
@@ -95,9 +97,35 @@ export default class ExtendedRequest {
 
         this.data = Object.assign({}, data);
         (this.data as any).frameAncestors = [
-            ...(data as any).frameAncestors.map((e: any) => ({ url: e.url })),
-        ];
-        this.origin = this.cacheOrigin();
+            ...((data as any)?.frameAncestors?.map((e: any) => ({ url: e.url })) || []),
+        ]; // making a copy?
+
+        // console.log('→→→',(this.data as any).frameAncestors, (data as any).frameAncestors);
+
+        let url: string;
+        let is_full_url = true;
+        if (this.data.type === 'main_frame') {
+            url = this.data.url;
+        } else if (this.data.frameId === 0 && this.data.documentUrl) {
+            url = this.data.documentUrl;
+            if (this.data.tabId == -1) {
+                //a service worker?
+                is_full_url = false;
+            }
+        } else if (
+            (this.data as any)?.frameAncestors &&
+            (this.data as any).frameAncestors[0] !== undefined
+        ) {
+            url = (this.data as any).frameAncestors[0].url || '';
+        } else {
+            url = this.data.documentUrl || this.data.originUrl;
+        }
+
+        this.originalURL = is_full_url ? url : null;
+        this.origin = new URL(url).origin;
+
+        this.originalHost = new URL(url).host;
+        this.originalPathname = is_full_url ? new URL(url).pathname : null;
     }
 
     addHeaders(headers: Request['requestHeaders']) {
@@ -106,50 +134,20 @@ export default class ExtendedRequest {
     }
 
     init() {
-        this.cacheOrigin();
         this.initialized = true;
         this.stolenData = this.getAllStolenData();
     }
 
-    cacheOrigin(): string {
-        let url: string;
-        if (this.data.type === 'main_frame') {
-            url = this.data.url;
-        } else if (this.data.originUrl) {
-            url = this.data.originUrl;
-        } else if (
-            (this.data as any)?.frameAncestors &&
-            (this.data as any).frameAncestors[0] !== undefined
-        ) {
-            url = (this.data as any).frameAncestors[0].url || '';
-        } else {
-            const headers = Object.fromEntries(
-                this.requestHeaders.map(({ name, value }) => [name, value])
-            );
-            if (headers.Referer) {
-                url = headers.Referer;
-            } else {
-                url = this.data.url;
-            }
-        }
-
-        this.originalURL = url;
-        this.origin = new URL(url).origin;
-        this.originalPathname = new URL(url).pathname;
-        return this.origin;
-    }
-
     isThirdParty() {
         const request_url = new URL(this.data.url);
-        const origin_url = new URL(this.originalURL);
-        if (request_url.host.includes(origin_url.host)) {
+        if (request_url.host.includes(this.originalHost)) {
             return false;
         }
-        if (getshorthost(request_url.host) == getshorthost(origin_url.host)) {
+        if (getshorthost(request_url.host) == getshorthost(this.originalHost)) {
             return false;
         }
         return (
-            request_url.origin != origin_url.origin ||
+            request_url.origin != this.origin ||
             (this.data as any).urlClassification.thirdParty.length > 0
         );
     }
@@ -161,9 +159,8 @@ export default class ExtendedRequest {
     }
 
     exposesOrigin() {
-        const url = new URL(this.originalURL);
-        const host = url.host;
-        const path = url.pathname;
+        const host = this.originalHost;
+        const path = this.originalPathname || '/';
         const shorthost = getshorthost(host);
         if (this.getReferer().includes(shorthost)) {
             return true;
@@ -215,7 +212,10 @@ export default class ExtendedRequest {
                 if ((Array.isArray(value) && value.length === 1 && !value[0]) || !value) {
                     return ['requestBody', key];
                 } else if (!Array.isArray(value)) {
-                    return ['raw', String.fromCharCode.apply(null, new Uint8Array(value.bytes))];
+                    return [
+                        'raw',
+                        String.fromCharCode.apply(null, Array.from(new Uint8Array(value.bytes))),
+                    ];
                 } else {
                     return [key, value || ''];
                 }
@@ -234,7 +234,7 @@ export default class ExtendedRequest {
     }
 
     getCookie(): string {
-        return this.requestHeaders.find((h) => h.name == 'Cookie')?.value;
+        return this.requestHeaders.find((h) => h.name == 'Cookie')?.value || '';
     }
 
     getPathParams(): StolenDataEntry[] {
@@ -257,8 +257,8 @@ export default class ExtendedRequest {
     getQueryParams(): StolenDataEntry[] {
         const url = new URL(this.data.url);
         return flattenObjectEntries(
-            Array.from((url.searchParams as any).entries())
-                .map(([key, value]) => [key, value || ''])
+            (Array.from((url.searchParams as any).entries()) as [string, string][])
+                .map(([key, value]: [string, string]) => [key, value || ''])
                 .map(([key, value]) => {
                     return [key, StolenDataEntry.parseValue(safeDecodeURIComponent(value))];
                 })
@@ -281,7 +281,7 @@ export default class ExtendedRequest {
                 .map((header) => {
                     return [
                         header.name,
-                        StolenDataEntry.parseValue(safeDecodeURIComponent(header.value)),
+                        StolenDataEntry.parseValue(safeDecodeURIComponent(header.value || '')),
                     ];
                 })
         ).map(([key, value]) => new StolenDataEntry(this, 'header', key, value));

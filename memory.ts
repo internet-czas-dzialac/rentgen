@@ -1,5 +1,5 @@
 import ExtendedRequest from './extended-request';
-import { getshorthost, makeThrottle } from './util';
+import { getshorthost } from './util';
 import { RequestCluster } from './request-cluster';
 import { SaferEmitter } from './safer-emitter';
 
@@ -67,7 +67,7 @@ export default class Memory extends SaferEmitter {
 
     emit(eventName: string, data = 'any'): boolean {
         setTimeout(() => super.emit(eventName, data), 0);
-        return;
+        return true;
     }
 
     getClustersForOrigin(origin: string): Record<string, RequestCluster> {

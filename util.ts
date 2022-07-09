@@ -102,7 +102,7 @@ export function parseToObject(str: unknown): Record<string | symbol, unknown> {
         result = str as Record<string | symbol, unknown>;
         original_string = (result[Symbol.for('originalString')] as string) || JSON.stringify(str);
     } else {
-        return {};
+        return result;
     }
     result[Symbol.for('originalString')] = original_string;
     return result;
@@ -159,7 +159,10 @@ export function toBase64(file: File): Promise<string> {
         const FR = new FileReader();
         FR.addEventListener('load', (e) => {
             const target = e.target;
-            target ? resolve(target.result as string) : reject('empty file?');
+            if (!target) {
+                return reject('File missing?');
+            }
+            resolve(e.target.result as string);
         });
         FR.readAsDataURL(file);
     });
@@ -228,7 +231,12 @@ export function flattenObject(
             flattenObject(value, parser, prefix + subkey, ret);
         }
     } else if (!parsed) {
-        flattenObject(parser(obj as { toString: () => string }), parser, key, ret, true);
+        try {
+            flattenObject(parser(obj as { toString: () => string }), parser, key, ret, true);
+        } catch (e) {
+            //emergency case, mostly for just type safety
+            ret.push([key, JSON.stringify(obj)]);
+        }
     } else if (typeof obj === 'string') {
         ret.push([key, obj]);
     } else {

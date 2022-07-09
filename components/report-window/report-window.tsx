@@ -21,6 +21,9 @@ function Report() {
     try {
         const url = new URL(document.location.toString());
         const origin = url.searchParams.get('origin');
+        if (!origin) {
+            return <div>Błąd: brak parametru "origin"</div>;
+        }
         const [counter] = useEmitter(getMemory());
         const rawAnswers = url.searchParams.get('answers');
         const [answers, setAnswers] = React.useState<ParsedAnswers>(
@@ -40,7 +43,7 @@ function Report() {
             history.pushState({}, 'Rentgen', url.toString());
         }, [mode, answers, origin]);
         const visited_url = Object.values(clusters)
-            .sort((clusterA, clusterB) => (clusterA.lastModified > clusterB.lastModified ? -1 : 1))
+            .sort((a, b) => (a.lastModified > b.lastModified ? -1 : 1))
             .find((cluster) => !!cluster.lastFullUrl)?.lastFullUrl;
 
         if (!visited_url) {

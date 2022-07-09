@@ -105,7 +105,7 @@ export default function HARConverter({ entries }: { entries: StolenDataEntry[] }
                     })
                 )}
                 download={`${getshorthost(
-                    entries[0].request.originalURL
+                    entries[0].request.origin
                 )}-${new Date().toJSON()}-trimmed.har`}
             >
                 Pobierz "zredukowany" HAR

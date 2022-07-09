@@ -1,4 +1,3 @@
-import { EventEmitter } from 'events';
 import ExtendedRequest, { HAREntry } from './extended-request';
 import { SaferEmitter } from './safer-emitter';
 
@@ -59,11 +58,10 @@ export class StolenDataEntry extends SaferEmitter {
     getPriority() {
         let priority = 0;
         priority += Math.min(this.value.length, 50);
-        const url = new URL(this.request.originalURL);
-        if (this.value.includes(url.host)) {
+        if (this.value.includes(this.request.originalHost)) {
             priority += 100;
         }
-        if (this.value.includes(url.pathname)) {
+        if (this.request.originalPathname && this.value.includes(this.request.originalPathname)) {
             priority += 100;
         }
         if (this.source === 'cookie') {
@@ -133,7 +131,7 @@ export class StolenDataEntry extends SaferEmitter {
         } else if (value === null) {
             return 'null';
         } else {
-            return value.toString();
+            return (value as any).toString();
         }
     }
 
@@ -238,10 +236,14 @@ export class StolenDataEntry extends SaferEmitter {
     }
 
     exposesPath() {
+        const pathname = this.request.originalPathname;
+        if (pathname === null) {
+            return false;
+        }
         return (
             this.request.originalPathname !== '/' &&
             [this.value, safeDecodeURIComponent(this.value)].some((haystack) =>
-                haystack.includes(this.request.originalPathname)
+                haystack.includes(pathname)
             )
         );
     }

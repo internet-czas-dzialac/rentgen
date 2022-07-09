@@ -31,8 +31,7 @@ const Toolbar = () => {
         const listener = async () => {
             const tab = await getCurrentTab();
 
-            if (tab !== undefined) {
-                if (!tab.url) return;
+            if (tab !== undefined && tab.url) {
                 const url = new URL(tab.url);
                 if (url.origin.startsWith('moz-extension')) {
                     return;
@@ -51,6 +50,7 @@ const Toolbar = () => {
     });
 
     React.useEffect(() => {
+        if (!origin) return;
         const exposedOriginDomains = Object.values(getMemory().getClustersForOrigin(origin))
             .filter((cluster) => cluster.exposesOrigin())
             .map((cluster) => cluster.id);
@@ -83,6 +83,7 @@ const Toolbar = () => {
     }, [eventCounts['*'], origin]);
 
     React.useEffect(() => {
+        if (!origin) return;
         const cookieDomains = Object.values(getMemory().getClustersForOrigin(origin))
             .filter((cluster) => cluster.hasCookies())
             .map((cluster) => cluster.id);
@@ -90,7 +91,7 @@ const Toolbar = () => {
 
         switch (cookieDomains.length) {
             case 0:
-                null;
+                break;
             case 1:
                 setCookieDomainCopy(`${cookieDomains[0]}.`);
                 break;

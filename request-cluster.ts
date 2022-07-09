@@ -9,12 +9,13 @@ const source_priority: Array<Sources> = ['cookie', 'pathname', 'queryparams', 'h
 export class RequestCluster extends SaferEmitter {
     public requests: ExtendedRequest[] = [];
     public representativeStolenData: StolenDataEntry[] = [];
-    public expanded: boolean;
+    public expanded: boolean = false;
     public lastModified: number = 0;
     public lastFullUrl: string | null = null;
     constructor(public id: string) {
         super();
     }
+
     add(request: ExtendedRequest) {
         this.requests.push(request);
         this.emit('change');

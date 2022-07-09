@@ -25,6 +25,7 @@ export default function EmailContent({
     downloadFiles: Function;
     user_role: string;
 }) {
+    console.log('rendering email!', answers);
     const _ = (key: string) => v(key, answers.zaimek);
     const problems = deduceProblems(answers, clusters);
     const explainers = Array.from(
