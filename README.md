@@ -9,8 +9,8 @@
 Note: At the moment, we support Polish language because this extension generates mail content that is dedicated to Polish website owners. In further versions of this add-on, we will add other languages as well.
 
 <div style="display: flex; align-items: flex-start; flex-flow: row;">
-    <img src="./assets/screenshots/1a.png" width="481" height="591.5" />
-    <img src="./assets/screenshots/1b.png" width="482" height="610.5" />
+    <img src="./assets/screenshots/1a.png"  />
+    <img src="./assets/screenshots/1b.png"  />
 </div>
 
 <img src="./assets/screenshots/2.png" />
