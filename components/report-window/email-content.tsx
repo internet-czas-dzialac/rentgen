@@ -63,9 +63,10 @@ export default function EmailContent({
                         {mode === 'email'
                             ? emailIntro(email_tone, _, visited_url)
                             : reportIntro(visited_url)}
-                        {problems.map((problem, index) => (
-                            <problem.getEmailContent mode={mode} tone={email_tone} key={index} />
-                        ))}
+                        {problems.map((problem, index) => {
+                            const Component = problem.getEmailContent.bind(problem);
+                            return <Component mode={mode} tone={email_tone} key={index} />;
+                        })}
                         {explainers.map((explainer) => explainer(answers.zaimek))}
                         <h2>Państwa rola jako współadministratora danych osobowych</h2>
                         {mode == 'email' ? (
