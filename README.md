@@ -10,7 +10,7 @@ Note: At the moment, we support Polish language because this extension generates
 
 <div style="display: flex; align-items: flex-start; flex-flow: row;">
     <img src="./assets/screenshots/1a.png" width="481" height="591.5" />
-    <img src="./assets/screenshots/1b.png" width="482" height="610.5"/>
+    <img src="./assets/screenshots/1b.png" width="466.99" height="591.5"/>
 </div>
 
 <img src="./assets/screenshots/2.png" />
