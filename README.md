@@ -8,16 +8,14 @@ Note: At the moment, we support Polish language because this extension generates
 
 ## How build and run add-on
 
-1. Use latest node 16.x and npm 8.x
+1. Prepare node 16.x and npm 8.x
 2. `npm install`
 3. `npm run build`
 4. The build code is located in the `lib/` directory
 
-<div style="display: flex; align-items: flex-start; flex-flow: row;">
-    <img src="./assets/screenshots/1a.png" width="481" height="591.5" />
-    <img src="./assets/screenshots/1b.png" width="466.99" height="591.5"/>
-</div>
+## Screenshots
 
+<img src="./assets/screenshots/1.png" />
 <img src="./assets/screenshots/2.png" />
 <img src="./assets/screenshots/3a.png" />
 <img src="./assets/screenshots/3b.png" />
