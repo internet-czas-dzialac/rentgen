@@ -13,13 +13,13 @@ Note: At the moment, we support Polish language because this extension generates
     <img src="./assets/screenshots/1b.png" width="482" height="610.5" />
 </div>
 
-<img src="./assets/screenshots/2.png" width="1201.33333" height="656"  />
-<img src="./assets/screenshots/3a.png" width="1201.33333" height="656"  />
-<img src="./assets/screenshots/3b.png" width="1201.33333" height="656"  />
-<img src="./assets/screenshots/4a.png" width="1201.33333" height="656"  />
-<img src="./assets/screenshots/4b.png" width="1201.33333" height="656"  />
-<img src="./assets/screenshots/5a.png" width="1201.33333" height="656"  />
-<img src="./assets/screenshots/5b.png" width="1201.33333" height="656"  />
+<img src="./assets/screenshots/2.png" />
+<img src="./assets/screenshots/3a.png" />
+<img src="./assets/screenshots/3b.png" />
+<img src="./assets/screenshots/4a.png" />
+<img src="./assets/screenshots/4b.png" />
+<img src="./assets/screenshots/5a.png" />
+<img src="./assets/screenshots/5b.png" />
 
 ## How build and run add-on
 
