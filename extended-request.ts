@@ -104,21 +104,27 @@ export default class ExtendedRequest {
 
         let url: string;
         let is_full_url = true;
+        let url_comes_from: string;
         if (this.data.type === 'main_frame') {
             url = this.data.url;
+            url_comes_from = 'main_frame';
         } else if (this.data.frameId === 0 && this.data.documentUrl) {
             url = this.data.documentUrl;
+            url_comes_from = 'documentUrl';
             if (this.data.tabId == -1) {
                 //a service worker?
+                url_comes_from = 'documentUrl (webworker)';
                 is_full_url = false;
             }
         } else if (
             (this.data as any)?.frameAncestors &&
             (this.data as any).frameAncestors[0] !== undefined
         ) {
-            url = (this.data as any).frameAncestors[0].url || '';
+            url = (this.data as any).frameAncestors.at(-1).url || '';
+            url_comes_from = 'frameAncestors';
         } else {
             url = this.data.documentUrl || this.data.originUrl;
+            url_comes_from = 'last resort';
         }
 
         this.originalURL = is_full_url ? url : null;
