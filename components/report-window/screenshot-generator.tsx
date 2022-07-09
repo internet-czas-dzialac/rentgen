@@ -20,6 +20,7 @@ type Screenshot = {
 interface screenshotTask {
     domains: string[];
     elapsed_time_s: number;
+    current_action: string;
     finished_time: number;
     id: string;
     images: Screenshot[];
@@ -68,6 +69,7 @@ export default function ScreenshotGenerator({
     const [images, setImages] = React.useState<Screenshot[]>([]);
     const [taskId, setTaskId] = React.useState<string | null>(null);
     const [output, setOutput] = React.useState<any>({});
+    const [currentAction, setCurrentAction] = React.useState<string>('');
 
     async function subscribeTask(path: string): Promise<screenshotTask> {
         let response = { status: taskState.WAITING };
@@ -75,6 +77,7 @@ export default function ScreenshotGenerator({
             await new Promise((resolve) => setTimeout(resolve, 1000));
             response = await (await pollTask(path)).json();
             setImages((response as screenshotTask)?.images);
+            setCurrentAction((response as screenshotTask)?.current_action);
             document.querySelector('.images')?.scrollTo({
                 top: document.querySelector('.images')?.scrollHeight,
                 behavior: 'smooth',
@@ -156,6 +159,7 @@ export default function ScreenshotGenerator({
                                     Nasz serwer właśnie odwiedza wskazaną przez Ciebie stronę
                                     i przygotowuje zrzuty ekranów narzędzi deweloperskich.
                                 </p>
+                                <div>{currentAction}</div>
                             </Fragment>
                         ) : null}
                         {mode === 'finished' ? (
