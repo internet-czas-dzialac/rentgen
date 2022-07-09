@@ -1,12 +1,25 @@
 <h1 style="display: flex; align-items: center;"><img src="./assets/icon-addon-2048.png" alt="Rentgen logo" style="margin-right: 1rem;" width="48"/> Rentgen</h1>
 
-## Description
+## Opis / Description
 
 <strong>Rentgen</strong> to wtyczka dla przeglądarek opartych o Firefoxa, która automatycznie wizualizuje, jakie dane zostały ~~wykradzione~~ wysłane do podmiotów trzecich przez odwiedzane strony.
 
-<strong>Rentgen</strong> is an add-on prepared for Firefox based browsers. This extension will automatically visualize all the data that a given website sends to third parties.
+<strong>Rentgen</strong> is an add-on prepared for Firefox based browsers. This extension will automatically visualize all the data that a given website ~~steals~~ sends to third parties.
 
 Note: At the moment, we support Polish language because this extension generates mail content that is dedicated to Polish website owners. In further versions of this add-on, we will add other languages as well.
+
+<div style="display: flex; align-items: flex-start; flex-flow: row;">
+    <img src="./assets/screenshots/1a.png" width="481" height="591.5" />
+    <img src="./assets/screenshots/1b.png" width="482" height="610.5" />
+</div>
+
+<img src="./assets/screenshots/2.png" width="1201.33333" height="656"  />
+<img src="./assets/screenshots/3a.png" width="1201.33333" height="656"  />
+<img src="./assets/screenshots/3b.png" width="1201.33333" height="656"  />
+<img src="./assets/screenshots/4a.png" width="1201.33333" height="656"  />
+<img src="./assets/screenshots/4b.png" width="1201.33333" height="656"  />
+<img src="./assets/screenshots/5a.png" width="1201.33333" height="656"  />
+<img src="./assets/screenshots/5b.png" width="1201.33333" height="656"  />
 
 ## How build and run add-on
 
@@ -14,4 +27,3 @@ Note: At the moment, we support Polish language because this extension generates
 2. `npm install`
 3. `npm run build`
 4. The build code is located in the `lib/` directory
-
