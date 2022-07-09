@@ -1,7 +1,7 @@
 {
     "name": "rentgen",
-    "version": "0.0.3",
-    "description": "A simple Firefox extension that visualizes all the data that a given website sends to third parties.",
+    "version": "0.1.0",
+    "description": "Rentgen is an add-on prepared for Firefox based browsers. This extension will automatically visualize all the data that a given website sends to third parties.",
     "main": "esbuild.config.js",
     "type": "module",
     "scripts": {
