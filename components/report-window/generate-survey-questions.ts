@@ -194,6 +194,7 @@ export default function generateSurveyQuestions(clusters: RequestCluster[]) {
                         type: 'radiogroup',
                         name: 'user_role',
                         title: 'Jestem:',
+                        isRequired: true,
                         choices: [
                             { value: 'user', text: 'użytkownikiem strony' },
                             { value: 'admin', text: 'administratorem strony' },
