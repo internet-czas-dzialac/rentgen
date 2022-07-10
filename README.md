@@ -67,7 +67,7 @@ Note: At the moment, we support Polish language because this extension generates
 4. Run command: `npm run build`
 5. Run command: `npm run create-package`
 6. Go to the `web-ext-artifacts` directory
-7. You will find zip archive: `rentgen-x-x-x.zip` (`x-x-x` means add-on version)
+7. You will find a zip archive: `rentgen-x-x-x.zip` (`x-x-x` means add-on version)
 
 ### Run steps
 
