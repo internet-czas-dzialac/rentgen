@@ -35,6 +35,12 @@
 3. Kliknij przycisk _Load Temporary Add-on..._
 4. Wybierz archiwum, które zbudowałeś w ostatnim kroku procesu budowy
 
+## Zgłaszanie błędów
+
+Link do issue trackera na naszej instancji Discourse: https://forum.internet-czas-dzialac.pl/c/rentgen-issue-tracker
+
+Każdy problem zostanie sprawdzony i przeniesiony na wewnętrzną listę problemów na naszej instancji Gitea: https://git.internet-czas-dzialac.pl/icd/rentgen/issues. Korzystamy z Gitea i najprawdopodobniej w przyszłości dzięki federalizacji Gitea będziemy w stanie wpuścić użytkowników do zgłaszania błędów bezpośrednio ze strony Gitea.
+
 ---
 
 ## English description 🇬🇧
@@ -75,6 +81,12 @@ Note: At the moment, we support Polish language because this extension generates
 2. Click _This Firefox_ tab
 3. Click _Load Temporary Add-on..._ button
 4. Pick the zip archive from last step of build process.
+
+## Issue tracker
+
+Link to issue tracker on our Discourse instance: https://forum.internet-czas-dzialac.pl/c/rentgen-issue-tracker
+
+Each issue will be reviewed and moved to an internal issues list of our Gitea instance: https://git.internet-czas-dzialac.pl/icd/rentgen/issues. We use Gitea and most likely in the future with the federalization of Gitea, we will be able to let users in to report issues directly from the Gitea site.
 
 ## Screenshots
 
