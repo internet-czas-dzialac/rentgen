@@ -30,7 +30,7 @@
 
 ### Kroki do uruchomienia
 
-1. Uruchom Firefoxa i przejdź do strony `about:debugging`
+1. Uruchom Firefoxa i przejdź do strony <a href="about:debugging">about:debugging</a>
 2. Kliknij zakładkę _This Firefox_
 3. Kliknij przycisk _Load Temporary Add-on..._
 4. Wybierz archiwum, które zbudowałeś w ostatnim kroku procesu budowy
@@ -77,7 +77,7 @@ Note: At the moment, we support Polish language because this extension generates
 
 ### Run steps
 
-1. Run Firefox and go to `about:debugging`
+1. Run Firefox and go to <a href="about:debugging">about:debugging</a>
 2. Click _This Firefox_ tab
 3. Click _Load Temporary Add-on..._ button
 4. Pick the zip archive from last step of build process.
