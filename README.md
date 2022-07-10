@@ -21,7 +21,7 @@
 ### Proces budowy
 
 1. Pobierz repozytorium przez `git pull https://git.internet-czas-dzialac.pl/icd/rentgen.git` lub pobierz archwium zip
-2. Przejdź do
+2. Przejdź do głównego katalogu pobranego repozytorium
 3. Uruchom komendę: `npm install`
 4. Uruchom komendę: `npm run build`
 5. Uruchom komendę: `npm run create-package`
