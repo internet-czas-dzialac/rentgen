@@ -225,7 +225,8 @@ const Toolbar = () => {
                             <section className="about">
                                 <p>
                                     Takie przetwarzanie danych może być niezgodne z prawem. Przejdź
-                                    do analizy aby pomóc ustalić, czy ta strona nie narusza RODO.
+                                    do analizy aby pomóc ustalić, czy ta strona nie narusza RODO lub
+                                    ustawy Prawo Telekomunikacyjne.
                                 </p>
                             </section>
                             <section className="actions">
