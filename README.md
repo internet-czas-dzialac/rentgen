@@ -39,6 +39,8 @@
 
 Link do issue trackera na naszej instancji Discourse: https://forum.internet-czas-dzialac.pl/c/rentgen-issue-tracker
 
+Nie przyjmujemy zgłoszeń na platformie Microsoft Github.
+
 Każdy problem zostanie sprawdzony i przeniesiony na wewnętrzną listę problemów na naszej instancji Gitea: https://git.internet-czas-dzialac.pl/icd/rentgen/issues. Korzystamy z Gitea i najprawdopodobniej w przyszłości dzięki federalizacji Gitea będziemy w stanie wpuścić użytkowników do zgłaszania błędów bezpośrednio ze strony Gitea.
 
 ---
